@@ -23,6 +23,7 @@
             --text-dim: #5f6773;
             --green: #4caf50;
             --red: #e74c3c;
+            --blue: #3498db;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,7 +45,7 @@
 
         /* ---------- HEADER ---------- */
         header {
-            padding: 20px 0;
+            padding: 16px 0;
             border-bottom: 1px solid var(--line);
             position: sticky;
             top: 0;
@@ -61,16 +62,16 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
-        .header-left .logo {
-            height: 40px;
+        .header-left .logo-small {
+            height: 32px;
             width: auto;
         }
         .wordmark {
             font-family: 'Unbounded', sans-serif;
             font-weight: 500;
-            font-size: 18px;
+            font-size: 16px;
             letter-spacing: 0.01em;
             color: var(--text);
         }
@@ -79,22 +80,22 @@
             color: var(--gold);
         }
         .header-meta {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-dim);
         }
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
         .btn {
-            padding: 8px 20px;
+            padding: 6px 16px;
             border: 1px solid var(--gold);
             background: transparent;
             color: var(--gold-bright);
             border-radius: 4px;
             font-family: 'Unbounded', sans-serif;
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 0.04em;
             cursor: pointer;
             transition: 0.2s;
@@ -103,31 +104,130 @@
             background: var(--gold);
             color: var(--bg);
         }
-        .btn-primary {
-            background: var(--gold);
-            color: var(--bg);
+
+        /* ---------- HERO LOGO ---------- */
+        .hero-logo {
+            text-align: center;
+            padding: 40px 0 20px;
         }
-        .btn-primary:hover {
-            background: var(--gold-bright);
+        .hero-logo img {
+            max-width: 200px;
+            height: auto;
         }
 
-        /* ---------- HERO ---------- */
-        .hero {
-            padding: 60px 0 50px;
-            text-align: center;
+        /* ---------- LIVE MATCH ---------- */
+        .live-match {
+            background: var(--panel);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 16px 24px;
+            margin: 12px 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            animation: pulse-border 2s ease-in-out infinite;
         }
-        .hero h1 {
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--gold); }
+            50% { border-color: var(--gold-bright); }
+        }
+        .live-match .live-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-family: 'Unbounded', sans-serif;
-            font-size: 42px;
+            font-size: 13px;
+            color: var(--gold-bright);
+        }
+        .live-match .live-label .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .live-match .teams {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .live-match .teams .vs {
+            color: var(--text-dim);
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .live-match .teams .team-name {
+            color: var(--text);
+        }
+        .live-match .teams .team-name.winner-hint {
+            color: var(--gold-bright);
+        }
+        .live-match .match-time {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+        .live-match .match-links {
+            display: flex;
+            gap: 10px;
+        }
+        .live-match .match-links a {
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Unbounded', sans-serif;
+            transition: 0.2s;
+        }
+        .live-match .match-links .link-tg {
+            background: #0088cc;
+            color: #fff;
+        }
+        .live-match .match-links .link-tg:hover {
+            background: #0099dd;
+        }
+        .live-match .match-links .link-vk {
+            background: #4a76a8;
+            color: #fff;
+        }
+        .live-match .match-links .link-vk:hover {
+            background: #5a86b8;
+        }
+        .live-match .match-links .link-twitch {
+            background: #6441a5;
+            color: #fff;
+        }
+        .live-match .match-links .link-twitch:hover {
+            background: #7451b5;
+        }
+        .live-match .no-live {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        /* ---------- HERO TEXT ---------- */
+        .hero-text {
+            text-align: center;
+            padding: 10px 0 30px;
+        }
+        .hero-text h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 36px;
             font-weight: 600;
             line-height: 1.1;
         }
-        .hero h1 .accent { color: var(--gold); }
-        .hero p {
-            margin-top: 12px;
+        .hero-text h1 .accent { color: var(--gold); }
+        .hero-text p {
+            margin-top: 10px;
             color: var(--text-muted);
-            font-size: 16px;
-            max-width: 560px;
+            font-size: 15px;
+            max-width: 520px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -136,8 +236,8 @@
         .facts {
             border-top: 1px solid var(--line);
             border-bottom: 1px solid var(--line);
-            padding: 20px 0;
-            margin-bottom: 40px;
+            padding: 16px 0;
+            margin-bottom: 30px;
         }
         .facts-row {
             display: grid;
@@ -147,35 +247,35 @@
         }
         .fact {
             background: var(--bg);
-            padding: 16px 24px;
+            padding: 14px 20px;
             text-align: center;
         }
         .fact dt {
             font-family: 'Unbounded', sans-serif;
             font-weight: 500;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--gold-bright);
         }
         .fact dd {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-dim);
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         /* ---------- BRACKET ---------- */
         .bracket-section {
-            padding: 30px 0;
+            padding: 20px 0 30px;
         }
         .bracket-section h2 {
             font-family: 'Unbounded', sans-serif;
             font-weight: 500;
-            font-size: 26px;
-            margin-bottom: 6px;
+            font-size: 24px;
+            margin-bottom: 4px;
         }
         .bracket-section .sub {
             color: var(--text-muted);
             font-size: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .bracket-wrapper {
@@ -188,35 +288,35 @@
 
         .bracket {
             display: flex;
-            gap: 40px;
-            min-width: 1100px;
-            padding: 10px 0;
+            gap: 30px;
+            min-width: 1000px;
+            padding: 8px 0;
         }
 
         .round {
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            min-width: 180px;
+            gap: 24px;
+            min-width: 160px;
         }
         .round-label {
             font-family: 'Unbounded', sans-serif;
-            font-size: 10px;
+            font-size: 9px;
             letter-spacing: 0.08em;
             color: var(--text-dim);
             text-align: center;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         .round-label.gold { color: var(--gold); }
         .round-label.ox { color: var(--oxblood-bright); }
-        .round-label.grand { color: var(--gold-bright); font-size: 11px; }
+        .round-label.grand { color: var(--gold-bright); font-size: 10px; }
 
         .match {
             background: var(--panel);
             border: 1px solid var(--line);
             border-radius: 4px;
-            padding: 8px 12px;
-            min-height: 64px;
+            padding: 6px 10px;
+            min-height: 56px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -231,15 +331,15 @@
         .match .team {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 4px 0;
-            font-size: 13px;
+            gap: 6px;
+            padding: 3px 0;
+            font-size: 12px;
             color: var(--text);
         }
         .match .team .seed {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-dim);
-            width: 18px;
+            width: 16px;
         }
         .match .team .name {
             flex: 1;
@@ -248,8 +348,8 @@
             text-overflow: ellipsis;
         }
         .match .team .status {
-            font-size: 10px;
-            padding: 1px 8px;
+            font-size: 9px;
+            padding: 1px 6px;
             border-radius: 10px;
         }
         .match .team .status.win { background: var(--green); color: #fff; }
@@ -259,11 +359,11 @@
         .match .match-info {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-dim);
-            margin-top: 4px;
+            margin-top: 3px;
             border-top: 1px solid var(--line);
-            padding-top: 4px;
+            padding-top: 3px;
         }
         .match .match-info .time { color: var(--gold-bright); }
 
@@ -271,27 +371,87 @@
             background: var(--panel);
             border: 1px dashed var(--line);
             border-radius: 4px;
-            padding: 8px 12px;
-            min-height: 64px;
+            padding: 6px 10px;
+            min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-dim);
+            font-size: 11px;
+        }
+
+        /* ---------- SCHEDULE SECTION ---------- */
+        .schedule-section {
+            padding: 20px 0 10px;
+            border-top: 1px solid var(--line);
+        }
+        .schedule-section h2 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+        }
+        .schedule-item {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .schedule-item .teams {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .schedule-item .teams .vs {
+            color: var(--text-dim);
+            font-size: 11px;
+        }
+        .schedule-item .time {
+            color: var(--gold-bright);
             font-size: 12px;
+            font-weight: 500;
+        }
+        .schedule-item .bracket-tag {
+            font-size: 9px;
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: var(--line);
+            color: var(--text-dim);
+        }
+        .schedule-item .bracket-tag.upper { background: rgba(201,163,90,0.2); color: var(--gold); }
+        .schedule-item .bracket-tag.lower { background: rgba(179,105,95,0.2); color: var(--oxblood-bright); }
+        .schedule-item .bracket-tag.grand { background: rgba(201,163,90,0.3); color: var(--gold-bright); }
+
+        .schedule-empty {
+            color: var(--text-dim);
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
         }
 
         /* ---------- LEGEND ---------- */
         .legend {
             display: flex;
-            gap: 24px;
+            gap: 20px;
             flex-wrap: wrap;
-            margin: 16px 0 24px;
-            font-size: 13px;
+            margin: 12px 0 18px;
+            font-size: 12px;
             color: var(--text-muted);
         }
-        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
         .legend-swatch {
-            width: 20px;
+            width: 18px;
             height: 2px;
             display: inline-block;
         }
@@ -313,8 +473,8 @@
             background: var(--panel);
             border: 1px solid var(--gold);
             border-radius: 8px;
-            padding: 32px 40px;
-            max-width: 420px;
+            padding: 28px 32px;
+            max-width: 400px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -322,36 +482,36 @@
         }
         .modal-close {
             position: absolute;
-            top: 12px;
-            right: 16px;
+            top: 10px;
+            right: 14px;
             background: none;
             border: none;
             color: var(--text-dim);
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
         }
         .modal-close:hover { color: var(--text); }
         .modal h2 {
             font-family: 'Unbounded', sans-serif;
-            font-size: 20px;
-            margin-bottom: 4px;
+            font-size: 18px;
+            margin-bottom: 2px;
         }
         .modal .sub {
             color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 16px;
+            font-size: 12px;
+            margin-bottom: 14px;
         }
         .modal .player {
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-bottom: 1px solid var(--line);
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .modal .player:last-child { border-bottom: none; }
         .modal .player .role {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-dim);
             background: var(--line);
             padding: 1px 8px;
@@ -360,9 +520,9 @@
 
         /* ---------- FORMAT ---------- */
         .format-section {
-            padding: 40px 0;
+            padding: 30px 0;
             border-top: 1px solid var(--line);
-            margin-top: 30px;
+            margin-top: 20px;
         }
         .format-grid {
             display: grid;
@@ -372,25 +532,25 @@
         }
         .format-item {
             background: var(--bg);
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-left: 2px solid var(--gold);
         }
         .format-item.ox { border-left-color: var(--oxblood-bright); }
         .format-item h3 {
             font-family: 'Unbounded', sans-serif;
             font-weight: 500;
-            font-size: 14px;
-            margin-bottom: 6px;
+            font-size: 13px;
+            margin-bottom: 4px;
         }
         .format-item p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
             line-height: 1.6;
         }
 
         /* ---------- BROADCAST ---------- */
         .broadcast {
-            padding: 40px 0 60px;
+            padding: 30px 0 50px;
             border-top: 1px solid var(--line);
         }
         .broadcast-inner {
@@ -398,31 +558,35 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
         }
         .broadcast h2 {
             font-family: 'Unbounded', sans-serif;
             font-weight: 500;
-            font-size: 22px;
+            font-size: 20px;
         }
         .broadcast p {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
         }
         .platforms {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
         .platform {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             border: 1px solid var(--line);
-            padding: 10px 18px;
+            padding: 8px 16px;
             font-family: 'Unbounded', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text);
             border-radius: 4px;
+            transition: 0.2s;
+        }
+        .platform:hover {
+            border-color: var(--gold);
         }
         .platform .dot {
             width: 6px;
@@ -435,30 +599,36 @@
         /* ---------- FOOTER ---------- */
         footer {
             border-top: 1px solid var(--line);
-            padding: 20px 0;
-            font-size: 12px;
+            padding: 16px 0;
+            font-size: 11px;
             color: var(--text-dim);
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         /* ---------- RESPONSIVE ---------- */
         @media (max-width: 860px) {
-            .hero h1 { font-size: 28px; }
+            .hero-text h1 { font-size: 26px; }
             .facts-row { grid-template-columns: repeat(2, 1fr); }
             .format-grid { grid-template-columns: 1fr; }
             .broadcast-inner { flex-direction: column; align-items: flex-start; }
-            .bracket { gap: 20px; min-width: 800px; }
-            .round { min-width: 140px; }
-            .header-left .logo { height: 30px; }
-            .wordmark { font-size: 15px; }
+            .bracket { gap: 16px; min-width: 720px; }
+            .round { min-width: 120px; }
+            .live-match { flex-direction: column; align-items: stretch; text-align: center; }
+            .live-match .teams { justify-content: center; }
+            .live-match .match-links { justify-content: center; }
+            .hero-logo img { max-width: 140px; }
+            .schedule-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 480px) {
-            .hero h1 { font-size: 22px; }
-            .container { padding: 0 16px; }
-            .modal { padding: 20px; }
+            .hero-text h1 { font-size: 20px; }
+            .container { padding: 0 14px; }
+            .modal { padding: 18px; }
+            .live-match .teams { font-size: 14px; gap: 10px; }
+            .header-left .logo-small { height: 24px; }
+            .wordmark { font-size: 13px; }
         }
     </style>
 </head>
@@ -468,7 +638,7 @@
     <header>
         <div class="container header-row">
             <div class="header-left">
-                <img src="logo.png" alt="Compass Arena" class="logo" id="logoImg" onerror="this.style.display='none'">
+                <img src="logo.png" alt="Compass Arena" class="logo-small" id="logoSmall" onerror="this.style.display='none'">
                 <span class="wordmark">COMPASS <em>ARENA</em></span>
             </div>
             <div class="header-actions">
@@ -478,11 +648,37 @@
         </div>
     </header>
 
-    <!-- HERO -->
-    <section class="hero">
+    <!-- HERO LOGO (большой логотип в центре) -->
+    <section class="hero-logo">
+        <div class="container">
+            <img src="logo.png" alt="Compass Arena" id="heroLogo" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <!-- HERO TEXT -->
+    <section class="hero-text">
         <div class="container">
             <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
             <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
+        </div>
+    </section>
+
+    <!-- LIVE MATCH (Сейчас играют) -->
+    <section class="container">
+        <div class="live-match" id="liveMatch">
+            <div class="live-label">
+                <span class="dot"></span>
+                СЕЙЧАС ИГРАЮТ
+            </div>
+            <div class="teams" id="liveTeams">
+                <span class="team-name" id="liveTeam1">—</span>
+                <span class="vs">⚔️</span>
+                <span class="team-name" id="liveTeam2">—</span>
+            </div>
+            <div class="match-time" id="liveTime"></div>
+            <div class="match-links" id="liveLinks">
+                <!-- Ссылки заполняются из конфига -->
+            </div>
         </div>
     </section>
 
@@ -513,6 +709,16 @@
         </div>
     </section>
 
+    <!-- SCHEDULE (РАСПИСАНИЕ) -->
+    <section class="schedule-section">
+        <div class="container">
+            <h2>📅 Расписание матчей</h2>
+            <div id="scheduleContainer">
+                <div class="schedule-empty">Загрузка расписания...</div>
+            </div>
+        </div>
+    </section>
+
     <!-- FORMAT -->
     <section class="format-section">
         <div class="container">
@@ -537,19 +743,18 @@
     <section class="broadcast">
         <div class="container broadcast-inner">
             <div>
-                <h2>Смотрите вживую</h2>
-                <p>Все матчи будут показаны в прямом эфире. Комментаторская команда объявится позже.</p>
+                <h2>📺 Смотрите вживую</h2>
+                <p>Все матчи будут показаны в прямом эфире. Подключайтесь к трансляциям!</p>
             </div>
-            <div class="platforms">
-                <div class="platform"><span class="dot"></span> Twitch</div>
-                <div class="platform"><span class="dot"></span> ВКонтакте</div>
+            <div class="platforms" id="broadcastPlatforms">
+                <!-- Заполняется из конфига -->
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
             <span>Compass Arena — организатор турниров по Dota 2</span>
             <span>Основано в 2026</span>
         </div>
@@ -567,8 +772,15 @@
 
     <script>
         // ============================================================
-        // 1. ДАННЫЕ (можно вынести в config.json, но для простоты пока здесь)
+        // 1. ДАННЫЕ
         // ============================================================
+        // Ссылки на трансляции (заполните своими)
+        const BROADCAST_LINKS = {
+            twitch: "https://twitch.tv/your_channel",
+            vk: "https://vk.com/your_stream",
+            tg: "https://t.me/your_channel"
+        };
+
         const DATA = {
             tournament: {
                 name: "Compass Arena",
@@ -587,36 +799,50 @@
                 { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
                 { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
             ],
-            // Результаты матчей: winner = id команды или null
             matches: [
-                // Upper Bracket Round 1
                 { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
                 { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
                 { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
                 { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
-                // Upper Bracket Round 2
                 { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
                 { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-                // Upper Bracket Final
                 { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-                // Lower Bracket Round 1 (проигравшие из R1)
                 { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
                 { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-                // Lower Bracket Round 2
                 { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
                 { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-                // Lower Bracket Round 3
                 { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
-                // Lower Bracket Final
                 { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-                // Grand Final
                 { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
             ],
             schedule: {}
         };
 
         // ============================================================
-        // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // 2. ЗАГРУЗКА ДАННЫХ ИЗ localStorage
+        // ============================================================
+        function loadSavedData() {
+            try {
+                const saved = localStorage.getItem('compassData');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // Обновляем только то, что есть
+                    if (parsed.teams) DATA.teams = parsed.teams;
+                    if (parsed.matches) DATA.matches = parsed.matches;
+                    if (parsed.schedule) DATA.schedule = parsed.schedule;
+                    if (parsed.tournament) DATA.tournament = parsed.tournament;
+                }
+            } catch(e) {}
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('compassData', JSON.stringify(DATA));
+            } catch(e) {}
+        }
+
+        // ============================================================
+        // 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
         // ============================================================
         function getTeam(id) {
             return DATA.teams.find(t => t.id === id) || null;
@@ -631,15 +857,6 @@
             return DATA.matches.find(m => m.id === id) || null;
         }
 
-        function getMatchesByRound(round, bracket) {
-            return DATA.matches.filter(m => m.round === round && m.bracket === bracket);
-        }
-
-        function getMatchesByBracket(bracket) {
-            return DATA.matches.filter(m => m.bracket === bracket);
-        }
-
-        // Определяем, кто проиграл в матче
         function getLoser(match) {
             if (!match.winner) return null;
             if (match.team1 === match.winner) return match.team2;
@@ -647,52 +864,31 @@
             return null;
         }
 
-        // Обновляет team1/team2 для матчей на основе победителей предыдущих
         function updateMatchLinks() {
-            // Upper Bracket Round 2
-            const m5 = getMatch(5);
-            const m6 = getMatch(6);
-            const m1 = getMatch(1);
-            const m2 = getMatch(2);
-            const m3 = getMatch(3);
-            const m4 = getMatch(4);
+            const m1 = getMatch(1), m2 = getMatch(2), m3 = getMatch(3), m4 = getMatch(4);
+            const m5 = getMatch(5), m6 = getMatch(6), m7 = getMatch(7);
+            const m8 = getMatch(8), m9 = getMatch(9), m10 = getMatch(10), m11 = getMatch(11);
+            const m12 = getMatch(12), m13 = getMatch(13), m14 = getMatch(14);
+
             if (m5) { m5.team1 = m1 ? m1.winner : null; m5.team2 = m2 ? m2.winner : null; }
             if (m6) { m6.team1 = m3 ? m3.winner : null; m6.team2 = m4 ? m4.winner : null; }
-
-            // Upper Bracket Final
-            const m7 = getMatch(7);
             if (m7) { m7.team1 = m5 ? m5.winner : null; m7.team2 = m6 ? m6.winner : null; }
 
-            // Lower Bracket Round 1 — проигравшие из R1
-            const m8 = getMatch(8);
-            const m9 = getMatch(9);
             if (m8) { m8.team1 = getLoser(m1); m8.team2 = getLoser(m2); }
             if (m9) { m9.team1 = getLoser(m3); m9.team2 = getLoser(m4); }
 
-            // Lower Bracket Round 2
-            const m10 = getMatch(10);
-            const m11 = getMatch(11);
-            const m5Loser = getLoser(m5);
-            const m6Loser = getLoser(m6);
-            if (m10) { m10.team1 = m8 ? m8.winner : null; m10.team2 = m5Loser; }
-            if (m11) { m11.team1 = m9 ? m9.winner : null; m11.team2 = m6Loser; }
+            if (m10) { m10.team1 = m8 ? m8.winner : null; m10.team2 = getLoser(m5); }
+            if (m11) { m11.team1 = m9 ? m9.winner : null; m11.team2 = getLoser(m6); }
 
-            // Lower Bracket Round 3
-            const m12 = getMatch(12);
             if (m12) { m12.team1 = m10 ? m10.winner : null; m12.team2 = m11 ? m11.winner : null; }
 
-            // Lower Bracket Final
-            const m13 = getMatch(13);
-            const m7Loser = getLoser(m7);
-            if (m13) { m13.team1 = m12 ? m12.winner : null; m13.team2 = m7Loser; }
+            if (m13) { m13.team1 = m12 ? m12.winner : null; m13.team2 = getLoser(m7); }
 
-            // Grand Final
-            const m14 = getMatch(14);
             if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
         }
 
         // ============================================================
-        // 3. ОТРИСОВКА СЕТКИ
+        // 4. ОТРИСОВКА СЕТКИ
         // ============================================================
         function renderBracket() {
             const wrapper = document.getElementById('bracketWrapper');
@@ -700,7 +896,6 @@
 
             updateMatchLinks();
 
-            // Группируем матчи по раундам для верхней сетки
             const upperRounds = {};
             const lowerRounds = {};
             const grandMatches = [];
@@ -719,46 +914,28 @@
 
             let html = '<div class="bracket">';
 
-            // --- UPPER BRACKET ---
-            const upperRoundLabels = {
-                1: 'РАУНД 1',
-                2: 'РАУНД 2',
-                3: 'ФИНАЛ ВЕРХНЕЙ'
-            };
+            const upperRoundLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'ФИНАЛ ВЕРХНЕЙ' };
             const upperKeys = Object.keys(upperRounds).sort((a,b) => a - b);
             upperKeys.forEach(round => {
                 html += `<div class="round">`;
                 html += `<div class="round-label gold">${upperRoundLabels[round] || 'РАУНД ' + round}</div>`;
-                upperRounds[round].forEach(m => {
-                    html += renderMatch(m);
-                });
+                upperRounds[round].forEach(m => { html += renderMatch(m); });
                 html += `</div>`;
             });
 
-            // --- LOWER BRACKET ---
-            const lowerRoundLabels = {
-                1: 'РАУНД 1',
-                2: 'РАУНД 2',
-                3: 'РАУНД 3',
-                4: 'ФИНАЛ НИЖНЕЙ'
-            };
+            const lowerRoundLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'РАУНД 3', 4: 'ФИНАЛ НИЖНЕЙ' };
             const lowerKeys = Object.keys(lowerRounds).sort((a,b) => a - b);
             lowerKeys.forEach(round => {
                 html += `<div class="round">`;
                 html += `<div class="round-label ox">${lowerRoundLabels[round] || 'РАУНД ' + round}</div>`;
-                lowerRounds[round].forEach(m => {
-                    html += renderMatch(m);
-                });
+                lowerRounds[round].forEach(m => { html += renderMatch(m); });
                 html += `</div>`;
             });
 
-            // --- GRAND FINAL ---
             if (grandMatches.length) {
                 html += `<div class="round">`;
                 html += `<div class="round-label grand">ГРАНД-ФИНАЛ</div>`;
-                grandMatches.forEach(m => {
-                    html += renderMatch(m);
-                });
+                grandMatches.forEach(m => { html += renderMatch(m); });
                 html += `</div>`;
             }
 
@@ -783,8 +960,7 @@
             const id1 = t1 ? t1.id : null;
             const id2 = t2 ? t2.id : null;
 
-            // Время матча (если есть)
-            const time = DATA.schedule && DATA.schedule[m.id] ? DATA.schedule[m.id] : '';
+            const time = DATA.schedule && DATA.schedule[m.id] ? formatTime(DATA.schedule[m.id]) : '';
 
             let html = `<div class="match" data-match="${m.id}">`;
             html += `<div class="team" data-team="${id1}">`;
@@ -810,7 +986,168 @@
         }
 
         // ============================================================
-        // 4. МОДАЛЬНОЕ ОКНО
+        // 5. РАСПИСАНИЕ
+        // ============================================================
+        function renderSchedule() {
+            const container = document.getElementById('scheduleContainer');
+            if (!container) return;
+
+            const matchesWithTeams = DATA.matches.filter(m => m.team1 && m.team2);
+
+            if (matchesWithTeams.length === 0) {
+                container.innerHTML = '<div class="schedule-empty">📭 Расписание пока не заполнено</div>';
+                return;
+            }
+
+            const bracketLabels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
+            const bracketClasses = { upper: 'upper', lower: 'lower', grand: 'grand' };
+
+            let html = '<div class="schedule-grid">';
+            matchesWithTeams.forEach(m => {
+                const time = DATA.schedule && DATA.schedule[m.id] ? formatTime(DATA.schedule[m.id]) : 'Время не указано';
+                const label = bracketLabels[m.bracket] || m.bracket;
+                const cls = bracketClasses[m.bracket] || 'upper';
+                html += `
+                    <div class="schedule-item">
+                        <div class="teams">
+                            <span>${getTeamName(m.team1)}</span>
+                            <span class="vs">vs</span>
+                            <span>${getTeamName(m.team2)}</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <span class="time">${time}</span>
+                            <span class="bracket-tag ${cls}">${label}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function formatTime(datetime) {
+            if (!datetime) return '';
+            try {
+                const d = new Date(datetime);
+                return d.toLocaleString('ru-RU', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+            } catch(e) {
+                return datetime;
+            }
+        }
+
+        // ============================================================
+        // 6. LIVE MATCH (Сейчас играют)
+        // ============================================================
+        function renderLiveMatch() {
+            // Находим первый матч, у которого есть время и он не завершён
+            const now = new Date();
+            let liveMatch = null;
+
+            // Ищем матч, который идёт прямо сейчас (по времени)
+            for (const m of DATA.matches) {
+                if (!m.team1 || !m.team2) continue;
+                if (m.winner) continue; // уже завершён
+                const time = DATA.schedule && DATA.schedule[m.id];
+                if (!time) continue;
+
+                try {
+                    const matchTime = new Date(time);
+                    const diff = (now - matchTime) / (1000 * 60); // минуты
+                    // Матч считается идущим, если начался не более 120 минут назад и ещё не завершён
+                    if (diff > -30 && diff < 120) {
+                        liveMatch = m;
+                        break;
+                    }
+                } catch(e) {}
+            }
+
+            // Если нет активного матча — показываем ближайший
+            if (!liveMatch) {
+                let closest = null;
+                let closestDiff = Infinity;
+                for (const m of DATA.matches) {
+                    if (!m.team1 || !m.team2) continue;
+                    if (m.winner) continue;
+                    const time = DATA.schedule && DATA.schedule[m.id];
+                    if (!time) continue;
+                    try {
+                        const matchTime = new Date(time);
+                        const diff = (matchTime - now) / (1000 * 60);
+                        if (diff > -30 && diff < closestDiff) {
+                            closestDiff = diff;
+                            closest = m;
+                        }
+                    } catch(e) {}
+                }
+                if (closest) liveMatch = closest;
+            }
+
+            const container = document.getElementById('liveMatch');
+            const team1El = document.getElementById('liveTeam1');
+            const team2El = document.getElementById('liveTeam2');
+            const timeEl = document.getElementById('liveTime');
+            const linksEl = document.getElementById('liveLinks');
+
+            if (!liveMatch) {
+                team1El.textContent = '—';
+                team2El.textContent = '—';
+                timeEl.textContent = '';
+                linksEl.innerHTML = '';
+                // Меняем заголовок
+                const label = container.querySelector('.live-label');
+                if (label) {
+                    label.innerHTML = `<span class="dot" style="opacity:0.3;"></span> ОЖИДАНИЕ МАТЧА`;
+                }
+                return;
+            }
+
+            const t1 = getTeam(liveMatch.team1);
+            const t2 = getTeam(liveMatch.team2);
+            team1El.textContent = t1 ? t1.name : '—';
+            team2El.textContent = t2 ? t2.name : '—';
+
+            const time = DATA.schedule && DATA.schedule[liveMatch.id];
+            timeEl.textContent = time ? formatTime(time) : '';
+
+            // Ссылки
+            linksEl.innerHTML = `
+                <a href="${BROADCAST_LINKS.twitch}" target="_blank" class="link-twitch">📺 Twitch</a>
+                <a href="${BROADCAST_LINKS.vk}" target="_blank" class="link-vk">📱 VK</a>
+                <a href="${BROADCAST_LINKS.tg}" target="_blank" class="link-tg">💬 Telegram</a>
+            `;
+
+            // Меняем заголовок
+            const label = container.querySelector('.live-label');
+            if (label) {
+                label.innerHTML = `<span class="dot"></span> СЕЙЧАС ИГРАЮТ`;
+            }
+        }
+
+        // ============================================================
+        // 7. BROADCAST PLATFORMS
+        // ============================================================
+        function renderBroadcastPlatforms() {
+            const container = document.getElementById('broadcastPlatforms');
+            if (!container) return;
+
+            const platforms = [
+                { name: 'Twitch', icon: '📺', link: BROADCAST_LINKS.twitch },
+                { name: 'VK', icon: '📱', link: BROADCAST_LINKS.vk },
+                { name: 'Telegram', icon: '💬', link: BROADCAST_LINKS.tg }
+            ];
+
+            container.innerHTML = platforms.map(p => `
+                <a href="${p.link}" target="_blank" class="platform">
+                    <span class="dot"></span> ${p.icon} ${p.name}
+                </a>
+            `).join('');
+        }
+
+        // ============================================================
+        // 8. МОДАЛЬНОЕ ОКНО
         // ============================================================
         function openModal(teamId) {
             const team = getTeam(teamId);
@@ -836,7 +1173,6 @@
             document.getElementById('modalOverlay').classList.remove('active');
         }
 
-        // Клик по команде в сетке
         document.addEventListener('click', function(e) {
             const teamEl = e.target.closest('.team');
             if (teamEl && teamEl.dataset.team) {
@@ -851,58 +1187,53 @@
         });
 
         // ============================================================
-        // 5. ИНИЦИАЛИЗАЦИЯ
+        // 9. ОБНОВЛЕНИЕ ФАКТОВ
         // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            // Обновляем шапку
+        function updateFacts() {
+            const dates = document.getElementById('tournamentDates');
+            if (dates) {
+                dates.textContent = DATA.tournament.dates || 'уточняются';
+            }
             const meta = document.getElementById('headerMeta');
             if (meta) {
                 meta.textContent = DATA.tournament.game + ' · ' + DATA.tournament.matches;
             }
+        }
 
-            // Обновляем даты
-            const dates = document.getElementById('tournamentDates');
-            if (dates) {
-                dates.textContent = DATA.tournament.dates;
-            }
-
+        // ============================================================
+        // 10. ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        function init() {
+            loadSavedData();
+            updateFacts();
             renderBracket();
+            renderSchedule();
+            renderLiveMatch();
+            renderBroadcastPlatforms();
 
-            // Если есть логотип — показываем
-            const logo = document.getElementById('logoImg');
-            if (logo) {
-                logo.src = 'logo.png';
-            }
-        });
+            // Обновляем live каждые 30 секунд
+            setInterval(() => {
+                renderLiveMatch();
+            }, 30000);
 
-        // Для админ-панели — сохраняем данные в localStorage для синхронизации
-        // (в реальном проекте использовать сервер, но для простоты — localStorage)
-        function saveData() {
-            try {
-                localStorage.setItem('compassData', JSON.stringify(DATA));
-            } catch(e) {}
+            // Периодически перерисовываем расписание и сетку (на случай изменений)
+            setInterval(() => {
+                renderSchedule();
+                renderBracket();
+            }, 60000);
+
+            // Сохраняем данные для синхронизации с админкой
+            window.getTournamentData = () => DATA;
+            window.renderBracket = renderBracket;
+            window.renderSchedule = renderSchedule;
+            window.renderLiveMatch = renderLiveMatch;
+
+            console.log('✅ Compass Arena загружена!');
+            console.log('📊 Данные:', DATA);
+            console.log('🕐 Обновление каждые 30 секунд');
         }
 
-        function loadData() {
-            try {
-                const saved = localStorage.getItem('compassData');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    Object.assign(DATA, parsed);
-                }
-            } catch(e) {}
-        }
-
-        // Загружаем сохранённые данные при старте
-        loadData();
-        // Сохраняем при изменении (вызывать из админки)
-        window.saveTournamentData = saveData;
-        window.getTournamentData = () => DATA;
-        window.renderBracket = renderBracket;
-
-        console.log('✅ Compass Arena загружена!');
-        console.log('📊 Данные:', DATA);
-        console.log('🛠️ Для админ-панели: window.getTournamentData()');
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 
 </body>
