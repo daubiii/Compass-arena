@@ -79,6 +79,34 @@
 </head>
 <body>
 
+<!-- ============================================================ -->
+<!-- ⚠️ ЗАЩИТА ПАРОЛЕМ — ИЗМЕНИТЕ ПАРОЛЬ НИЖЕ -->
+<!-- ============================================================ -->
+<script>
+// ⚠️ СМЕНИТЕ ЭТОТ ПАРОЛЬ НА СВОЙ!
+var ADMIN_PASSWORD = "compass2026";
+
+function checkPassword() {
+    var input = prompt("🔐 Введите пароль администратора:");
+    if (input !== ADMIN_PASSWORD) {
+        document.body.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#e74c3c;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
+                <h1 style="font-size:48px;">⛔</h1>
+                <h2>Доступ запрещён</h2>
+                <p style="color:#97a0ac;">Неверный пароль администратора</p>
+                <button onclick="location.reload()" style="padding:10px 30px;background:#c9a35a;border:none;border-radius:4px;color:#0a0d12;cursor:pointer;font-size:16px;">Попробовать снова</button>
+            </div>
+        `;
+        return false;
+    }
+    return true;
+}
+
+if (!checkPassword()) {
+    throw new Error("Доступ запрещён");
+}
+</script>
+
 <div class="container">
     <div class="admin-header">
         <h1>⚙️ COMPASS <em>ARENA</em> · АДМИН-ПАНЕЛЬ</h1>
