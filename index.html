@@ -3,207 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compass Arena — Админ-панель</title>
+    <title>Compass Arena — турнирная сетка</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; padding: 16px 0 40px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid #242b35; margin-bottom: 24px; }
-        .admin-header h1 { font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 500; }
-        .admin-header h1 em { color: #c9a35a; font-style: normal; }
-        .admin-header .back { color: #97a0ac; font-size: 13px; text-decoration: none; border: 1px solid #242b35; padding: 6px 16px; border-radius: 4px; transition: 0.2s; }
-        .admin-header .back:hover { border-color: #c9a35a; color: #e3c48a; }
-        .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #242b35; flex-wrap: wrap; }
-        .tab { padding: 8px 20px; background: transparent; border: none; color: #5f6773; font-family: 'Unbounded', sans-serif; font-size: 11px; letter-spacing: 0.04em; cursor: pointer; border-bottom: 2px solid transparent; transition: 0.2s; }
-        .tab:hover { color: #eae6da; }
-        .tab.active { color: #e3c48a; border-bottom-color: #c9a35a; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .card { background: #10141b; border: 1px solid #242b35; border-radius: 6px; padding: 16px 20px; margin-bottom: 14px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-        .card-header h3 { font-family: 'Unbounded', sans-serif; font-size: 15px; font-weight: 500; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
-        .form-group { display: flex; flex-direction: column; gap: 3px; }
-        .form-group label { font-size: 11px; color: #97a0ac; font-weight: 500; }
-        .form-group input, .form-group select { background: #0a0d12; border: 1px solid #242b35; color: #eae6da; padding: 6px 10px; border-radius: 4px; font-family: 'Manrope', sans-serif; font-size: 13px; outline: none; transition: 0.2s; }
-        .form-group input:focus, .form-group select:focus { border-color: #c9a35a; }
-        .form-group input::placeholder { color: #5f6773; }
-        .btn { padding: 6px 16px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; letter-spacing: 0.04em; cursor: pointer; transition: 0.2s; }
+        body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* HEADER */
+        header { padding: 16px 0; border-bottom: 1px solid #242b35; }
+        .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-left .logo { height: 32px; width: auto; }
+        .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; }
+        .wordmark em { font-style: normal; color: #c9a35a; }
+        .header-meta { font-size: 12px; color: #5f6773; }
+        .btn { padding: 6px 16px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
         .btn:hover { background: #c9a35a; color: #0a0d12; }
-        .btn-primary { background: #c9a35a; color: #0a0d12; }
-        .btn-primary:hover { background: #e3c48a; }
-        .btn-danger { border-color: #e74c3c; color: #e74c3c; }
-        .btn-danger:hover { background: #e74c3c; color: #fff; }
-        .btn-sm { padding: 3px 10px; font-size: 9px; }
-        .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-        .team-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
-        .team-item { background: #151a22; border: 1px solid #242b35; border-radius: 4px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .team-item:hover { border-color: #c9a35a; }
-        .team-item .info { display: flex; flex-direction: column; gap: 2px; }
-        .team-item .info .name { font-size: 13px; font-weight: 500; }
-        .team-item .info .players { font-size: 11px; color: #5f6773; }
-        .team-item .actions { display: flex; gap: 4px; }
-        .match-list { display: flex; flex-direction: column; gap: 6px; }
-        .match-item { background: #151a22; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 13px; }
-        .match-item .teams { display: flex; align-items: center; gap: 10px; }
-        .match-item .teams .vs { color: #5f6773; font-size: 11px; }
-        .match-item .teams .winner { color: #e3c48a; font-weight: 600; }
-        .match-item .meta { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #5f6773; flex-wrap: wrap; }
-        .match-item .meta .tag { padding: 1px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; }
-        .match-item .meta .tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
-        .match-item .meta .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
-        .match-item .meta .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
-        .match-item .meta select { background: #0a0d12; border: 1px solid #242b35; color: #eae6da; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
+
+        /* HERO LOGO */
+        .hero-logo { text-align: center; padding: 30px 0 10px; }
+        .hero-logo img { max-width: 180px; height: auto; }
+
+        /* HERO TEXT */
+        .hero-text { text-align: center; padding: 10px 0 20px; }
+        .hero-text h1 { font-family: 'Unbounded', sans-serif; font-size: 32px; font-weight: 600; line-height: 1.1; }
+        .hero-text h1 .accent { color: #c9a35a; }
+        .hero-text p { color: #97a0ac; font-size: 15px; max-width: 520px; margin: 10px auto 0; }
+
+        /* LIVE MATCH */
+        .live-match { background: #10141b; border: 2px solid #c9a35a; border-radius: 8px; padding: 14px 20px; margin: 10px 0 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .live-match .label { display: flex; align-items: center; gap: 10px; font-family: 'Unbounded', sans-serif; font-size: 12px; color: #e3c48a; }
+        .live-match .label .dot { width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; animation: blink 1s infinite; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .live-match .teams { display: flex; align-items: center; gap: 14px; font-size: 16px; font-weight: 600; }
+        .live-match .teams .vs { color: #5f6773; font-size: 13px; font-weight: 400; }
+        .live-match .time { font-size: 12px; color: #5f6773; }
+        .live-match .links { display: flex; gap: 8px; }
+        .live-match .links a { padding: 4px 12px; border-radius: 4px; font-size: 11px; font-family: 'Unbounded', sans-serif; color: #fff; text-decoration: none; }
+        .live-match .links .twitch { background: #6441a5; }
+        .live-match .links .vk { background: #4a76a8; }
+        .live-match .links .tg { background: #0088cc; }
+        .live-match .no-live { color: #5f6773; font-size: 14px; }
+
+        /* FACTS */
+        .facts { border-top: 1px solid #242b35; border-bottom: 1px solid #242b35; padding: 14px 0; margin-bottom: 24px; }
+        .facts-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #242b35; }
+        .fact { background: #0a0d12; padding: 12px 16px; text-align: center; }
+        .fact dt { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 12px; color: #e3c48a; }
+        .fact dd { font-size: 12px; color: #5f6773; margin-top: 2px; }
+
+        /* BRACKET */
+        .bracket-section { padding: 16px 0 24px; }
+        .bracket-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 22px; }
+        .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 12px; }
+        .bracket-wrapper { overflow-x: auto; padding-bottom: 12px; }
+        .bracket-wrapper::-webkit-scrollbar { height: 6px; }
+        .bracket-wrapper::-webkit-scrollbar-track { background: #10141b; }
+        .bracket-wrapper::-webkit-scrollbar-thumb { background: #242b35; border-radius: 4px; }
+        .bracket { display: flex; gap: 24px; min-width: 900px; padding: 6px 0; }
+        .round { display: flex; flex-direction: column; gap: 20px; min-width: 140px; }
+        .round-label { font-family: 'Unbounded', sans-serif; font-size: 9px; letter-spacing: 0.08em; color: #5f6773; text-align: center; margin-bottom: 2px; }
+        .round-label.gold { color: #c9a35a; }
+        .round-label.ox { color: #b3695f; }
+        .round-label.grand { color: #e3c48a; font-size: 10px; }
+        .match { background: #10141b; border: 1px solid #242b35; border-radius: 4px; padding: 6px 10px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .match:hover { border-color: #c9a35a; background: #151a22; }
+        .match .team { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 12px; color: #eae6da; }
+        .match .team .seed { font-size: 9px; color: #5f6773; width: 16px; }
+        .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .match .team .status { font-size: 8px; padding: 1px 6px; border-radius: 10px; }
+        .match .team .status.win { background: #4caf50; color: #fff; }
+        .match .team .status.loss { background: #e74c3c; color: #fff; }
+        .match .team .status.pending { background: #242b35; color: #5f6773; }
+        .match .match-info { display: flex; justify-content: space-between; font-size: 9px; color: #5f6773; margin-top: 2px; border-top: 1px solid #242b35; padding-top: 2px; }
+        .match .match-info .time { color: #e3c48a; }
+        .match-empty { background: #10141b; border: 1px dashed #242b35; border-radius: 4px; padding: 6px 10px; min-height: 50px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
+
+        /* SCHEDULE */
+        .schedule-section { padding: 16px 0 10px; border-top: 1px solid #242b35; }
+        .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 10px; }
+        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+        .schedule-item { background: #10141b; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; font-size: 12px; }
+        .schedule-item .teams { display: flex; align-items: center; gap: 6px; }
+        .schedule-item .teams .vs { color: #5f6773; font-size: 10px; }
+        .schedule-item .time { color: #e3c48a; font-size: 11px; font-weight: 500; }
+        .schedule-item .tag { font-size: 8px; padding: 1px 8px; border-radius: 10px; background: #242b35; color: #5f6773; }
+        .schedule-item .tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
+        .schedule-item .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
+        .schedule-item .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
+        .schedule-empty { color: #5f6773; text-align: center; padding: 16px; font-size: 13px; }
+
+        /* MODAL */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
-        .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 460px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 380px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
         .modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; color: #5f6773; font-size: 22px; cursor: pointer; }
         .modal-close:hover { color: #eae6da; }
-        .modal h2 { font-family: 'Unbounded', sans-serif; font-size: 18px; margin-bottom: 12px; }
-        .toast { position: fixed; bottom: 24px; right: 24px; background: #10141b; border: 1px solid #c9a35a; padding: 10px 20px; border-radius: 6px; color: #eae6da; font-size: 13px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: 0.3s; pointer-events: none; }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        @media (max-width: 640px) {
-            .form-row { grid-template-columns: 1fr; }
-            .form-row.three { grid-template-columns: 1fr; }
-            .admin-header h1 { font-size: 16px; }
-            .team-list { grid-template-columns: 1fr; }
-            .match-item { flex-direction: column; align-items: stretch; }
-            .match-item .teams { justify-content: center; }
-            .match-item .meta { justify-content: center; }
+        .modal h2 { font-family: 'Unbounded', sans-serif; font-size: 18px; margin-bottom: 2px; }
+        .modal .sub { color: #97a0ac; font-size: 12px; margin-bottom: 12px; }
+        .modal .player { padding: 5px 10px; border-bottom: 1px solid #242b35; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .modal .player:last-child { border-bottom: none; }
+        .modal .player .role { font-size: 9px; color: #5f6773; background: #242b35; padding: 1px 8px; border-radius: 10px; }
+
+        /* FORMAT */
+        .format-section { padding: 24px 0; border-top: 1px solid #242b35; margin-top: 16px; }
+        .format-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #242b35; }
+        .format-item { background: #0a0d12; padding: 14px 18px; border-left: 2px solid #c9a35a; }
+        .format-item.ox { border-left-color: #b3695f; }
+        .format-item h3 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 13px; margin-bottom: 4px; }
+        .format-item p { font-size: 12px; color: #97a0ac; line-height: 1.6; }
+
+        /* BROADCAST */
+        .broadcast { padding: 24px 0 40px; border-top: 1px solid #242b35; }
+        .broadcast-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .broadcast h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 18px; }
+        .broadcast p { color: #97a0ac; font-size: 13px; }
+        .platforms { display: flex; gap: 8px; }
+        .platform { display: flex; align-items: center; gap: 6px; border: 1px solid #242b35; padding: 6px 14px; font-family: 'Unbounded', sans-serif; font-size: 10px; color: #eae6da; border-radius: 4px; text-decoration: none; transition: 0.2s; }
+        .platform:hover { border-color: #c9a35a; }
+        .platform .dot { width: 6px; height: 6px; border-radius: 50%; background: #c9a35a; }
+
+        footer { border-top: 1px solid #242b35; padding: 14px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+
+        @media (max-width: 860px) {
+            .hero-text h1 { font-size: 24px; }
+            .facts-row { grid-template-columns: repeat(2, 1fr); }
+            .format-grid { grid-template-columns: 1fr; }
+            .broadcast-inner { flex-direction: column; align-items: flex-start; }
+            .bracket { gap: 16px; min-width: 700px; }
+            .round { min-width: 110px; }
+            .live-match { flex-direction: column; align-items: stretch; text-align: center; }
+            .live-match .teams { justify-content: center; }
+            .live-match .links { justify-content: center; }
+            .hero-logo img { max-width: 120px; }
+            .schedule-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hero-text h1 { font-size: 18px; }
+            .container { padding: 0 12px; }
+            .modal { padding: 16px; }
+            .live-match .teams { font-size: 13px; gap: 8px; }
+            .header-left .logo { height: 24px; }
+            .wordmark { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="admin-header">
-        <h1>⚙️ COMPASS <em>ARENA</em> · АДМИН-ПАНЕЛЬ</h1>
-        <a href="index.html" class="back">← На сайт</a>
-    </div>
-
-    <div class="tabs">
-        <button class="tab active" data-tab="teams">Команды</button>
-        <button class="tab" data-tab="matches">Матчи</button>
-        <button class="tab" data-tab="schedule">Расписание</button>
-        <button class="tab" data-tab="settings">Настройки</button>
-    </div>
-
-    <div class="tab-content active" id="tab-teams">
-        <div class="card">
-            <div class="card-header"><h3>➕ Добавить команду</h3></div>
-            <div class="form-row">
-                <div class="form-group"><label>Название</label><input type="text" id="teamNameInput" placeholder="Team Name"></div>
-                <div class="form-group"><label>Игроки (через запятую)</label><input type="text" id="teamPlayersInput" placeholder="Игрок1, Игрок2, Игрок3, Игрок4, Игрок5"></div>
-            </div>
-            <button class="btn btn-primary" onclick="addTeam()">➕ Добавить</button>
+<header>
+    <div class="container header-row">
+        <div class="header-left">
+            <img src="logo.png" alt="Compass Arena" class="logo" id="logoSmall" onerror="this.style.display='none'">
+            <span class="wordmark">COMPASS <em>ARENA</em></span>
         </div>
-        <div class="card">
-            <div class="card-header"><h3>📋 Список команд</h3><span id="teamsCount" style="color:#5f6773;font-size:12px;">0 команд</span></div>
-            <div class="team-list" id="teamList"></div>
+        <div class="header-actions">
+            <span class="header-meta" id="headerMeta">Dota 2 · Bo3</span>
+            <a href="admin.html" class="btn">Управление</a>
         </div>
     </div>
+</header>
 
-    <div class="tab-content" id="tab-matches">
-        <div class="card">
-            <div class="card-header"><h3>🏆 Управление матчами</h3><span style="color:#5f6773;font-size:12px;">Выберите победителя</span></div>
-            <div class="match-list" id="matchList"></div>
+<section class="hero-logo">
+    <div class="container">
+        <img src="logo.png" alt="Compass Arena" id="heroLogo" onerror="this.style.display='none'">
+    </div>
+</section>
+
+<section class="hero-text">
+    <div class="container">
+        <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
+        <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
+    </div>
+</section>
+
+<section class="container">
+    <div class="live-match" id="liveMatch">
+        <div class="label"><span class="dot"></span>СЕЙЧАС ИГРАЮТ</div>
+        <div class="teams" id="liveTeams"><span class="team-name" id="liveTeam1">—</span><span class="vs">⚔️</span><span class="team-name" id="liveTeam2">—</span></div>
+        <div class="time" id="liveTime"></div>
+        <div class="links" id="liveLinks"></div>
+    </div>
+</section>
+
+<section class="facts">
+    <div class="container">
+        <dl class="facts-row">
+            <div class="fact"><dt>8 команд</dt><dd>слоты открыты</dd></div>
+            <div class="fact"><dt>Double elimination</dt><dd>формат TI</dd></div>
+            <div class="fact"><dt>Bo3</dt><dd>во всех раундах</dd></div>
+            <div class="fact"><dt>Даты</dt><dd id="tournamentDates">уточняются</dd></div>
+        </dl>
+    </div>
+</section>
+
+<section class="bracket-section">
+    <div class="container">
+        <h2>Путь к трофею</h2>
+        <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;font-size:12px;color:#97a0ac;">
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#c9a35a;display:inline-block;"></span> Верхняя сетка</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#b3695f;display:inline-block;"></span> Нижняя сетка</span>
+        </div>
+        <div class="bracket-wrapper" id="bracketWrapper"></div>
+    </div>
+</section>
+
+<section class="schedule-section">
+    <div class="container">
+        <h2>📅 Расписание матчей</h2>
+        <div id="scheduleContainer"><div class="schedule-empty">Загрузка...</div></div>
+    </div>
+</section>
+
+<section class="format-section">
+    <div class="container">
+        <div class="format-grid">
+            <div class="format-item"><h3>Верхняя сетка</h3><p>Поражение не выбивает — команда спускается в нижнюю сетку.</p></div>
+            <div class="format-item ox"><h3>Нижняя сетка</h3><p>Второй шанс для проигравших. Поражение здесь — выбывание.</p></div>
+            <div class="format-item"><h3>Гранд-финал</h3><p>Победитель верхней vs победитель нижней. Bo3 решает всё.</p></div>
         </div>
     </div>
+</section>
 
-    <div class="tab-content" id="tab-schedule">
-        <div class="card">
-            <div class="card-header"><h3>🕐 Расписание</h3></div>
-            <div id="scheduleList"></div>
-        </div>
+<section class="broadcast">
+    <div class="container broadcast-inner">
+        <div><h2>📺 Смотрите вживую</h2><p>Все матчи в прямом эфире. Подключайтесь!</p></div>
+        <div class="platforms" id="broadcastPlatforms"></div>
     </div>
+</section>
 
-    <div class="tab-content" id="tab-settings">
-        <div class="card">
-            <div class="card-header"><h3>⚙️ Настройки</h3></div>
-            <div class="form-row three">
-                <div class="form-group"><label>Название</label><input type="text" id="settingsName" value="Compass Arena"></div>
-                <div class="form-group"><label>Игра</label><input type="text" id="settingsGame" value="Dota 2"></div>
-                <div class="form-group"><label>Формат</label><input type="text" id="settingsFormat" value="Bo3"></div>
-            </div>
-            <div class="form-group" style="margin-bottom:10px;"><label>Даты</label><input type="text" id="settingsDates" placeholder="01.06.2026 - 03.06.2026"></div>
-            <button class="btn btn-primary" onclick="saveSettings()">💾 Сохранить</button>
-        </div>
-        <div class="card">
-            <div class="card-header"><h3>💾 Управление данными</h3></div>
-            <div class="btn-group">
-                <button class="btn" onclick="exportData()">📤 Экспорт JSON</button>
-                <button class="btn" onclick="document.getElementById('importFile').click()">📥 Импорт JSON</button>
-                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-                <button class="btn btn-danger" onclick="resetData()">🔄 Сбросить</button>
-            </div>
-        </div>
+<footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+        <span>Compass Arena — организатор турниров по Dota 2</span>
+        <span>Основано в 2026</span>
+    </div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <h2 id="modalTitle">Team</h2>
+        <div class="sub" id="modalSub">Состав</div>
+        <div id="modalPlayers"></div>
     </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-var DATA = getDefaultData();
+// ============================================================
+// ДАННЫЕ
+// ============================================================
+var BROADCAST_LINKS = {
+    twitch: "https://twitch.tv/your_channel",
+    vk: "https://vk.com/your_stream",
+    tg: "https://t.me/your_channel"
+};
 
-function getDefaultData() {
-    return {
-        tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "уточняются" },
-        teams: [
-            { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
-            { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
-            { id: 3, name: "Team Liquid", players: ["m1CKe", "Nisha", "33", "Boxi", "Insania"] },
-            { id: 4, name: "OG", players: ["Yuragi", "bzm", "ATF", "Taiga", "Misha"] },
-            { id: 5, name: "Gaimin Gladiators", players: ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"] },
-            { id: 6, name: "BetBoom Team", players: ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"] },
-            { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
-            { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
-        ],
-        matches: [
-            { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
-            { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
-            { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
-            { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
-            { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-            { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-            { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-            { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
-        ],
-        schedule: {}
-    };
-}
+var DATA = {
+    tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "уточняются" },
+    teams: [
+        { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
+        { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
+        { id: 3, name: "Team Liquid", players: ["m1CKe", "Nisha", "33", "Boxi", "Insania"] },
+        { id: 4, name: "OG", players: ["Yuragi", "bzm", "ATF", "Taiga", "Misha"] },
+        { id: 5, name: "Gaimin Gladiators", players: ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"] },
+        { id: 6, name: "BetBoom Team", players: ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"] },
+        { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
+        { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
+    ],
+    matches: [
+        { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
+        { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
+        { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
+        { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
+        { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+    ],
+    schedule: {}
+};
 
-function loadData() {
+// ============================================================
+// ЗАГРУЗКА ДАННЫХ
+// ============================================================
+function loadSavedData() {
     try {
         var saved = localStorage.getItem('compassData');
         if (saved) {
             var parsed = JSON.parse(saved);
-            DATA = parsed;
-            var defaultMatches = getDefaultData().matches;
-            var ids = DATA.matches.map(function(m) { return m.id; });
-            for (var i = 0; i < defaultMatches.length; i++) {
-                if (ids.indexOf(defaultMatches[i].id) === -1) DATA.matches.push(defaultMatches[i]);
-            }
-            if (!DATA.schedule) DATA.schedule = {};
-            if (!DATA.tournament) DATA.tournament = getDefaultData().tournament;
+            if (parsed.teams) DATA.teams = parsed.teams;
+            if (parsed.matches) DATA.matches = parsed.matches;
+            if (parsed.schedule) DATA.schedule = parsed.schedule;
+            if (parsed.tournament) DATA.tournament = parsed.tournament;
         }
     } catch(e) {}
-    saveData();
 }
 
-function saveData() {
-    try { localStorage.setItem('compassData', JSON.stringify(DATA)); } catch(e) {}
-}
-
+// ============================================================
+// ВСПОМОГАТЕЛЬНЫЕ
+// ============================================================
 function getTeam(id) {
     for (var i = 0; i < DATA.teams.length; i++) {
         if (DATA.teams[i].id === id) return DATA.teams[i];
@@ -247,264 +354,245 @@ function updateMatchLinks() {
     if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
 }
 
-function renderTeams() {
-    var container = document.getElementById('teamList');
-    var count = document.getElementById('teamsCount');
-    if (!container) return;
-    container.innerHTML = '';
-    for (var i = 0; i < DATA.teams.length; i++) {
-        var t = DATA.teams[i];
-        var div = document.createElement('div');
-        div.className = 'team-item';
-        div.innerHTML = '<div class="info"><span class="name">#' + t.id + ' ' + t.name + '</span><span class="players">' + t.players.join(' · ') + '</span></div><div class="actions"><button class="btn btn-sm" onclick="editTeam(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
-        container.appendChild(div);
-    }
-    if (count) count.textContent = DATA.teams.length + ' команд';
-}
-
-function renderMatches() {
-    var container = document.getElementById('matchList');
-    if (!container) return;
+// ============================================================
+// ОТРИСОВКА СЕТКИ
+// ============================================================
+function renderBracket() {
+    var wrapper = document.getElementById('bracketWrapper');
+    if (!wrapper) return;
     updateMatchLinks();
-    container.innerHTML = '';
-    var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
-    var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
-    var sorted = DATA.matches.slice().sort(function(a,b){return a.id - b.id;});
-    for (var i = 0; i < sorted.length; i++) {
-        var m = sorted[i];
-        var t1 = getTeamName(m.team1);
-        var t2 = getTeamName(m.team2);
-        var winner = m.winner ? getTeamName(m.winner) : '—';
-        var isComplete = !!m.winner;
-        var div = document.createElement('div');
-        div.className = 'match-item';
-        var selectHtml = '';
-        if (!isComplete) {
-            selectHtml = '<select onchange="setWinner(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 6px;border-radius:4px;font-size:11px;"><option value="">Выбрать</option>';
-            if (m.team1) selectHtml += '<option value="' + m.team1 + '">' + getTeamName(m.team1) + '</option>';
-            if (m.team2) selectHtml += '<option value="' + m.team2 + '">' + getTeamName(m.team2) + '</option>';
-            selectHtml += '</select>';
-        } else {
-            selectHtml = '<button class="btn btn-sm" onclick="resetMatch(' + m.id + ')">↩️ Сбросить</button>';
+    var upperRounds = {}, lowerRounds = {}, grandMatches = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (m.bracket === 'upper') {
+            if (!upperRounds[m.round]) upperRounds[m.round] = [];
+            upperRounds[m.round].push(m);
+        } else if (m.bracket === 'lower') {
+            if (!lowerRounds[m.round]) lowerRounds[m.round] = [];
+            lowerRounds[m.round].push(m);
+        } else if (m.bracket === 'grand') {
+            grandMatches.push(m);
         }
-        var label = labels[m.bracket] || m.bracket;
-        var cls = classes[m.bracket] || 'upper';
-        div.innerHTML = '<div class="teams"><span>' + t1 + '</span><span class="vs">vs</span><span>' + t2 + '</span>' + (isComplete ? '<span class="winner">→ ' + winner + '</span>' : '') + '</div><div class="meta"><span class="tag ' + cls + '">' + label + '</span><span>Раунд ' + m.round + '</span>' + selectHtml + '</div>';
-        container.appendChild(div);
     }
+    var labels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'ФИНАЛ ВЕРХНЕЙ' };
+    var lowerLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'РАУНД 3', 4: 'ФИНАЛ НИЖНЕЙ' };
+    var html = '<div class="bracket">';
+    var keys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
+    for (var k = 0; k < keys.length; k++) {
+        var r = keys[k];
+        html += '<div class="round"><div class="round-label gold">' + (labels[r] || 'РАУНД ' + r) + '</div>';
+        for (var j = 0; j < upperRounds[r].length; j++) {
+            html += renderMatch(upperRounds[r][j]);
+        }
+        html += '</div>';
+    }
+    var lowerKeys = Object.keys(lowerRounds).sort(function(a,b){return a-b;});
+    for (var lk = 0; lk < lowerKeys.length; lk++) {
+        var lr = lowerKeys[lk];
+        html += '<div class="round"><div class="round-label ox">' + (lowerLabels[lr] || 'РАУНД ' + lr) + '</div>';
+        for (var lj = 0; lj < lowerRounds[lr].length; lj++) {
+            html += renderMatch(lowerRounds[lr][lj]);
+        }
+        html += '</div>';
+    }
+    if (grandMatches.length) {
+        html += '<div class="round"><div class="round-label grand">ГРАНД-ФИНАЛ</div>';
+        for (var gj = 0; gj < grandMatches.length; gj++) {
+            html += renderMatch(grandMatches[gj]);
+        }
+        html += '</div>';
+    }
+    html += '</div>';
+    wrapper.innerHTML = html;
 }
 
+function renderMatch(m) {
+    var t1 = getTeam(m.team1);
+    var t2 = getTeam(m.team2);
+    if (!t1 && !t2) return '<div class="match-empty">ожидание</div>';
+    var w1 = m.winner === m.team1 ? 'win' : (m.winner ? 'loss' : 'pending');
+    var w2 = m.winner === m.team2 ? 'win' : (m.winner ? 'loss' : 'pending');
+    var name1 = t1 ? t1.name : '—';
+    var name2 = t2 ? t2.name : '—';
+    var id1 = t1 ? t1.id : null;
+    var id2 = t2 ? t2.id : null;
+    var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : '';
+    var html = '<div class="match" data-match="' + m.id + '">';
+    html += '<div class="team" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
+    if (m.winner) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'Победа' : 'Поражение') + '</span>';
+    else html += '<span class="status pending">ожидание</span>';
+    html += '</div>';
+    html += '<div class="team" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
+    if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'Победа' : 'Поражение') + '</span>';
+    else html += '<span class="status pending">ожидание</span>';
+    html += '</div>';
+    if (time) html += '<div class="match-info"><span class="time">🕐 ' + time + '</span></div>';
+    html += '</div>';
+    return html;
+}
+
+function formatTime(dt) {
+    if (!dt) return '';
+    try {
+        var d = new Date(dt);
+        return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch(e) { return dt; }
+}
+
+// ============================================================
+// РАСПИСАНИЕ
+// ============================================================
 function renderSchedule() {
-    var container = document.getElementById('scheduleList');
+    var container = document.getElementById('scheduleContainer');
     if (!container) return;
-    container.innerHTML = '';
     var matches = [];
     for (var i = 0; i < DATA.matches.length; i++) {
         if (DATA.matches[i].team1 && DATA.matches[i].team2) matches.push(DATA.matches[i]);
     }
     if (matches.length === 0) {
-        container.innerHTML = '<div class="card" style="text-align:center;color:#5f6773;">Нет матчей</div>';
+        container.innerHTML = '<div class="schedule-empty">📭 Расписание пока не заполнено</div>';
         return;
     }
+    var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
+    var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
+    var html = '<div class="schedule-grid">';
     for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
-        var time = (DATA.schedule && DATA.schedule[m.id]) ? DATA.schedule[m.id] : '';
+        var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : 'Время не указано';
+        var label = labels[m.bracket] || m.bracket;
+        var cls = classes[m.bracket] || 'upper';
+        html += '<div class="schedule-item"><div class="teams"><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span class="time">' + time + '</span><span class="tag ' + cls + '">' + label + '</span></div></div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ============================================================
+// LIVE MATCH
+// ============================================================
+function renderLiveMatch() {
+    var now = new Date();
+    var liveMatch = null;
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.team1 || !m.team2) continue;
+        if (m.winner) continue;
+        var time = DATA.schedule && DATA.schedule[m.id];
+        if (!time) continue;
+        try {
+            var mt = new Date(time);
+            var diff = (now - mt) / (1000 * 60);
+            if (diff > -30 && diff < 120) { liveMatch = m; break; }
+        } catch(e) {}
+    }
+    if (!liveMatch) {
+        var closest = null, closestDiff = Infinity;
+        for (var i = 0; i < DATA.matches.length; i++) {
+            var m = DATA.matches[i];
+            if (!m.team1 || !m.team2) continue;
+            if (m.winner) continue;
+            var time = DATA.schedule && DATA.schedule[m.id];
+            if (!time) continue;
+            try {
+                var mt = new Date(time);
+                var diff = (mt - now) / (1000 * 60);
+                if (diff > -30 && diff < closestDiff) { closestDiff = diff; closest = m; }
+            } catch(e) {}
+        }
+        if (closest) liveMatch = closest;
+    }
+    var team1El = document.getElementById('liveTeam1');
+    var team2El = document.getElementById('liveTeam2');
+    var timeEl = document.getElementById('liveTime');
+    var linksEl = document.getElementById('liveLinks');
+    var label = document.querySelector('.live-match .label');
+    if (!liveMatch) {
+        if (team1El) team1El.textContent = '—';
+        if (team2El) team2El.textContent = '—';
+        if (timeEl) timeEl.textContent = '';
+        if (linksEl) linksEl.innerHTML = '';
+        if (label) label.innerHTML = '<span class="dot" style="opacity:0.3;"></span>ОЖИДАНИЕ МАТЧА';
+        return;
+    }
+    var t1 = getTeam(liveMatch.team1);
+    var t2 = getTeam(liveMatch.team2);
+    if (team1El) team1El.textContent = t1 ? t1.name : '—';
+    if (team2El) team2El.textContent = t2 ? t2.name : '—';
+    var time = DATA.schedule && DATA.schedule[liveMatch.id];
+    if (timeEl) timeEl.textContent = time ? formatTime(time) : '';
+    if (linksEl) {
+        linksEl.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="twitch">📺 Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="vk">📱 VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="tg">💬 Telegram</a>';
+    }
+    if (label) label.innerHTML = '<span class="dot"></span>СЕЙЧАС ИГРАЮТ';
+}
+
+function renderBroadcastPlatforms() {
+    var container = document.getElementById('broadcastPlatforms');
+    if (!container) return;
+    container.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="platform"><span class="dot"></span> Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="platform"><span class="dot"></span> VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="platform"><span class="dot"></span> Telegram</a>';
+}
+
+// ============================================================
+// МОДАЛЬНОЕ ОКНО
+// ============================================================
+function openModal(teamId) {
+    var team = getTeam(teamId);
+    if (!team) return;
+    document.getElementById('modalTitle').textContent = team.name;
+    document.getElementById('modalSub').textContent = 'Состав команды';
+    var container = document.getElementById('modalPlayers');
+    container.innerHTML = '';
+    var roles = ['Керри', 'Мидер', 'Офлейнер', 'Саппорт 4', 'Саппорт 5'];
+    for (var i = 0; i < team.players.length; i++) {
         var div = document.createElement('div');
-        div.className = 'match-item';
-        div.innerHTML = '<div class="teams"><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span>' + (m.winner ? '<span class="winner">✅</span>' : '') + '</div><div class="meta"><input type="datetime-local" value="' + time + '" onchange="setSchedule(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:3px 6px;border-radius:4px;font-size:11px;"/></div>';
+        div.className = 'player';
+        div.innerHTML = '<span>' + team.players[i] + '</span><span class="role">' + (roles[i] || 'Игрок') + '</span>';
         container.appendChild(div);
     }
+    document.getElementById('modalOverlay').classList.add('active');
 }
 
-function addTeam() {
-    var nameInput = document.getElementById('teamNameInput');
-    var playersInput = document.getElementById('teamPlayersInput');
-    var name = nameInput.value.trim();
-    var playersRaw = playersInput.value.trim();
-    if (!name) { showToast('Введите название'); return; }
-    var players = playersRaw ? playersRaw.split(',').map(function(s){return s.trim();}).filter(function(s){return s;}) : [];
-    var maxId = 0;
-    for (var i = 0; i < DATA.teams.length; i++) {
-        if (DATA.teams[i].id > maxId) maxId = DATA.teams[i].id;
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.addEventListener('click', function(e) {
+    var teamEl = e.target.closest('.team');
+    if (teamEl && teamEl.dataset.team) {
+        var id = parseInt(teamEl.dataset.team, 10);
+        if (id) openModal(id);
     }
-    DATA.teams.push({ id: maxId + 1, name: name, players: players });
-    nameInput.value = '';
-    playersInput.value = '';
-    saveData();
-    renderTeams();
-    renderMatches();
+});
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// ============================================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================================
+function init() {
+    loadSavedData();
+    var dates = document.getElementById('tournamentDates');
+    if (dates) dates.textContent = DATA.tournament.dates || 'уточняются';
+    var meta = document.getElementById('headerMeta');
+    if (meta) meta.textContent = DATA.tournament.game + ' · ' + DATA.tournament.matches;
+    renderBracket();
     renderSchedule();
-    showToast('✅ Команда "' + name + '" добавлена!');
+    renderLiveMatch();
+    renderBroadcastPlatforms();
+    setInterval(function() { renderLiveMatch(); }, 30000);
+    setInterval(function() { renderSchedule(); renderBracket(); }, 60000);
+    window.getTournamentData = function() { return DATA; };
+    window.renderBracket = renderBracket;
+    window.renderSchedule = renderSchedule;
+    window.renderLiveMatch = renderLiveMatch;
+    console.log('✅ Compass Arena загружена!');
 }
 
-function deleteTeam(id) {
-    if (!confirm('Удалить команду #' + id + '?')) return;
-    var newTeams = [];
-    for (var i = 0; i < DATA.teams.length; i++) {
-        if (DATA.teams[i].id !== id) newTeams.push(DATA.teams[i]);
-    }
-    DATA.teams = newTeams;
-    for (var j = 0; j < DATA.matches.length; j++) {
-        if (DATA.matches[j].team1 === id) DATA.matches[j].team1 = null;
-        if (DATA.matches[j].team2 === id) DATA.matches[j].team2 = null;
-        if (DATA.matches[j].winner === id) DATA.matches[j].winner = null;
-    }
-    saveData();
-    renderTeams();
-    renderMatches();
-    renderSchedule();
-    showToast('🗑️ Команда удалена');
-}
-
-function editTeam(id) {
-    var team = getTeam(id);
-    if (!team) return;
-    var newName = prompt('Новое название:', team.name);
-    if (newName !== null && newName.trim()) {
-        team.name = newName.trim();
-        saveData();
-        renderTeams();
-        renderMatches();
-        renderSchedule();
-        showToast('✏️ Команда обновлена');
-    }
-}
-
-function setWinner(matchId, teamId) {
-    var match = getMatch(matchId);
-    if (!match || !teamId) return;
-    match.winner = parseInt(teamId, 10);
-    saveData();
-    renderMatches();
-    renderSchedule();
-    if (window.renderBracket) window.renderBracket();
-    showToast('🏆 Победитель матча #' + matchId + ' выбран!');
-}
-
-function resetMatch(matchId) {
-    var match = getMatch(matchId);
-    if (!match) return;
-    if (!confirm('Сбросить результат матча #' + matchId + '?')) return;
-    match.winner = null;
-    saveData();
-    renderMatches();
-    renderSchedule();
-    if (window.renderBracket) window.renderBracket();
-    showToast('↩️ Результат матча #' + matchId + ' сброшен');
-}
-
-function setSchedule(matchId, time) {
-    if (!DATA.schedule) DATA.schedule = {};
-    DATA.schedule[matchId] = time;
-    saveData();
-    showToast('🕐 Время матча #' + matchId + ' сохранено');
-}
-
-function saveSettings() {
-    var name = document.getElementById('settingsName').value.trim();
-    var game = document.getElementById('settingsGame').value.trim();
-    var format = document.getElementById('settingsFormat').value.trim();
-    var dates = document.getElementById('settingsDates').value.trim();
-    DATA.tournament.name = name || 'Compass Arena';
-    DATA.tournament.game = game || 'Dota 2';
-    DATA.tournament.matches = format || 'Bo3';
-    DATA.tournament.dates = dates || 'уточняются';
-    saveData();
-    showToast('💾 Настройки сохранены!');
-}
-
-function exportData() {
-    var blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'compass_data.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('📤 Данные экспортированы');
-}
-
-function importData(event) {
-    var file = event.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            var data = JSON.parse(e.target.result);
-            DATA = data;
-            saveData();
-            renderTeams();
-            renderMatches();
-            renderSchedule();
-            showToast('📥 Данные импортированы!');
-        } catch(err) {
-            showToast('❌ Ошибка импорта');
-        }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-}
-
-function resetData() {
-    if (!confirm('⚠️ Сбросить все данные?')) return;
-    if (!confirm('Точно?')) return;
-    DATA = getDefaultData();
-    saveData();
-    renderTeams();
-    renderMatches();
-    renderSchedule();
-    showToast('🔄 Данные сброшены');
-}
-
-function showToast(msg) {
-    var el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(el._timer);
-    el._timer = setTimeout(function() { el.classList.remove('show'); }, 3000);
-}
-
-// TABS
-var tabs = document.querySelectorAll('.tab');
-for (var i = 0; i < tabs.length; i++) {
-    tabs[i].addEventListener('click', function() {
-        var allTabs = document.querySelectorAll('.tab');
-        for (var j = 0; j < allTabs.length; j++) allTabs[j].classList.remove('active');
-        var allContent = document.querySelectorAll('.tab-content');
-        for (var k = 0; k < allContent.length; k++) allContent[k].classList.remove('active');
-        this.classList.add('active');
-        var target = document.getElementById('tab-' + this.dataset.tab);
-        if (target) target.classList.add('active');
-        if (this.dataset.tab === 'matches') renderMatches();
-        if (this.dataset.tab === 'schedule') renderSchedule();
-    });
-}
-
-// INIT
-loadData();
-document.getElementById('settingsName').value = DATA.tournament.name || 'Compass Arena';
-document.getElementById('settingsGame').value = DATA.tournament.game || 'Dota 2';
-document.getElementById('settingsFormat').value = DATA.tournament.matches || 'Bo3';
-document.getElementById('settingsDates').value = DATA.tournament.dates || '';
-renderTeams();
-renderMatches();
-renderSchedule();
-
-window.addTeam = addTeam;
-window.deleteTeam = deleteTeam;
-window.editTeam = editTeam;
-window.setWinner = setWinner;
-window.resetMatch = resetMatch;
-window.setSchedule = setSchedule;
-window.saveSettings = saveSettings;
-window.exportData = exportData;
-window.importData = importData;
-window.resetData = resetData;
-window.showToast = showToast;
-window.getTournamentData = function() { return DATA; };
-window.renderBracket = function() {};
-
-console.log('✅ Admin panel loaded!');
+document.addEventListener('DOMContentLoaded', init);
 </script>
+
 </body>
 </html>
