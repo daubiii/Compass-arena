@@ -1,625 +1,909 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compass Arena — турнирная сетка</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0d12;
-    --panel: #10141b;
-    --panel-2: #151a22;
-    --line: #242b35;
-    --conn: #3a4250;
-    --gold: #c9a35a;
-    --gold-bright: #e3c48a;
-    --oxblood: #6e3a3a;
-    --oxblood-bright: #b3695f;
-    --text: #eae6da;
-    --text-muted: #97a0ac;
-    --text-dim: #5f6773;
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Compass Arena — турнирная сетка</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0d12;
+            --panel: #10141b;
+            --panel-2: #151a22;
+            --line: #242b35;
+            --conn: #3a4250;
+            --gold: #c9a35a;
+            --gold-bright: #e3c48a;
+            --oxblood: #6e3a3a;
+            --oxblood-bright: #b3695f;
+            --text: #eae6da;
+            --text-muted: #97a0ac;
+            --text-dim: #5f6773;
+            --green: #4caf50;
+            --red: #e74c3c;
+        }
 
-  * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Manrope', sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Manrope', sans-serif;
+            min-height: 100vh;
+        }
 
-  a { color: var(--gold-bright); }
+        a { color: var(--gold-bright); text-decoration: none; }
 
-  .container {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 32px;
-  }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-  .display {
-    font-family: 'Unbounded', sans-serif;
-  }
+        /* ---------- HEADER ---------- */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 100;
+        }
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .header-left .logo {
+            height: 40px;
+            width: auto;
+        }
+        .wordmark {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            letter-spacing: 0.01em;
+            color: var(--text);
+        }
+        .wordmark em {
+            font-style: normal;
+            color: var(--gold);
+        }
+        .header-meta {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 20px;
+            border: 1px solid var(--gold);
+            background: transparent;
+            color: var(--gold-bright);
+            border-radius: 4px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: var(--gold);
+            color: var(--bg);
+        }
+        .btn-primary {
+            background: var(--gold);
+            color: var(--bg);
+        }
+        .btn-primary:hover {
+            background: var(--gold-bright);
+        }
 
-  /* ---------- Header ---------- */
-  header {
-    padding: 26px 0;
-    border-bottom: 1px solid var(--line);
-    position: relative;
-    z-index: 2;
-  }
-  .header-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .wordmark {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 15px;
-    letter-spacing: 0.01em;
-    color: var(--text);
-  }
-  .wordmark em {
-    font-style: normal;
-    color: var(--gold);
-  }
-  .header-meta {
-    font-size: 13px;
-    color: var(--text-dim);
-    font-variant-numeric: tabular-nums;
-  }
+        /* ---------- HERO ---------- */
+        .hero {
+            padding: 60px 0 50px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 42px;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+        .hero h1 .accent { color: var(--gold); }
+        .hero p {
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-  /* ---------- Hero ---------- */
-  .hero {
-    position: relative;
-    padding: 96px 0 88px;
-    overflow: hidden;
-  }
-  .hero-ring {
-    position: absolute;
-    top: -220px;
-    right: -260px;
-    width: 780px;
-    height: 780px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    align-items: center;
-    gap: 40px;
-  }
-  .hero-text h1 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    font-size: 52px;
-    line-height: 1.06;
-    letter-spacing: -0.01em;
-    margin: 0 0 22px;
-  }
-  .hero-text h1 .accent { color: var(--gold); }
-  .hero-text p.lede {
-    max-width: 460px;
-    font-size: 17px;
-    line-height: 1.65;
-    color: var(--text-muted);
-    margin: 0;
-  }
-  .hero-figure {
-    display: flex;
-    justify-content: center;
-  }
-  .hero-figure img {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    filter: drop-shadow(0 0 50px rgba(201,163,90,0.16));
-  }
+        /* ---------- FACTS ---------- */
+        .facts {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+        .facts-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--line);
+        }
+        .fact {
+            background: var(--bg);
+            padding: 16px 24px;
+            text-align: center;
+        }
+        .fact dt {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--gold-bright);
+        }
+        .fact dd {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
 
-  /* ---------- Facts strip ---------- */
-  .facts {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .facts-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin: 0;
-  }
-  .fact {
-    padding: 24px 28px;
-    border-left: 1px solid var(--line);
-  }
-  .fact:first-child { border-left: none; }
-  .fact dt {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    letter-spacing: 0.01em;
-    color: var(--gold-bright);
-    margin: 0 0 5px;
-  }
-  .fact dd {
-    margin: 0;
-    font-size: 13px;
-    color: var(--text-dim);
-  }
+        /* ---------- BRACKET ---------- */
+        .bracket-section {
+            padding: 30px 0;
+        }
+        .bracket-section h2 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+        .bracket-section .sub {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
 
-  /* ---------- Bracket section ---------- */
-  .bracket-section {
-    padding: 80px 0 44px;
-  }
-  .section-kicker {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--text-dim);
-    margin: 0 0 14px;
-  }
-  .bracket-section h2 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 27px;
-    letter-spacing: -0.005em;
-    margin: 0 0 8px;
-  }
-  .bracket-section .section-note {
-    color: var(--text-muted);
-    font-size: 14.5px;
-    line-height: 1.6;
-    margin: 0 0 22px;
-    max-width: 640px;
-  }
-  .bracket-scroll {
-    overflow-x: auto;
-    padding-bottom: 20px;
-  }
-  .bracket-scroll::-webkit-scrollbar { height: 8px; }
-  .bracket-scroll::-webkit-scrollbar-track { background: var(--panel); }
-  .bracket-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+        .bracket-wrapper {
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+        .bracket-wrapper::-webkit-scrollbar { height: 8px; }
+        .bracket-wrapper::-webkit-scrollbar-track { background: var(--panel); }
+        .bracket-wrapper::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
 
-  svg.bracket-svg {
-    display: block;
-    min-width: 1482px;
-    width: 1482px;
-  }
-  .section-label {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-  }
-  .section-label.gold-label { fill: var(--gold); }
-  .section-label.ox-label { fill: var(--oxblood-bright); }
-  .slot-txt {
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    fill: var(--text);
-  }
-  .slot-txt.muted { fill: var(--text-dim); }
-  .match-num {
-    font-family: 'Manrope', sans-serif;
-    font-size: 11px;
-    fill: var(--text-dim);
-  }
+        .bracket {
+            display: flex;
+            gap: 40px;
+            min-width: 1100px;
+            padding: 10px 0;
+        }
 
-  .legend {
-    display: flex;
-    gap: 26px;
-    flex-wrap: wrap;
-    margin-bottom: 26px;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-  .legend-item { display: flex; align-items: center; gap: 8px; }
-  .legend-swatch {
-    width: 20px; height: 2px; display: inline-block;
-  }
-  .legend-swatch.gold { background: var(--gold); }
-  .legend-swatch.ox { background: var(--oxblood-bright); }
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            min-width: 180px;
+        }
+        .round-label {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .round-label.gold { color: var(--gold); }
+        .round-label.ox { color: var(--oxblood-bright); }
+        .round-label.grand { color: var(--gold-bright); font-size: 11px; }
 
-  /* ---------- Format explainer ---------- */
-  .format {
-    padding: 60px 0;
-    border-top: 1px solid var(--line);
-  }
-  .format-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--line);
-  }
-  .format-item {
-    background: var(--bg);
-    padding: 4px 28px 4px 24px;
-    border-left: 2px solid var(--gold);
-  }
-  .format-item.ox { border-left-color: var(--oxblood-bright); }
-  .format-item h3 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 15px;
-    color: var(--text);
-    margin: 0 0 10px;
-  }
-  .format-item p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.65;
-    color: var(--text-muted);
-  }
+        .match {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            padding: 8px 12px;
+            min-height: 64px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+        .match:hover {
+            border-color: var(--gold);
+            background: var(--panel-2);
+        }
+        .match .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 13px;
+            color: var(--text);
+        }
+        .match .team .seed {
+            font-size: 10px;
+            color: var(--text-dim);
+            width: 18px;
+        }
+        .match .team .name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .match .team .status {
+            font-size: 10px;
+            padding: 1px 8px;
+            border-radius: 10px;
+        }
+        .match .team .status.win { background: var(--green); color: #fff; }
+        .match .team .status.loss { background: var(--red); color: #fff; }
+        .match .team .status.pending { background: var(--line); color: var(--text-dim); }
 
-  /* ---------- Broadcast ---------- */
-  .broadcast {
-    padding: 60px 0 80px;
-    border-top: 1px solid var(--line);
-  }
-  .broadcast-inner {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: 24px;
-  }
-  .broadcast h2 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 24px;
-    margin: 0 0 10px;
-  }
-  .broadcast p {
-    max-width: 440px;
-    color: var(--text-muted);
-    font-size: 14.5px;
-    line-height: 1.6;
-    margin: 0;
-  }
-  .platforms {
-    display: flex;
-    gap: 12px;
-  }
-  .platform {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    border: 1px solid var(--line);
-    padding: 11px 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 12.5px;
-    letter-spacing: 0.01em;
-    color: var(--text);
-  }
-  .platform .dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
-    box-shadow: 0 0 6px var(--gold);
-  }
+        .match .match-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-top: 4px;
+            border-top: 1px solid var(--line);
+            padding-top: 4px;
+        }
+        .match .match-info .time { color: var(--gold-bright); }
 
-  footer {
-    border-top: 1px solid var(--line);
-    padding: 26px 0;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+        .match-empty {
+            background: var(--panel);
+            border: 1px dashed var(--line);
+            border-radius: 4px;
+            padding: 8px 12px;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 12px;
+        }
 
-  @media (max-width: 860px) {
-    .hero-inner { grid-template-columns: 1fr; text-align: left; }
-    .hero-figure { order: -1; max-width: 220px; margin: 0 auto 12px; }
-    .hero-ring { opacity: 0.5; }
-    .facts-row { grid-template-columns: repeat(2, 1fr); }
-    .fact:nth-child(3) { border-left: none; }
-    .format-grid { grid-template-columns: 1fr; }
-    .broadcast-inner { grid-template-columns: 1fr; align-items: start; }
-  }
-  @media (max-width: 640px) {
-    .hero-text h1 { font-size: 36px; }
-    .container { padding: 0 20px; }
-  }
-</style>
+        /* ---------- LEGEND ---------- */
+        .legend {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin: 16px 0 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-swatch {
+            width: 20px;
+            height: 2px;
+            display: inline-block;
+        }
+        .legend-swatch.gold { background: var(--gold); }
+        .legend-swatch.ox { background: var(--oxblood-bright); }
+
+        /* ---------- MODAL ---------- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--panel);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 32px 40px;
+            max-width: 420px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: var(--text); }
+        .modal h2 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .modal .sub {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .modal .player {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--line);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal .player:last-child { border-bottom: none; }
+        .modal .player .role {
+            font-size: 10px;
+            color: var(--text-dim);
+            background: var(--line);
+            padding: 1px 8px;
+            border-radius: 10px;
+        }
+
+        /* ---------- FORMAT ---------- */
+        .format-section {
+            padding: 40px 0;
+            border-top: 1px solid var(--line);
+            margin-top: 30px;
+        }
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--line);
+        }
+        .format-item {
+            background: var(--bg);
+            padding: 20px 24px;
+            border-left: 2px solid var(--gold);
+        }
+        .format-item.ox { border-left-color: var(--oxblood-bright); }
+        .format-item h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .format-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ---------- BROADCAST ---------- */
+        .broadcast {
+            padding: 40px 0 60px;
+            border-top: 1px solid var(--line);
+        }
+        .broadcast-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .broadcast h2 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 22px;
+        }
+        .broadcast p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .platforms {
+            display: flex;
+            gap: 12px;
+        }
+        .platform {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--line);
+            padding: 10px 18px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 12px;
+            color: var(--text);
+            border-radius: 4px;
+        }
+        .platform .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 6px var(--gold);
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 20px 0;
+            font-size: 12px;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 860px) {
+            .hero h1 { font-size: 28px; }
+            .facts-row { grid-template-columns: repeat(2, 1fr); }
+            .format-grid { grid-template-columns: 1fr; }
+            .broadcast-inner { flex-direction: column; align-items: flex-start; }
+            .bracket { gap: 20px; min-width: 800px; }
+            .round { min-width: 140px; }
+            .header-left .logo { height: 30px; }
+            .wordmark { font-size: 15px; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 22px; }
+            .container { padding: 0 16px; }
+            .modal { padding: 20px; }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="container header-row">
-    <div class="wordmark">COMPASS <em>ARENA</em></div>
-    <div class="header-meta">DOTA 2 · 8 SLOTS</div>
-  </div>
-</header>
+    <!-- HEADER -->
+    <header>
+        <div class="container header-row">
+            <div class="header-left">
+                <img src="logo.png" alt="Compass Arena" class="logo" id="logoImg" onerror="this.style.display='none'">
+                <span class="wordmark">COMPASS <em>ARENA</em></span>
+            </div>
+            <div class="header-actions">
+                <span class="header-meta" id="headerMeta">Dota 2 · Bo3</span>
+                <a href="admin.html" class="btn">Управление</a>
+            </div>
+        </div>
+    </header>
 
-<section class="hero">
-  <svg class="hero-ring" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg"><circle cx="450" cy="450" r="420" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.35"/><circle cx="450" cy="450" r="398" fill="none" stroke="var(--gold)" stroke-width="0.6" opacity="0.22"/><line x1="870.0" y1="450.0" x2="856.0" y2="450.0" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="867.7" y1="493.9" x2="860.7" y2="493.2" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="860.8" y1="537.3" x2="854.0" y2="535.9" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="849.4" y1="579.8" x2="842.8" y2="577.6" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="833.7" y1="620.8" x2="827.3" y2="618.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="813.7" y1="660.0" x2="807.7" y2="656.5" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="789.8" y1="696.9" x2="784.1" y2="692.8" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="762.1" y1="731.0" x2="751.7" y2="721.7" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="731.0" y1="762.1" x2="726.4" y2="756.9" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="696.9" y1="789.8" x2="692.8" y2="784.1" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="660.0" y1="813.7" x2="656.5" y2="807.7" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="620.8" y1="833.7" x2="618.0" y2="827.3" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="579.8" y1="849.4" x2="577.6" y2="842.8" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="537.3" y1="860.8" x2="535.9" y2="854.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="493.9" y1="867.7" x2="492.4" y2="853.8" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="450.0" y1="870.0" x2="450.0" y2="863.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="406.1" y1="867.7" x2="406.8" y2="860.7" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="362.7" y1="860.8" x2="364.1" y2="854.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="320.2" y1="849.4" x2="322.4" y2="842.8" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="279.2" y1="833.7" x2="282.0" y2="827.3" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="240.0" y1="813.7" x2="243.5" y2="807.7" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="203.1" y1="789.8" x2="211.4" y2="778.5" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="169.0" y1="762.1" x2="173.6" y2="756.9" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="137.9" y1="731.0" x2="143.1" y2="726.4" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="110.2" y1="696.9" x2="115.9" y2="692.8" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="86.3" y1="660.0" x2="92.3" y2="656.5" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="66.3" y1="620.8" x2="72.7" y2="618.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="50.6" y1="579.8" x2="57.2" y2="577.6" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="39.2" y1="537.3" x2="52.9" y2="534.4" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="32.3" y1="493.9" x2="39.3" y2="493.2" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="30.0" y1="450.0" x2="37.0" y2="450.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="32.3" y1="406.1" x2="39.3" y2="406.8" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="39.2" y1="362.7" x2="46.0" y2="364.1" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="50.6" y1="320.2" x2="57.2" y2="322.4" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="66.3" y1="279.2" x2="72.7" y2="282.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="86.3" y1="240.0" x2="98.4" y2="247.0" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="110.2" y1="203.1" x2="115.9" y2="207.2" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="137.9" y1="169.0" x2="143.1" y2="173.6" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="169.0" y1="137.9" x2="173.6" y2="143.1" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="203.1" y1="110.2" x2="207.2" y2="115.9" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="240.0" y1="86.3" x2="243.5" y2="92.3" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="279.2" y1="66.3" x2="282.0" y2="72.7" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="320.2" y1="50.6" x2="324.5" y2="63.9" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="362.7" y1="39.2" x2="364.1" y2="46.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="406.1" y1="32.3" x2="406.8" y2="39.3" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="450.0" y1="30.0" x2="450.0" y2="37.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="493.9" y1="32.3" x2="493.2" y2="39.3" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="537.3" y1="39.2" x2="535.9" y2="46.0" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="579.8" y1="50.6" x2="577.6" y2="57.2" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="620.8" y1="66.3" x2="615.1" y2="79.1" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="660.0" y1="86.3" x2="656.5" y2="92.3" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="696.9" y1="110.2" x2="692.8" y2="115.9" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="731.0" y1="137.9" x2="726.4" y2="143.1" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="762.1" y1="169.0" x2="756.9" y2="173.6" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="789.8" y1="203.1" x2="784.1" y2="207.2" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="813.7" y1="240.0" x2="807.7" y2="243.5" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="833.7" y1="279.2" x2="820.9" y2="284.9" stroke="var(--gold)" stroke-width="1.4" opacity="0.55"/><line x1="849.4" y1="320.2" x2="842.8" y2="322.4" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="860.8" y1="362.7" x2="854.0" y2="364.1" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/><line x1="867.7" y1="406.1" x2="860.7" y2="406.8" stroke="var(--gold)" stroke-width="0.8" opacity="0.22"/></svg>
-  <div class="container hero-inner">
-    <div class="hero-text">
-      <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
-      <p class="lede">Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
-    </div>
-    <div class="hero-figure">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAACAGAIAAAD... [BASE64_IMAGE_TRUNCATED_FOR_BREVITY]" alt="Compass Arena">
-    </div>
-  </div>
-</section>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
+            <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
+        </div>
+    </section>
 
-<section class="facts">
-  <div class="container">
-    <dl class="facts-row">
-      <div class="fact"><dt>8 команд</dt><dd>слоты открыты</dd></div>
-      <div class="fact"><dt>Double elimination</dt><dd>формат TI</dd></div>
-      <div class="fact"><dt>Bo3</dt><dd>во всех раундах</dd></div>
-      <div class="fact"><dt>Даты</dt><dd>уточняются</dd></div>
-    </dl>
-  </div>
-</section>
+    <!-- FACTS -->
+    <section class="facts">
+        <div class="container">
+            <dl class="facts-row" id="factsRow">
+                <div class="fact"><dt>8 команд</dt><dd>слоты открыты</dd></div>
+                <div class="fact"><dt>Double elimination</dt><dd>формат TI</dd></div>
+                <div class="fact"><dt>Bo3</dt><dd>во всех раундах</dd></div>
+                <div class="fact"><dt>Даты</dt><dd id="tournamentDates">уточняются</dd></div>
+            </dl>
+        </div>
+    </section>
 
-<section class="bracket-section">
-  <div class="container">
-    <p class="section-kicker">ТУРНИРНАЯ СЕТКА</p>
-    <h2>Путь к трофею</h2>
-    <p class="section-note">Слоты будут заполнены по мере регистрации команд. Проигравшие в верхней сетке переходят в нижнюю — подробнее в разделе «Формат» ниже. Номер у скобки — порядковый номер матча.</p>
-    <div class="legend">
-      <div class="legend-item"><span class="legend-swatch gold"></span> Верхняя сетка</div>
-      <div class="legend-item"><span class="legend-swatch ox"></span> Нижняя сетка</div>
-    </div>
-    <div class="bracket-scroll">
-      <svg class="bracket-svg" viewBox="0 0 1482 1268" xmlns="http://www.w3.org/2000/svg">
-        <text x="58.0" y="104.0" class="match-num" text-anchor="start">№1</text>
-        <text x="58.0" y="244.0" class="match-num" text-anchor="start">№2</text>
-        <text x="58.0" y="484.0" class="match-num" text-anchor="start">№3</text>
-        <text x="58.0" y="624.0" class="match-num" text-anchor="start">№4</text>
-        <path d="M242.0,140.0 H290.7" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M242.0,280.0 H290.7" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M290.7,140.0 V280.0" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M290.7,210.0 H358.0" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <text x="282.7" y="202.0" class="match-num" text-anchor="end">№7</text>
-        <path d="M242.0,520.0 H290.7" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M242.0,660.0 H290.7" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M290.7,520.0 V660.0" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M290.7,590.0 H358.0" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <text x="282.7" y="582.0" class="match-num" text-anchor="end">№8</text>
-        <text x="58.0" y="954.0" class="match-num" text-anchor="start">№5</text>
-        <text x="58.0" y="1334.0" class="match-num" text-anchor="start">№6</text>
-        <path d="M542.0,210.0 H590.7" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M542.0,590.0 H590.7" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M590.7,210.0 V590.0" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <path d="M590.7,400.0 H658.0" fill="none" stroke="var(--conn)" stroke-width="1.4"/>
-        <text x="582.7" y="392.0" class="match-num" text-anchor="end">№12</text>
-        <path d="M242.0,990.0 H358.0" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <text x="292.0" y="954.0" class="match-num" text-anchor="end">№9</text>
-        <path d="M242.0,1370.0 H358.0" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <text x="292.0" y="1334.0" class="match-num" text-anchor="end">№10</text>
-        <path d="M542.0,990.0 H590.7" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <path d="M542.0,1370.0 H590.7" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <path d="M590.7,990.0 V1370.0" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <path d="M590.7,1180.0 H658.0" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <text x="582.7" y="1172.0" class="match-num" text-anchor="end">№11</text>
-        <path d="M842.0,400.0 H1050.0 V790.0 H1258.0" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
-        <path d="M842.0,1180.0 H900.0 V1180.0 H958.0" fill="none" stroke="var(--oxblood-bright)" stroke-width="1.4"/>
-        <text x="892.0" y="1172.0" class="match-num" text-anchor="end">№13</text>
-        <path d="M1142.0,1180.0 H1200.0 V790.0 H1258.0" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
-        <text x="1258.0" y="754.0" class="match-num" text-anchor="start">№14</text>
-        
-        <!-- COLUMN HEADERS -->
-        <g class="col-header">
-          <rect x="58.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--gold)" stroke-width="1"/>
-          <text x="150.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--gold-bright);">РАУНД 1</text>
-        </g>
-        <g class="col-header">
-          <rect x="358.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--gold)" stroke-width="1"/>
-          <text x="450.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--gold-bright);">РАУНД 2</text>
-        </g>
-        <g class="col-header">
-          <rect x="658.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--gold)" stroke-width="1"/>
-          <text x="750.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--gold-bright);">ФИНАЛ ВЕРХНЕЙ СЕТКИ</text>
-        </g>
-        <g class="col-header">
-          <rect x="1258.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--gold)" stroke-width="1"/>
-          <text x="1350.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--gold-bright);">ГРАНД-ФИНАЛ</text>
-        </g>
-        <g class="col-header">
-          <rect x="58.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--oxblood)" stroke-width="1"/>
-          <text x="150.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--oxblood-bright);">РАУНД НИЖНЕЙ СЕТКИ 1</text>
-        </g>
-        <g class="col-header">
-          <rect x="358.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--oxblood)" stroke-width="1"/>
-          <text x="450.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--oxblood-bright);">РАУНД НИЖНЕЙ СЕТКИ 2</text>
-        </g>
-        <g class="col-header">
-          <rect x="658.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--oxblood)" stroke-width="1"/>
-          <text x="750.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--oxblood-bright);">РАУНД НИЖНЕЙ СЕТКИ 3</text>
-        </g>
-        <g class="col-header">
-          <rect x="958.0" y="0" width="184" height="34" fill="var(--panel-2)" stroke="var(--oxblood)" stroke-width="1"/>
-          <text x="1050.0" y="21.0" text-anchor="middle" style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.04em;fill:var(--oxblood-bright);">ФИНАЛ НИЖНЕЙ СЕТКИ</text>
-        </g>
-        
-        <text x="58.0" y="46.0" class="section-label gold-label">ВЕРХНЯЯ СЕТКА</text>
-        <text x="58.0" y="806.0" class="section-label ox-label">НИЖНЯЯ СЕТКА</text>
-        
-        <!-- MATCHES UPPER BRACKET ROUND 1 -->
-        <g class="match">
-          <rect x="58.0" y="112.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="58.0" y1="140.0" x2="242.0" y2="140.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="72.0" y="130.0" class="slot-txt" data-slot="0"></text>
-          <text x="72.0" y="156.0" class="slot-txt" data-slot="1"></text>
-        </g>
-        <g class="match">
-          <rect x="58.0" y="252.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="58.0" y1="280.0" x2="242.0" y2="280.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="72.0" y="270.0" class="slot-txt" data-slot="2"></text>
-          <text x="72.0" y="296.0" class="slot-txt" data-slot="3"></text>
-        </g>
-        <g class="match">
-          <rect x="58.0" y="492.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="58.0" y1="520.0" x2="242.0" y2="520.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="72.0" y="510.0" class="slot-txt" data-slot="4"></text>
-          <text x="72.0" y="536.0" class="slot-txt" data-slot="5"></text>
-        </g>
-        <g class="match">
-          <rect x="58.0" y="632.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="58.0" y1="660.0" x2="242.0" y2="660.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="72.0" y="650.0" class="slot-txt" data-slot="6"></text>
-          <text x="72.0" y="676.0" class="slot-txt" data-slot="7"></text>
-        </g>
-        
-        <!-- MATCHES UPPER BRACKET ROUND 2 -->
-        <g class="match">
-          <rect x="358.0" y="182.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="358.0" y1="210.0" x2="542.0" y2="210.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="372.0" y="200.0" class="slot-txt">—</text>
-          <text x="372.0" y="226.0" class="slot-txt">—</text>
-        </g>
-        <g class="match">
-          <rect x="358.0" y="562.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="358.0" y1="590.0" x2="542.0" y2="590.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="372.0" y="580.0" class="slot-txt">—</text>
-          <text x="372.0" y="606.0" class="slot-txt">—</text>
-        </g>
-        
-        <!-- UPPER BRACKET FINAL -->
-        <g class="match">
-          <rect x="658.0" y="372.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.6"/>
-          <line x1="658.0" y1="400.0" x2="842.0" y2="400.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="672.0" y="390.0" class="slot-txt">—</text>
-          <text x="672.0" y="416.0" class="slot-txt">—</text>
-        </g>
-        
-        <!-- GRAND FINAL -->
-        <g class="match">
-          <rect x="1258.0" y="762.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.6"/>
-          <line x1="1258.0" y1="790.0" x2="1442.0" y2="790.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="1272.0" y="780.0" class="slot-txt">—</text>
-          <text x="1272.0" y="806.0" class="slot-txt">—</text>
-        </g>
-        
-        <!-- LOWER BRACKET ROUND 1 -->
-        <g class="match">
-          <rect x="58.0" y="962.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="58.0" y1="990.0" x2="242.0" y2="990.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="72.0" y="980.0" class="slot-txt muted">—</text>
-          <text x="72.0" y="1006.0" class="slot-txt muted">—</text>
-        </g>
-        <g class="match">
-          <rect x="58.0" y="1342.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="58.0" y1="1370.0" x2="242.0" y2="1370.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="72.0" y="1360.0" class="slot-txt muted">—</text>
-          <text x="72.0" y="1386.0" class="slot-txt muted">—</text>
-        </g>
-        
-        <!-- LOWER BRACKET ROUND 2 -->
-        <g class="match">
-          <rect x="358.0" y="962.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="358.0" y1="990.0" x2="542.0" y2="990.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="372.0" y="980.0" class="slot-txt muted">—</text>
-          <text x="372.0" y="1006.0" class="slot-txt muted">—</text>
-        </g>
-        <g class="match">
-          <rect x="358.0" y="1342.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="358.0" y1="1370.0" x2="542.0" y2="1370.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="372.0" y="1360.0" class="slot-txt muted">—</text>
-          <text x="372.0" y="1386.0" class="slot-txt muted">—</text>
-        </g>
-        
-        <!-- LOWER BRACKET ROUND 3 -->
-        <g class="match">
-          <rect x="658.0" y="1152.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="658.0" y1="1180.0" x2="842.0" y2="1180.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="672.0" y="1170.0" class="slot-txt muted">—</text>
-          <text x="672.0" y="1196.0" class="slot-txt muted">—</text>
-        </g>
-        
-        <!-- LOWER BRACKET FINAL -->
-        <g class="match">
-          <rect x="958.0" y="1152.0" width="184" height="56" rx="2" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
-          <line x1="958.0" y1="1180.0" x2="1142.0" y2="1180.0" stroke="var(--line)" stroke-width="1"/>
-          <text x="972.0" y="1170.0" class="slot-txt muted">—</text>
-          <text x="972.0" y="1196.0" class="slot-txt muted">—</text>
-        </g>
-        
-      </svg>
-    </div>
-  </div>
-</section>
+    <!-- BRACKET -->
+    <section class="bracket-section">
+        <div class="container">
+            <h2>Путь к трофею</h2>
+            <p class="sub">Слоты заполняются по мере регистрации. Проигравшие в верхней сетке переходят в нижнюю.</p>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-swatch gold"></span> Верхняя сетка</div>
+                <div class="legend-item"><span class="legend-swatch ox"></span> Нижняя сетка</div>
+            </div>
+            <div class="bracket-wrapper" id="bracketWrapper">
+                <!-- Сюда будет вставлена сетка -->
+            </div>
+        </div>
+    </section>
 
-<section class="format">
-  <div class="container">
-    <p class="section-kicker">ФОРМАТ</p>
-    <div class="format-grid">
-      <div class="format-item">
-        <h3>Верхняя сетка</h3>
-        <p>Поражение здесь не выбивает команду из турнира — она спускается в нижнюю сетку и продолжает борьбу за место в гранд-финале.</p>
-      </div>
-      <div class="format-item ox">
-        <h3>Нижняя сетка</h3>
-        <p>Второй шанс для тех, кто уже проиграл один раз. Поражение здесь — выбывание из турнира без права на реванш.</p>
-      </div>
-      <div class="format-item">
-        <h3>Гранд-финал</h3>
-        <p>Победитель верхней сетки встречается с победителем нижней. Bo3 решает, кто поднимет трофей Compass Arena.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- FORMAT -->
+    <section class="format-section">
+        <div class="container">
+            <div class="format-grid">
+                <div class="format-item">
+                    <h3>Верхняя сетка</h3>
+                    <p>Поражение не выбивает — команда спускается в нижнюю сетку и продолжает борьбу за место в гранд-финале.</p>
+                </div>
+                <div class="format-item ox">
+                    <h3>Нижняя сетка</h3>
+                    <p>Второй шанс для проигравших. Поражение здесь — выбывание из турнира без права на реванш.</p>
+                </div>
+                <div class="format-item">
+                    <h3>Гранд-финал</h3>
+                    <p>Победитель верхней сетки встречается с победителем нижней. Bo3 решает, кто поднимет трофей.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section class="broadcast">
-  <div class="container broadcast-inner">
-    <div>
-      <p class="section-kicker">ТРАНСЛЯЦИЯ</p>
-      <h2>Смотрите вживую</h2>
-      <p>Все матчи будут показаны в прямом эфире. Комментаторская команда объявится позже.</p>
-    </div>
-    <div class="platforms">
-      <div class="platform"><span class="dot"></span> Twitch</div>
-      <div class="platform"><span class="dot"></span> ВКонтакте</div>
-    </div>
-  </div>
-</section>
+    <!-- BROADCAST -->
+    <section class="broadcast">
+        <div class="container broadcast-inner">
+            <div>
+                <h2>Смотрите вживую</h2>
+                <p>Все матчи будут показаны в прямом эфире. Комментаторская команда объявится позже.</p>
+            </div>
+            <div class="platforms">
+                <div class="platform"><span class="dot"></span> Twitch</div>
+                <div class="platform"><span class="dot"></span> ВКонтакте</div>
+            </div>
+        </div>
+    </section>
 
-<footer>
-  <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-    <span>Compass Arena — организатор турниров по Dota 2</span>
-    <span>Основано в 2026</span>
-  </div>
-</footer>
+    <!-- FOOTER -->
+    <footer>
+        <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <span>Compass Arena — организатор турниров по Dota 2</span>
+            <span>Основано в 2026</span>
+        </div>
+    </footer>
 
-<script>
-  // Загружаем конфиг и обновляем данные на странице
-  fetch('config.json')
-    .then(response => response.json())
-    .then(config => {
-      // Обновляем названия команд в слотах
-      const teams = config.teams.upper_bracket;
-      
-      // Находим все слоты на SVG-схеме
-      const slots = document.querySelectorAll('.slot-txt');
-      
-      // Первые 8 слотов заполняем названиями команд
-      for (let i = 0; i < 8 && i < slots.length; i++) {
-        if (teams[i]) {
-          slots[i].textContent = teams[i];
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h2 id="modalTitle">Team Name</h2>
+            <div class="sub" id="modalSub">Состав команды</div>
+            <div id="modalPlayers"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. ДАННЫЕ (можно вынести в config.json, но для простоты пока здесь)
+        // ============================================================
+        const DATA = {
+            tournament: {
+                name: "Compass Arena",
+                game: "Dota 2",
+                format: "Double Elimination",
+                matches: "Bo3",
+                dates: "уточняются"
+            },
+            teams: [
+                { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
+                { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
+                { id: 3, name: "Team Liquid", players: ["m1CKe", "Nisha", "33", "Boxi", "Insania"] },
+                { id: 4, name: "OG", players: ["Yuragi", "bzm", "ATF", "Taiga", "Misha"] },
+                { id: 5, name: "Gaimin Gladiators", players: ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"] },
+                { id: 6, name: "BetBoom Team", players: ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"] },
+                { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
+                { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
+            ],
+            // Результаты матчей: winner = id команды или null
+            matches: [
+                // Upper Bracket Round 1
+                { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
+                { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
+                { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
+                { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
+                // Upper Bracket Round 2
+                { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+                { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+                // Upper Bracket Final
+                { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
+                // Lower Bracket Round 1 (проигравшие из R1)
+                { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+                { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+                // Lower Bracket Round 2
+                { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+                { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+                // Lower Bracket Round 3
+                { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
+                // Lower Bracket Final
+                { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
+                // Grand Final
+                { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+            ],
+            schedule: {}
+        };
+
+        // ============================================================
+        // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ============================================================
+        function getTeam(id) {
+            return DATA.teams.find(t => t.id === id) || null;
         }
-      }
-      
-      // Обновляем информацию о турнире в хедере
-      const headerMeta = document.querySelector('.header-meta');
-      if (headerMeta && config.tournament) {
-        headerMeta.textContent = config.tournament.game + ' · ' + config.tournament.matches;
-      }
-      
-      console.log('✅ Конфиг загружен! Команды:', teams);
-    })
-    .catch(error => console.error('❌ Ошибка загрузки конфига:', error));
-</script>
+
+        function getTeamName(id) {
+            const t = getTeam(id);
+            return t ? t.name : '—';
+        }
+
+        function getMatch(id) {
+            return DATA.matches.find(m => m.id === id) || null;
+        }
+
+        function getMatchesByRound(round, bracket) {
+            return DATA.matches.filter(m => m.round === round && m.bracket === bracket);
+        }
+
+        function getMatchesByBracket(bracket) {
+            return DATA.matches.filter(m => m.bracket === bracket);
+        }
+
+        // Определяем, кто проиграл в матче
+        function getLoser(match) {
+            if (!match.winner) return null;
+            if (match.team1 === match.winner) return match.team2;
+            if (match.team2 === match.winner) return match.team1;
+            return null;
+        }
+
+        // Обновляет team1/team2 для матчей на основе победителей предыдущих
+        function updateMatchLinks() {
+            // Upper Bracket Round 2
+            const m5 = getMatch(5);
+            const m6 = getMatch(6);
+            const m1 = getMatch(1);
+            const m2 = getMatch(2);
+            const m3 = getMatch(3);
+            const m4 = getMatch(4);
+            if (m5) { m5.team1 = m1 ? m1.winner : null; m5.team2 = m2 ? m2.winner : null; }
+            if (m6) { m6.team1 = m3 ? m3.winner : null; m6.team2 = m4 ? m4.winner : null; }
+
+            // Upper Bracket Final
+            const m7 = getMatch(7);
+            if (m7) { m7.team1 = m5 ? m5.winner : null; m7.team2 = m6 ? m6.winner : null; }
+
+            // Lower Bracket Round 1 — проигравшие из R1
+            const m8 = getMatch(8);
+            const m9 = getMatch(9);
+            if (m8) { m8.team1 = getLoser(m1); m8.team2 = getLoser(m2); }
+            if (m9) { m9.team1 = getLoser(m3); m9.team2 = getLoser(m4); }
+
+            // Lower Bracket Round 2
+            const m10 = getMatch(10);
+            const m11 = getMatch(11);
+            const m5Loser = getLoser(m5);
+            const m6Loser = getLoser(m6);
+            if (m10) { m10.team1 = m8 ? m8.winner : null; m10.team2 = m5Loser; }
+            if (m11) { m11.team1 = m9 ? m9.winner : null; m11.team2 = m6Loser; }
+
+            // Lower Bracket Round 3
+            const m12 = getMatch(12);
+            if (m12) { m12.team1 = m10 ? m10.winner : null; m12.team2 = m11 ? m11.winner : null; }
+
+            // Lower Bracket Final
+            const m13 = getMatch(13);
+            const m7Loser = getLoser(m7);
+            if (m13) { m13.team1 = m12 ? m12.winner : null; m13.team2 = m7Loser; }
+
+            // Grand Final
+            const m14 = getMatch(14);
+            if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
+        }
+
+        // ============================================================
+        // 3. ОТРИСОВКА СЕТКИ
+        // ============================================================
+        function renderBracket() {
+            const wrapper = document.getElementById('bracketWrapper');
+            if (!wrapper) return;
+
+            updateMatchLinks();
+
+            // Группируем матчи по раундам для верхней сетки
+            const upperRounds = {};
+            const lowerRounds = {};
+            const grandMatches = [];
+
+            DATA.matches.forEach(m => {
+                if (m.bracket === 'upper') {
+                    if (!upperRounds[m.round]) upperRounds[m.round] = [];
+                    upperRounds[m.round].push(m);
+                } else if (m.bracket === 'lower') {
+                    if (!lowerRounds[m.round]) lowerRounds[m.round] = [];
+                    lowerRounds[m.round].push(m);
+                } else if (m.bracket === 'grand') {
+                    grandMatches.push(m);
+                }
+            });
+
+            let html = '<div class="bracket">';
+
+            // --- UPPER BRACKET ---
+            const upperRoundLabels = {
+                1: 'РАУНД 1',
+                2: 'РАУНД 2',
+                3: 'ФИНАЛ ВЕРХНЕЙ'
+            };
+            const upperKeys = Object.keys(upperRounds).sort((a,b) => a - b);
+            upperKeys.forEach(round => {
+                html += `<div class="round">`;
+                html += `<div class="round-label gold">${upperRoundLabels[round] || 'РАУНД ' + round}</div>`;
+                upperRounds[round].forEach(m => {
+                    html += renderMatch(m);
+                });
+                html += `</div>`;
+            });
+
+            // --- LOWER BRACKET ---
+            const lowerRoundLabels = {
+                1: 'РАУНД 1',
+                2: 'РАУНД 2',
+                3: 'РАУНД 3',
+                4: 'ФИНАЛ НИЖНЕЙ'
+            };
+            const lowerKeys = Object.keys(lowerRounds).sort((a,b) => a - b);
+            lowerKeys.forEach(round => {
+                html += `<div class="round">`;
+                html += `<div class="round-label ox">${lowerRoundLabels[round] || 'РАУНД ' + round}</div>`;
+                lowerRounds[round].forEach(m => {
+                    html += renderMatch(m);
+                });
+                html += `</div>`;
+            });
+
+            // --- GRAND FINAL ---
+            if (grandMatches.length) {
+                html += `<div class="round">`;
+                html += `<div class="round-label grand">ГРАНД-ФИНАЛ</div>`;
+                grandMatches.forEach(m => {
+                    html += renderMatch(m);
+                });
+                html += `</div>`;
+            }
+
+            html += '</div>';
+            wrapper.innerHTML = html;
+        }
+
+        function renderMatch(m) {
+            const t1 = getTeam(m.team1);
+            const t2 = getTeam(m.team2);
+            const hasTeams = t1 || t2;
+
+            if (!hasTeams) {
+                return `<div class="match-empty">ожидание</div>`;
+            }
+
+            const w1 = m.winner === m.team1 ? 'win' : (m.winner ? 'loss' : 'pending');
+            const w2 = m.winner === m.team2 ? 'win' : (m.winner ? 'loss' : 'pending');
+
+            const name1 = t1 ? t1.name : '—';
+            const name2 = t2 ? t2.name : '—';
+            const id1 = t1 ? t1.id : null;
+            const id2 = t2 ? t2.id : null;
+
+            // Время матча (если есть)
+            const time = DATA.schedule && DATA.schedule[m.id] ? DATA.schedule[m.id] : '';
+
+            let html = `<div class="match" data-match="${m.id}">`;
+            html += `<div class="team" data-team="${id1}">`;
+            html += `<span class="seed">#${id1 || '?'}</span>`;
+            html += `<span class="name">${name1}</span>`;
+            if (m.winner) html += `<span class="status ${w1}">${w1 === 'win' ? 'Победа' : 'Поражение'}</span>`;
+            else html += `<span class="status pending">ожидание</span>`;
+            html += `</div>`;
+
+            html += `<div class="team" data-team="${id2}">`;
+            html += `<span class="seed">#${id2 || '?'}</span>`;
+            html += `<span class="name">${name2}</span>`;
+            if (m.winner) html += `<span class="status ${w2}">${w2 === 'win' ? 'Победа' : 'Поражение'}</span>`;
+            else html += `<span class="status pending">ожидание</span>`;
+            html += `</div>`;
+
+            if (time) {
+                html += `<div class="match-info"><span class="time">🕐 ${time}</span></div>`;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        // ============================================================
+        // 4. МОДАЛЬНОЕ ОКНО
+        // ============================================================
+        function openModal(teamId) {
+            const team = getTeam(teamId);
+            if (!team) return;
+
+            document.getElementById('modalTitle').textContent = team.name;
+            document.getElementById('modalSub').textContent = 'Состав команды';
+
+            const container = document.getElementById('modalPlayers');
+            container.innerHTML = '';
+            const roles = ['Керри', 'Мидер', 'Офлейнер', 'Саппорт 4', 'Саппорт 5'];
+            team.players.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = 'player';
+                div.innerHTML = `<span>${p}</span><span class="role">${roles[i] || 'Игрок'}</span>`;
+                container.appendChild(div);
+            });
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // Клик по команде в сетке
+        document.addEventListener('click', function(e) {
+            const teamEl = e.target.closest('.team');
+            if (teamEl && teamEl.dataset.team) {
+                const id = parseInt(teamEl.dataset.team);
+                if (id) openModal(id);
+            }
+        });
+
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ============================================================
+        // 5. ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обновляем шапку
+            const meta = document.getElementById('headerMeta');
+            if (meta) {
+                meta.textContent = DATA.tournament.game + ' · ' + DATA.tournament.matches;
+            }
+
+            // Обновляем даты
+            const dates = document.getElementById('tournamentDates');
+            if (dates) {
+                dates.textContent = DATA.tournament.dates;
+            }
+
+            renderBracket();
+
+            // Если есть логотип — показываем
+            const logo = document.getElementById('logoImg');
+            if (logo) {
+                logo.src = 'logo.png';
+            }
+        });
+
+        // Для админ-панели — сохраняем данные в localStorage для синхронизации
+        // (в реальном проекте использовать сервер, но для простоты — localStorage)
+        function saveData() {
+            try {
+                localStorage.setItem('compassData', JSON.stringify(DATA));
+            } catch(e) {}
+        }
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('compassData');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(DATA, parsed);
+                }
+            } catch(e) {}
+        }
+
+        // Загружаем сохранённые данные при старте
+        loadData();
+        // Сохраняем при изменении (вызывать из админки)
+        window.saveTournamentData = saveData;
+        window.getTournamentData = () => DATA;
+        window.renderBracket = renderBracket;
+
+        console.log('✅ Compass Arena загружена!');
+        console.log('📊 Данные:', DATA);
+        console.log('🛠️ Для админ-панели: window.getTournamentData()');
+    </script>
 
 </body>
 </html>
