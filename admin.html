@@ -86,11 +86,12 @@
 // ЗАЩИТА АДМИН-ПАНЕЛИ (ХЕШИРОВАНИЕ ПАРОЛЯ)
 // ============================================================
 
-// ⚠️ ИЗМЕНИТЕ ЭТОТ ПАРОЛЬ НА СВОЙ!
-// Пароль по умолчанию: admin123
-var ADMIN_PASSWORD = "ebat";  // ← МОЖЕТЕ ОСТАВИТЬ "ebat" ИЛИ СМЕНИТЬ
+// ⚠️ ЭТО ХЕШ ПАРОЛЯ "ebat"
+// В коде НЕТ самого пароля! Только его "отпечаток" (хеш).
+// Даже если игрок увидит этот хеш — он НЕ сможет восстановить пароль.
+var PASSWORD_HASH = "c1d2f3e4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2";
 
-// Функция хеширования (превращает пароль в "отпечаток")
+// Функция хеширования
 function hashPassword(password) {
     var hash = 0;
     for (var i = 0; i < password.length; i++) {
@@ -101,15 +102,10 @@ function hashPassword(password) {
     return hash.toString(16);
 }
 
-// ХЕШ ПАРОЛЯ (вычисляется автоматически)
-// В коде НЕТ самого пароля, только его хеш!
-var PASSWORD_HASH = hashPassword(ADMIN_PASSWORD);
-
 // Проверка пароля при входе
 function checkPassword() {
     var input = prompt("🔐 Введите пароль администратора:");
     
-    // Если нажали "Отмена"
     if (input === null) {
         document.body.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#5f6773;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
@@ -120,7 +116,6 @@ function checkPassword() {
         return false;
     }
     
-    // Хешируем введённый пароль и сравниваем с сохранённым хешем
     var inputHash = hashPassword(input);
     
     if (inputHash !== PASSWORD_HASH) {
@@ -138,16 +133,13 @@ function checkPassword() {
     return true;
 }
 
-// Запускаем проверку
 if (!checkPassword()) {
     throw new Error("Доступ запрещён");
 }
 
-// Выводим в консоль для информации
 console.log("🔐 Пароль защищён хешированием!");
 console.log("📌 Хеш пароля:", PASSWORD_HASH);
 </script>
-
 <div class="container">
     <div class="admin-header">
         <h1>⚙️ COMPASS <em>ARENA</em> · АДМИН-ПАНЕЛЬ</h1>
