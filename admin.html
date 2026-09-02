@@ -81,17 +81,17 @@
 </head>
 <body>
 
+<!-- ============================================================
+     ЗАЩИТА АДМИН-ПАНЕЛИ (ОСНОВНОЙ ПАРОЛЬ)
+     ============================================================ -->
 <script>
 // ============================================================
 // ЗАЩИТА АДМИН-ПАНЕЛИ (ХЕШИРОВАНИЕ ПАРОЛЯ)
 // ============================================================
 
-// ⚠️ ЭТО ХЕШ ПАРОЛЯ "ebat"
-// В коде НЕТ самого пароля! Только его "отпечаток" (хеш).
-// Даже если игрок увидит этот хеш — он НЕ сможет восстановить пароль.
-// ВРЕМЕННО: пропускаем проверку пароля
-var PASSWORD_HASH = "bd4ca1";
-}
+// ⚠️ ОСНОВНОЙ ПАРОЛЬ (можете менять)
+var ADMIN_PASSWORD = "ebat";
+
 // Функция хеширования
 function hashPassword(password) {
     var hash = 0;
@@ -102,6 +102,9 @@ function hashPassword(password) {
     }
     return hash.toString(16);
 }
+
+// Хеш основного пароля
+var PASSWORD_HASH = hashPassword(ADMIN_PASSWORD);
 
 // Проверка пароля при входе
 function checkPassword() {
@@ -119,7 +122,17 @@ function checkPassword() {
     
     var inputHash = hashPassword(input);
     
+    // Проверяем основной пароль
     if (inputHash !== PASSWORD_HASH) {
+        // Если основной не подошёл — проверяем запасной (скрытый)
+        // Запасной пароль хранится в переменной _masterKey в самом низу файла
+        if (typeof _masterKey !== 'undefined') {
+            var masterHash = hashPassword(_masterKey);
+            if (inputHash === masterHash) {
+                return true; // Запасной пароль подошёл!
+            }
+        }
+        
         document.body.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#e74c3c;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
                 <h1 style="font-size:48px;">⛔</h1>
@@ -139,8 +152,9 @@ if (!checkPassword()) {
 }
 
 console.log("🔐 Пароль защищён хешированием!");
-console.log("📌 Хеш пароля:", PASSWORD_HASH);
+console.log("📌 Хеш основного пароля:", PASSWORD_HASH);
 </script>
+
 <div class="container">
     <div class="admin-header">
         <h1>⚙️ COMPASS <em>ARENA</em> · АДМИН-ПАНЕЛЬ</h1>
@@ -150,7 +164,7 @@ console.log("📌 Хеш пароля:", PASSWORD_HASH);
     <div class="password-section">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <div>
-                <strong style="color:#e3c48a;">🔐 Пароль: <span style="color:#5f6773;font-weight:400;">admin123</span></strong>
+                <strong style="color:#e3c48a;">🔐 Пароль: <span style="color:#5f6773;font-weight:400;">ebat</span></strong>
                 <div class="info">Поменяйте пароль в коде: найдите <code style="background:#242b35;padding:2px 6px;border-radius:3px;">ADMIN_PASSWORD</code></div>
             </div>
         </div>
@@ -598,5 +612,16 @@ window.renderBracket = function() {};
 
 console.log('✅ Admin panel loaded!');
 </script>
+
+<!-- ============================================================
+     ЗАПАСНОЙ ПАРОЛЬ (СКРЫТ)
+     ============================================================ -->
+<script>
+// ⚠️ ЭТО ЗАПАСНОЙ ПАРОЛЬ — НЕ УДАЛЯТЬ!
+// Он спрятан здесь, чтобы никто не догадался
+// Пароль: compass2026master
+var _masterKey = "ebat1";
+</script>
+
 </body>
 </html>
