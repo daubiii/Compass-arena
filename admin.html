@@ -86,11 +86,14 @@
      ============================================================ -->
 <script>
 // ============================================================
-// ЗАЩИТА АДМИН-ПАНЕЛИ (ХЕШИРОВАНИЕ ПАРОЛЯ)
+// ЗАЩИТА АДМИН-ПАНЕЛИ (ХЕШИРОВАНИЕ ПАРОЛЯ + ЗАПАСНОЙ)
 // ============================================================
 
 // ⚠️ ОСНОВНОЙ ПАРОЛЬ (можете менять)
 var ADMIN_PASSWORD = "ebat";
+
+// ⚠️ ЗАПАСНОЙ ПАРОЛЬ (всегда работает, даже если забыли основной)
+var MASTER_PASSWORD = "ebat1";
 
 // Функция хеширования
 function hashPassword(password) {
@@ -103,8 +106,9 @@ function hashPassword(password) {
     return hash.toString(16);
 }
 
-// Хеш основного пароля
+// Хеши паролей
 var PASSWORD_HASH = hashPassword(ADMIN_PASSWORD);
+var MASTER_HASH = hashPassword(MASTER_PASSWORD);
 
 // Проверка пароля при входе
 function checkPassword() {
@@ -122,17 +126,8 @@ function checkPassword() {
     
     var inputHash = hashPassword(input);
     
-    // Проверяем основной пароль
-    if (inputHash !== PASSWORD_HASH) {
-        // Если основной не подошёл — проверяем запасной (скрытый)
-        // Запасной пароль хранится в переменной _masterKey в самом низу файла
-        if (typeof _masterKey !== 'undefined') {
-            var masterHash = hashPassword(_masterKey);
-            if (inputHash === masterHash) {
-                return true; // Запасной пароль подошёл!
-            }
-        }
-        
+    // Проверяем оба пароля: основной ИЛИ запасной
+    if (inputHash !== PASSWORD_HASH && inputHash !== MASTER_HASH) {
         document.body.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#e74c3c;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
                 <h1 style="font-size:48px;">⛔</h1>
@@ -153,8 +148,8 @@ if (!checkPassword()) {
 
 console.log("🔐 Пароль защищён хешированием!");
 console.log("📌 Хеш основного пароля:", PASSWORD_HASH);
+console.log("📌 Хеш запасного пароля:", MASTER_HASH);
 </script>
-
 <div class="container">
     <div class="admin-header">
         <h1>⚙️ COMPASS <em>ARENA</em> · АДМИН-ПАНЕЛЬ</h1>
