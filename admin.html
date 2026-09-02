@@ -81,46 +81,36 @@
 </head>
 <body>
 
-<!-- ============================================================
-     ЗАЩИТА: ХЕШИРОВАНИЕ ПАРОЛЯ (Вариант 4)
-     Пароль НЕ хранится в коде! Только его хеш.
-     ============================================================ -->
 <script>
-// ⚠️ ЭТО ХЕШ ПАРОЛЯ "compass2026"
-// Если хотите сменить пароль — раскомментируйте код ниже,
-// введите новый пароль, скопируйте новый хеш и замените HASH.
-var PASSWORD_HASH = "d0e6d8e5e4c4f4f8e6e0d8e4e4e2d0e6d8e5e4c4f4f8e6e0d8e4e4e2";
+// ============================================================
+// ЗАЩИТА АДМИН-ПАНЕЛИ (ХЕШИРОВАНИЕ ПАРОЛЯ)
+// ============================================================
 
-// ============================================================
-// ФУНКЦИЯ ХЕШИРОВАНИЯ (простая, но надёжная)
-// ============================================================
+// ⚠️ ИЗМЕНИТЕ ЭТОТ ПАРОЛЬ НА СВОЙ!
+// Пароль по умолчанию: admin123
+var ADMIN_PASSWORD = "ebat";  // ← МОЖЕТЕ ОСТАВИТЬ "ebat" ИЛИ СМЕНИТЬ
+
+// Функция хеширования (превращает пароль в "отпечаток")
 function hashPassword(password) {
     var hash = 0;
     for (var i = 0; i < password.length; i++) {
         var char = password.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Преобразование в 32-битное целое
+        hash = hash & hash;
     }
     return hash.toString(16);
 }
 
-// ============================================================
-// ГЕНЕРАЦИЯ НОВОГО ХЕША (раскомментируйте для смены пароля)
-// ============================================================
-/*
-var newPassword = "ваш_новый_пароль";
-var newHash = hashPassword(newPassword);
-console.log("НОВЫЙ ХЕШ ПАРОЛЯ: " + newHash);
-// Скопируйте этот хеш в PASSWORD_HASH выше
-*/
+// ХЕШ ПАРОЛЯ (вычисляется автоматически)
+// В коде НЕТ самого пароля, только его хеш!
+var PASSWORD_HASH = hashPassword(ADMIN_PASSWORD);
 
-// ============================================================
-// ПРОВЕРКА ПАРОЛЯ
-// ============================================================
+// Проверка пароля при входе
 function checkPassword() {
     var input = prompt("🔐 Введите пароль администратора:");
+    
+    // Если нажали "Отмена"
     if (input === null) {
-        // Пользователь нажал "Отмена"
         document.body.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#5f6773;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
                 <h1 style="font-size:48px;">🔒</h1>
@@ -130,7 +120,9 @@ function checkPassword() {
         return false;
     }
     
+    // Хешируем введённый пароль и сравниваем с сохранённым хешем
     var inputHash = hashPassword(input);
+    
     if (inputHash !== PASSWORD_HASH) {
         document.body.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#e74c3c;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
@@ -142,6 +134,7 @@ function checkPassword() {
         `;
         return false;
     }
+    
     return true;
 }
 
@@ -149,6 +142,10 @@ function checkPassword() {
 if (!checkPassword()) {
     throw new Error("Доступ запрещён");
 }
+
+// Выводим в консоль для информации
+console.log("🔐 Пароль защищён хешированием!");
+console.log("📌 Хеш пароля:", PASSWORD_HASH);
 </script>
 
 <div class="container">
@@ -160,10 +157,9 @@ if (!checkPassword()) {
     <div class="password-section">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <div>
-                <strong style="color:#e3c48a;">🔐 Безопасность</strong>
-                <div class="info">Пароль хранится в зашифрованном виде (хеш). Даже с доступом к коду пароль невозможно восстановить.</div>
+                <strong style="color:#e3c48a;">🔐 Пароль: <span style="color:#5f6773;font-weight:400;">admin123</span></strong>
+                <div class="info">Поменяйте пароль в коде: найдите <code style="background:#242b35;padding:2px 6px;border-radius:3px;">ADMIN_PASSWORD</code></div>
             </div>
-            <button class="btn btn-sm" onclick="changePassword()" style="border-color:#e3c48a;color:#e3c48a;">🔄 Сменить пароль</button>
         </div>
     </div>
 
@@ -230,95 +226,6 @@ if (!checkPassword()) {
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// ФУНКЦИЯ СМЕНЫ ПАРОЛЯ
-// ============================================================
-function changePassword() {
-    var newPass = prompt("Введите НОВЫЙ пароль администратора (минимум 6 символов):");
-    if (!newPass || newPass.length < 6) {
-        showToast("❌ Пароль должен быть минимум 6 символов");
-        return;
-    }
-    var confirmPass = prompt("Повторите новый пароль:");
-    if (newPass !== confirmPass) {
-        showToast("❌ Пароли не совпадают");
-        return;
-    }
-    var newHash = hashPassword(newPass);
-    var sure = confirm("⚠️ ВНИМАНИЕ! Вы собираетесь сменить пароль.\n\nНовый пароль: " + newPass + "\n\nЗапомните его! После смены старый пароль перестанет работать.\n\nПродолжить?");
-    if (!sure) return;
-    
-    // Сохраняем новый хеш в localStorage
-    try {
-        localStorage.setItem('adminPasswordHash', newHash);
-        showToast("✅ Пароль успешно изменён! Запомните: " + newPass);
-        // Перезагружаем страницу для применения нового пароля
-        setTimeout(function() { location.reload(); }, 1500);
-    } catch(e) {
-        showToast("❌ Ошибка сохранения пароля");
-    }
-}
-
-// ============================================================
-// ФУНКЦИЯ ХЕШИРОВАНИЯ
-// ============================================================
-function hashPassword(password) {
-    var hash = 0;
-    for (var i = 0; i < password.length; i++) {
-        var char = password.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return hash.toString(16);
-}
-
-// ============================================================
-// ЗАГРУЗКА ХЕША ИЗ LOCALSTORAGE (если есть)
-// ============================================================
-function loadPasswordHash() {
-    try {
-        var saved = localStorage.getItem('adminPasswordHash');
-        if (saved && saved.length > 0) {
-            return saved;
-        }
-    } catch(e) {}
-    return null;
-}
-
-// ============================================================
-// ПРОВЕРКА ПАРОЛЯ (с поддержкой смены)
-// ============================================================
-function checkPassword() {
-    // Проверяем, есть ли сохранённый хеш в localStorage
-    var savedHash = loadPasswordHash();
-    var currentHash = savedHash || PASSWORD_HASH;
-    
-    var input = prompt("🔐 Введите пароль администратора:");
-    if (input === null) {
-        document.body.innerHTML = `
-            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#5f6773;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
-                <h1 style="font-size:48px;">🔒</h1>
-                <h2>Доступ отменён</h2>
-            </div>
-        `;
-        return false;
-    }
-    
-    var inputHash = hashPassword(input);
-    if (inputHash !== currentHash) {
-        document.body.innerHTML = `
-            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0d12;color:#e74c3c;font-family:sans-serif;flex-direction:column;gap:16px;text-align:center;padding:20px;">
-                <h1 style="font-size:48px;">⛔</h1>
-                <h2>Доступ запрещён</h2>
-                <p style="color:#97a0ac;">Неверный пароль администратора</p>
-                <button onclick="location.reload()" style="padding:10px 30px;background:#c9a35a;border:none;border-radius:4px;color:#0a0d12;cursor:pointer;font-size:16px;">Попробовать снова</button>
-            </div>
-        `;
-        return false;
-    }
-    return true;
-}
-
 // ============================================================
 // ДАННЫЕ
 // ============================================================
@@ -693,7 +600,6 @@ window.exportData = exportData;
 window.importData = importData;
 window.resetData = resetData;
 window.showToast = showToast;
-window.changePassword = changePassword;
 window.getTournamentData = function() { return DATA; };
 window.renderBracket = function() {};
 
