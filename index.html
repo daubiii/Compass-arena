@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass Arena — турнирная сетка</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* ===== HEADER ===== */
+        header { padding: 16px 0; border-bottom: 1px solid #242b35; }
+        .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; }
+        .wordmark em { font-style: normal; color: #c9a35a; }
+        .header-meta { font-size: 12px; color: #5f6773; }
+        .btn { padding: 6px 16px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #c9a35a; color: #0a0d12; }
+
+        /* ===== HERO WITH BACKGROUND ===== */
+        .hero-bg { padding: 16px 0 0; }
+        .hero-bg-inner {
+            background-image: url('gt.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 16px 16px 0 0;
+            min-height: 340px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg-inner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 13, 18, 0.55);
+            z-index: 0;
+            border-radius: 16px 16px 0 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 50px 40px 60px;
+            max-width: 640px;
+        }
+        .hero-content h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            line-height: 1.1;
+            color: #eae6da;
+        }
+        .hero-content h1 .accent { color: #c9a35a; }
+        .hero-content p {
+            color: #b0b8c4;
+            font-size: 15px;
+            max-width: 480px;
+            margin-top: 12px;
+            line-height: 1.7;
+        }
+        .hero-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent 0%, #0a0d12 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== LIVE MATCH ===== */
+        .live-match { background: #10141b; border: 2px solid #c9a35a; border-radius: 8px; padding: 14px 20px; margin: 10px 0 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .live-match .label { display: flex; align-items: center; gap: 10px; font-family: 'Unbounded', sans-serif; font-size: 12px; color: #e3c48a; }
+        .live-match .label .dot { width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; animation: blink 1s infinite; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .live-match .teams { display: flex; align-items: center; gap: 14px; font-size: 16px; font-weight: 600; }
+        .live-match .teams .vs { color: #5f6773; font-size: 13px; font-weight: 400; }
+        .live-match .time { font-size: 12px; color: #5f6773; }
+        .live-match .links { display: flex; gap: 8px; }
+        .live-match .links a { padding: 4px 12px; border-radius: 4px; font-size: 11px; font-family: 'Unbounded', sans-serif; color: #fff; text-decoration: none; }
+        .live-match .links .twitch { background: #6441a5; }
+        .live-match .links .vk { background: #4a76a8; }
+        .live-match .links .tg { background: #0088cc; }
+
+        /* ===== FACTS ===== */
+        .facts { border-top: 1px solid #242b35; border-bottom: 1px solid #242b35; padding: 14px 0; margin-bottom: 24px; }
+        .facts-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #242b35; }
+        .fact { background: #0a0d12; padding: 12px 16px; text-align: center; }
+        .fact dt { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 12px; color: #e3c48a; }
+        .fact dd { font-size: 12px; color: #5f6773; margin-top: 2px; }
+
+        /* ===== BRACKET ===== */
+        .bracket-section { padding: 16px 0 24px; }
+        .bracket-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 22px; }
+        .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 12px; }
+        .bracket-wrapper { overflow-x: auto; padding-bottom: 12px; }
+        .bracket-wrapper::-webkit-scrollbar { height: 6px; }
+        .bracket-wrapper::-webkit-scrollbar-track { background: #10141b; }
+        .bracket-wrapper::-webkit-scrollbar-thumb { background: #242b35; border-radius: 4px; }
+        .bracket { display: flex; gap: 24px; min-width: 900px; padding: 6px 0; }
+        .round { display: flex; flex-direction: column; gap: 20px; min-width: 140px; }
+        .round-label { font-family: 'Unbounded', sans-serif; font-size: 9px; letter-spacing: 0.08em; color: #5f6773; text-align: center; margin-bottom: 2px; }
+        .round-label.gold { color: #c9a35a; }
+        .round-label.ox { color: #b3695f; }
+        .round-label.grand { color: #e3c48a; font-size: 10px; }
+        .match { background: #10141b; border: 1px solid #242b35; border-radius: 4px; padding: 6px 10px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .match:hover { border-color: #c9a35a; background: #151a22; }
+        .match .team { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 12px; color: #eae6da; }
+        .match .team .seed { font-size: 9px; color: #5f6773; width: 16px; }
+        .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .match .team .status { font-size: 8px; padding: 1px 6px; border-radius: 10px; }
+        .match .team .status.win { background: #4caf50; color: #fff; }
+        .match .team .status.loss { background: #e74c3c; color: #fff; }
+        .match .team .status.pending { background: #242b35; color: #5f6773; }
+        .match .match-info { display: flex; justify-content: space-between; font-size: 9px; color: #5f6773; margin-top: 2px; border-top: 1px solid #242b35; padding-top: 2px; }
+        .match .match-info .time { color: #e3c48a; }
+        .match-empty { background: #10141b; border: 1px dashed #242b35; border-radius: 4px; padding: 6px 10px; min-height: 50px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
+
+        /* ===== SCHEDULE ===== */
+        .schedule-section { padding: 16px 0 10px; border-top: 1px solid #242b35; }
+        .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 10px; }
+        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+        .schedule-item { background: #10141b; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; font-size: 12px; }
+        .schedule-item .teams { display: flex; align-items: center; gap: 6px; }
+        .schedule-item .teams .vs { color: #5f6773; font-size: 10px; }
+        .schedule-item .time { color: #e3c48a; font-size: 11px; font-weight: 500; }
+        .schedule-item .tag { font-size: 8px; padding: 1px 8px; border-radius: 10px; background: #242b35; color: #5f6773; }
+        .schedule-item .tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
+        .schedule-item .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
+        .schedule-item .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
+        .schedule-empty { color: #5f6773; text-align: center; padding: 16px; font-size: 13px; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 380px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; color: #5f6773; font-size: 22px; cursor: pointer; }
+        .modal-close:hover { color: #eae6da; }
+        .modal h2 { font-family: 'Unbounded', sans-serif; font-size: 18px; margin-bottom: 2px; }
+        .modal .sub { color: #97a0ac; font-size: 12px; margin-bottom: 12px; }
+        .modal .player { padding: 5px 10px; border-bottom: 1px solid #242b35; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .modal .player:last-child { border-bottom: none; }
+        .modal .player .role { font-size: 9px; color: #5f6773; background: #242b35; padding: 1px 8px; border-radius: 10px; }
+
+        /* ===== FORMAT ===== */
+        .format-section { padding: 24px 0; border-top: 1px solid #242b35; margin-top: 16px; }
+        .format-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #242b35; }
+        .format-item { background: #0a0d12; padding: 14px 18px; border-left: 2px solid #c9a35a; }
+        .format-item.ox { border-left-color: #b3695f; }
+        .format-item h3 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 13px; margin-bottom: 4px; }
+        .format-item p { font-size: 12px; color: #97a0ac; line-height: 1.6; }
+
+        /* ===== BROADCAST ===== */
+        .broadcast { padding: 24px 0 40px; border-top: 1px solid #242b35; }
+        .broadcast-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .broadcast h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 18px; }
+        .broadcast p { color: #97a0ac; font-size: 13px; }
+        .platforms { display: flex; gap: 8px; }
+        .platform { display: flex; align-items: center; gap: 6px; border: 1px solid #242b35; padding: 6px 14px; font-family: 'Unbounded', sans-serif; font-size: 10px; color: #eae6da; border-radius: 4px; text-decoration: none; transition: 0.2s; }
+        .platform:hover { border-color: #c9a35a; }
+        .platform .dot { width: 6px; height: 6px; border-radius: 50%; background: #c9a35a; }
+
+        footer { border-top: 1px solid #242b35; padding: 14px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 860px) {
+            .facts-row { grid-template-columns: repeat(2, 1fr); }
+            .format-grid { grid-template-columns: 1fr; }
+            .broadcast-inner { flex-direction: column; align-items: flex-start; }
+            .bracket { gap: 16px; min-width: 700px; }
+            .round { min-width: 110px; }
+            .live-match { flex-direction: column; align-items: stretch; text-align: center; }
+            .live-match .teams { justify-content: center; }
+            .live-match .links { justify-content: center; }
+            .schedule-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
+            .hero-bg-inner::before { border-radius: 12px 12px 0 0; }
+            .hero-content { padding: 30px 20px 40px; }
+            .hero-content h1 { font-size: 22px; }
+            .hero-content p { font-size: 13px; }
+            .hero-fade { height: 50px; }
+            .container { padding: 0 12px; }
+            .modal { padding: 16px; }
+            .live-match .teams { font-size: 13px; gap: 8px; }
+            .wordmark { font-size: 13px; }
+        }
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 18px; }
+            .hero-content { padding: 20px 16px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header>
+    <div class="container header-row">
+        <div class="header-left">
+            <span class="wordmark">COMPASS <em>ARENA</em></span>
+        </div>
+        <div class="header-actions">
+            <span class="header-meta" id="headerMeta">Dota 2 · Bo3</span>
+        </div>
+    </div>
+</header>
+
+<!-- ============================================================
+     ГЕРОЙ С ФОНОМ
+     ============================================================ -->
+<section class="hero-bg">
+    <div class="container">
+        <div class="hero-bg-inner">
+            <div class="hero-content">
+                <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
+                <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
+            </div>
+            <div class="hero-fade"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     LIVE MATCH
+     ============================================================ -->
+<section class="container">
+    <div class="live-match" id="liveMatch">
+        <div class="label"><span class="dot"></span>СЕЙЧАС ИГРАЮТ</div>
+        <div class="teams" id="liveTeams">
+            <span class="team-name" id="liveTeam1">—</span>
+            <span class="vs">⚔️</span>
+            <span class="team-name" id="liveTeam2">—</span>
+        </div>
+        <div class="time" id="liveTime"></div>
+        <div class="links" id="liveLinks"></div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FACTS
+     ============================================================ -->
+<section class="facts">
+    <div class="container">
+        <dl class="facts-row">
+            <div class="fact"><dt>8 команд</dt><dd>слоты открыты</dd></div>
+            <div class="fact"><dt>Double elimination</dt><dd>формат TI</dd></div>
+            <div class="fact"><dt>Bo3</dt><dd>во всех раундах</dd></div>
+            <div class="fact"><dt>Даты</dt><dd id="tournamentDates">уточняются</dd></div>
+        </dl>
+    </div>
+</section>
+
+<!-- ============================================================
+     BRACKET
+     ============================================================ -->
+<section class="bracket-section">
+    <div class="container">
+        <h2>Путь к трофею</h2>
+        <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;font-size:12px;color:#97a0ac;">
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#c9a35a;display:inline-block;"></span> Верхняя сетка</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#b3695f;display:inline-block;"></span> Нижняя сетка</span>
+        </div>
+        <div class="bracket-wrapper" id="bracketWrapper"></div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SCHEDULE
+     ============================================================ -->
+<section class="schedule-section">
+    <div class="container">
+        <h2>📅 Расписание матчей</h2>
+        <div id="scheduleContainer"><div class="schedule-empty">Загрузка...</div></div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FORMAT
+     ============================================================ -->
+<section class="format-section">
+    <div class="container">
+        <div class="format-grid">
+            <div class="format-item"><h3>Верхняя сетка</h3><p>Поражение не выбивает — команда спускается в нижнюю сетку.</p></div>
+            <div class="format-item ox"><h3>Нижняя сетка</h3><p>Второй шанс для проигравших. Поражение здесь — выбывание.</p></div>
+            <div class="format-item"><h3>Гранд-финал</h3><p>Победитель верхней vs победитель нижней. Bo3 решает всё.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     BROADCAST
+     ============================================================ -->
+<section class="broadcast">
+    <div class="container broadcast-inner">
+        <div>
+            <h2>📺 Смотрите вживую</h2>
+            <p>Все матчи в прямом эфире. Подключайтесь!</p>
+        </div>
+        <div class="platforms" id="broadcastPlatforms"></div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+        <span>Compass Arena — организатор турниров по Dota 2</span>
+        <span>Основано в 2026</span>
+    </div>
+</footer>
+
+<!-- ============================================================
+     MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <h2 id="modalTitle">Team</h2>
+        <div class="sub" id="modalSub">Состав</div>
+        <div id="modalPlayers"></div>
+    </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// ============================================================
+// ДАННЫЕ
+// ============================================================
+var BROADCAST_LINKS = {
+    twitch: "https://twitch.tv/your_channel",
+    vk: "https://vk.com/your_stream",
+    tg: "https://t.me/your_channel"
+};
+
+var DATA = {
+    tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "уточняются" },
+    teams: [
+        { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
+        { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
+        { id: 3, name: "Team Liquid", players: ["m1CKe", "Nisha", "33", "Boxi", "Insania"] },
+        { id: 4, name: "OG", players: ["Yuragi", "bzm", "ATF", "Taiga", "Misha"] },
+        { id: 5, name: "Gaimin Gladiators", players: ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"] },
+        { id: 6, name: "BetBoom Team", players: ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"] },
+        { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
+        { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
+    ],
+    matches: [
+        { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
+        { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
+        { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
+        { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
+        { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+    ],
+    schedule: {}
+};
+
+// ============================================================
+// ЗАГРУЗКА ДАННЫХ
+// ============================================================
+// Данные больше не хранятся в localStorage (он виден только на этом
+// устройстве). Вместо этого сайт спрашивает их у серверной функции —
+// одинаковый ответ получают все посетители, откуда бы они ни заходили.
+function loadSavedData() {
+    return fetch('/api/data', { cache: 'no-store' })
+        .then(function(res) {
+            if (!res.ok) throw new Error('bad response');
+            return res.json();
+        })
+        .then(function(parsed) {
+            if (parsed.teams) DATA.teams = parsed.teams;
+            if (parsed.matches) DATA.matches = parsed.matches;
+            if (parsed.schedule) DATA.schedule = parsed.schedule;
+            if (parsed.tournament) DATA.tournament = parsed.tournament;
+        })
+        .catch(function(err) {
+            // Офлайн или бэкенд ещё не развёрнут — остаёмся на данных
+            // по умолчанию, чтобы страница не сломалась.
+            console.warn('Не удалось загрузить данные с сервера, показаны значения по умолчанию', err);
+        });
+}
+
+// ============================================================
+// ВСПОМОГАТЕЛЬНЫЕ
+// ============================================================
+function getTeam(id) {
+    for (var i = 0; i < DATA.teams.length; i++) {
+        if (DATA.teams[i].id === id) return DATA.teams[i];
+    }
+    return null;
+}
+
+function getTeamName(id) {
+    var t = getTeam(id);
+    return t ? t.name : '—';
+}
+
+function getMatch(id) {
+    for (var i = 0; i < DATA.matches.length; i++) {
+        if (DATA.matches[i].id === id) return DATA.matches[i];
+    }
+    return null;
+}
+
+function getLoser(m) {
+    if (!m.winner) return null;
+    if (m.team1 === m.winner) return m.team2;
+    if (m.team2 === m.winner) return m.team1;
+    return null;
+}
+
+function updateMatchLinks() {
+    var m1 = getMatch(1), m2 = getMatch(2), m3 = getMatch(3), m4 = getMatch(4);
+    var m5 = getMatch(5), m6 = getMatch(6), m7 = getMatch(7);
+    var m8 = getMatch(8), m9 = getMatch(9), m10 = getMatch(10), m11 = getMatch(11);
+    var m12 = getMatch(12), m13 = getMatch(13), m14 = getMatch(14);
+    if (m5) { m5.team1 = m1 ? m1.winner : null; m5.team2 = m2 ? m2.winner : null; }
+    if (m6) { m6.team1 = m3 ? m3.winner : null; m6.team2 = m4 ? m4.winner : null; }
+    if (m7) { m7.team1 = m5 ? m5.winner : null; m7.team2 = m6 ? m6.winner : null; }
+    if (m8) { m8.team1 = getLoser(m1); m8.team2 = getLoser(m2); }
+    if (m9) { m9.team1 = getLoser(m3); m9.team2 = getLoser(m4); }
+    if (m10) { m10.team1 = m8 ? m8.winner : null; m10.team2 = getLoser(m5); }
+    if (m11) { m11.team1 = m9 ? m9.winner : null; m11.team2 = getLoser(m6); }
+    if (m12) { m12.team1 = m10 ? m10.winner : null; m12.team2 = m11 ? m11.winner : null; }
+    if (m13) { m13.team1 = m12 ? m12.winner : null; m13.team2 = getLoser(m7); }
+    if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
+}
+
+// ============================================================
+// ОТРИСОВКА СЕТКИ
+// ============================================================
+function renderBracket() {
+    var wrapper = document.getElementById('bracketWrapper');
+    if (!wrapper) return;
+    updateMatchLinks();
+    var upperRounds = {}, lowerRounds = {}, grandMatches = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (m.bracket === 'upper') {
+            if (!upperRounds[m.round]) upperRounds[m.round] = [];
+            upperRounds[m.round].push(m);
+        } else if (m.bracket === 'lower') {
+            if (!lowerRounds[m.round]) lowerRounds[m.round] = [];
+            lowerRounds[m.round].push(m);
+        } else if (m.bracket === 'grand') {
+            grandMatches.push(m);
+        }
+    }
+    var labels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'ФИНАЛ ВЕРХНЕЙ' };
+    var lowerLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'РАУНД 3', 4: 'ФИНАЛ НИЖНЕЙ' };
+    var html = '<div class="bracket">';
+    var keys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
+    for (var k = 0; k < keys.length; k++) {
+        var r = keys[k];
+        html += '<div class="round"><div class="round-label gold">' + (labels[r] || 'РАУНД ' + r) + '</div>';
+        for (var j = 0; j < upperRounds[r].length; j++) {
+            html += renderMatch(upperRounds[r][j]);
+        }
+        html += '</div>';
+    }
+    var lowerKeys = Object.keys(lowerRounds).sort(function(a,b){return a-b;});
+    for (var lk = 0; lk < lowerKeys.length; lk++) {
+        var lr = lowerKeys[lk];
+        html += '<div class="round"><div class="round-label ox">' + (lowerLabels[lr] || 'РАУНД ' + lr) + '</div>';
+        for (var lj = 0; lj < lowerRounds[lr].length; lj++) {
+            html += renderMatch(lowerRounds[lr][lj]);
+        }
+        html += '</div>';
+    }
+    if (grandMatches.length) {
+        html += '<div class="round"><div class="round-label grand">ГРАНД-ФИНАЛ</div>';
+        for (var gj = 0; gj < grandMatches.length; gj++) {
+            html += renderMatch(grandMatches[gj]);
+        }
+        html += '</div>';
+    }
+    html += '</div>';
+    wrapper.innerHTML = html;
+}
+
+function renderMatch(m) {
+    var t1 = getTeam(m.team1);
+    var t2 = getTeam(m.team2);
+    if (!t1 && !t2) return '<div class="match-empty">ожидание</div>';
+    var w1 = m.winner === m.team1 ? 'win' : (m.winner ? 'loss' : 'pending');
+    var w2 = m.winner === m.team2 ? 'win' : (m.winner ? 'loss' : 'pending');
+    var name1 = t1 ? t1.name : '—';
+    var name2 = t2 ? t2.name : '—';
+    var id1 = t1 ? t1.id : null;
+    var id2 = t2 ? t2.id : null;
+    var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : '';
+    var html = '<div class="match" data-match="' + m.id + '">';
+    html += '<div class="team" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
+    if (m.winner) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'Победа' : 'Поражение') + '</span>';
+    else html += '<span class="status pending">ожидание</span>';
+    html += '</div>';
+    html += '<div class="team" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
+    if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'Победа' : 'Поражение') + '</span>';
+    else html += '<span class="status pending">ожидание</span>';
+    html += '</div>';
+    if (time) html += '<div class="match-info"><span class="time">🕐 ' + time + '</span></div>';
+    html += '</div>';
+    return html;
+}
+
+function formatTime(dt) {
+    if (!dt) return '';
+    try {
+        var d = new Date(dt);
+        return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch(e) { return dt; }
+}
+
+// ============================================================
+// РАСПИСАНИЕ
+// ============================================================
+function renderSchedule() {
+    var container = document.getElementById('scheduleContainer');
+    if (!container) return;
+    var matches = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        if (DATA.matches[i].team1 && DATA.matches[i].team2) matches.push(DATA.matches[i]);
+    }
+    if (matches.length === 0) {
+        container.innerHTML = '<div class="schedule-empty">📭 Расписание пока не заполнено</div>';
+        return;
+    }
+    var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
+    var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
+    var html = '<div class="schedule-grid">';
+    for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : 'Время не указано';
+        var label = labels[m.bracket] || m.bracket;
+        var cls = classes[m.bracket] || 'upper';
+        html += '<div class="schedule-item"><div class="teams"><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span class="time">' + time + '</span><span class="tag ' + cls + '">' + label + '</span></div></div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ============================================================
+// LIVE MATCH
+// ============================================================
+function renderLiveMatch() {
+    var now = new Date();
+    var liveMatch = null;
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.team1 || !m.team2) continue;
+        if (m.winner) continue;
+        var time = DATA.schedule && DATA.schedule[m.id];
+        if (!time) continue;
+        try {
+            var mt = new Date(time);
+            var diff = (now - mt) / (1000 * 60);
+            if (diff > -30 && diff < 120) { liveMatch = m; break; }
+        } catch(e) {}
+    }
+    if (!liveMatch) {
+        var closest = null, closestDiff = Infinity;
+        for (var i = 0; i < DATA.matches.length; i++) {
+            var m = DATA.matches[i];
+            if (!m.team1 || !m.team2) continue;
+            if (m.winner) continue;
+            var time = DATA.schedule && DATA.schedule[m.id];
+            if (!time) continue;
+            try {
+                var mt = new Date(time);
+                var diff = (mt - now) / (1000 * 60);
+                if (diff > -30 && diff < closestDiff) { closestDiff = diff; closest = m; }
+            } catch(e) {}
+        }
+        if (closest) liveMatch = closest;
+    }
+    var team1El = document.getElementById('liveTeam1');
+    var team2El = document.getElementById('liveTeam2');
+    var timeEl = document.getElementById('liveTime');
+    var linksEl = document.getElementById('liveLinks');
+    var label = document.querySelector('.live-match .label');
+    if (!liveMatch) {
+        if (team1El) team1El.textContent = '—';
+        if (team2El) team2El.textContent = '—';
+        if (timeEl) timeEl.textContent = '';
+        if (linksEl) linksEl.innerHTML = '';
+        if (label) label.innerHTML = '<span class="dot" style="opacity:0.3;"></span>ОЖИДАНИЕ МАТЧА';
+        return;
+    }
+    var t1 = getTeam(liveMatch.team1);
+    var t2 = getTeam(liveMatch.team2);
+    if (team1El) team1El.textContent = t1 ? t1.name : '—';
+    if (team2El) team2El.textContent = t2 ? t2.name : '—';
+    var time = DATA.schedule && DATA.schedule[liveMatch.id];
+    if (timeEl) timeEl.textContent = time ? formatTime(time) : '';
+    if (linksEl) {
+        linksEl.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="twitch">📺 Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="vk">📱 VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="tg">💬 Telegram</a>';
+    }
+    if (label) label.innerHTML = '<span class="dot"></span>СЕЙЧАС ИГРАЮТ';
+}
+
+function renderBroadcastPlatforms() {
+    var container = document.getElementById('broadcastPlatforms');
+    if (!container) return;
+    container.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="platform"><span class="dot"></span> Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="platform"><span class="dot"></span> VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="platform"><span class="dot"></span> Telegram</a>';
+}
+
+// ============================================================
+// МОДАЛЬНОЕ ОКНО
+// ============================================================
+function openModal(teamId) {
+    var team = getTeam(teamId);
+    if (!team) return;
+    document.getElementById('modalTitle').textContent = team.name;
+    document.getElementById('modalSub').textContent = 'Состав команды';
+    var container = document.getElementById('modalPlayers');
+    container.innerHTML = '';
+    var roles = ['Керри', 'Мидер', 'Офлейнер', 'Саппорт 4', 'Саппорт 5'];
+    for (var i = 0; i < team.players.length; i++) {
+        var div = document.createElement('div');
+        div.className = 'player';
+        div.innerHTML = '<span>' + team.players[i] + '</span><span class="role">' + (roles[i] || 'Игрок') + '</span>';
+        container.appendChild(div);
+    }
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.addEventListener('click', function(e) {
+    var teamEl = e.target.closest('.team');
+    if (teamEl && teamEl.dataset.team) {
+        var id = parseInt(teamEl.dataset.team, 10);
+        if (id) openModal(id);
+    }
+});
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// ============================================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================================
+function renderAll() {
+    var dates = document.getElementById('tournamentDates');
+    if (dates) dates.textContent = DATA.tournament.dates || 'уточняются';
+    var meta = document.getElementById('headerMeta');
+    if (meta) meta.textContent = DATA.tournament.game + ' · ' + DATA.tournament.matches;
+    renderBracket();
+    renderSchedule();
+    renderLiveMatch();
+}
+
+function init() {
+    loadSavedData().then(renderAll);
+    renderBroadcastPlatforms();
+    setInterval(function() { renderLiveMatch(); }, 30000);
+    // Раз в минуту переспрашиваем сервер — если админ обновил результат
+    // во время трансляции, зрители увидят это без перезагрузки страницы.
+    setInterval(function() { loadSavedData().then(renderAll); }, 60000);
+    window.getTournamentData = function() { return DATA; };
+    window.renderBracket = renderBracket;
+    window.renderSchedule = renderSchedule;
+    window.renderLiveMatch = renderLiveMatch;
+    console.log('✅ Compass Arena загружена!');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

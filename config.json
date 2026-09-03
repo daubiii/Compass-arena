@@ -7,62 +7,14 @@
     "dates": "уточняются"
   },
   "teams": [
-    {
-      "id": 1,
-      "name": "Team Spirit",
-      "logo": "",
-      "players": ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"],
-      "seed": 1
-    },
-    {
-      "id": 2,
-      "name": "Virtus.pro",
-      "logo": "",
-      "players": ["Nightfall", "gpk", "Noticed", "Save", "Fng"],
-      "seed": 2
-    },
-    {
-      "id": 3,
-      "name": "Team Liquid",
-      "logo": "",
-      "players": ["m1CKe", "Nisha", "33", "Boxi", "Insania"],
-      "seed": 3
-    },
-    {
-      "id": 4,
-      "name": "OG",
-      "logo": "",
-      "players": ["Yuragi", "bzm", "ATF", "Taiga", "Misha"],
-      "seed": 4
-    },
-    {
-      "id": 5,
-      "name": "Gaimin Gladiators",
-      "logo": "",
-      "players": ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"],
-      "seed": 5
-    },
-    {
-      "id": 6,
-      "name": "BetBoom Team",
-      "logo": "",
-      "players": ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"],
-      "seed": 6
-    },
-    {
-      "id": 7,
-      "name": "9Pandas",
-      "logo": "",
-      "players": ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"],
-      "seed": 7
-    },
-    {
-      "id": 8,
-      "name": "Natus Vincere",
-      "logo": "",
-      "players": ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"],
-      "seed": 8
-    }
+    { "id": 1, "name": "Team Spirit", "logo": "", "players": ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"], "seed": 1 },
+    { "id": 2, "name": "Virtus.pro", "logo": "", "players": ["Nightfall", "gpk", "Noticed", "Save", "Fng"], "seed": 2 },
+    { "id": 3, "name": "Team Liquid", "logo": "", "players": ["m1CKe", "Nisha", "33", "Boxi", "Insania"], "seed": 3 },
+    { "id": 4, "name": "OG", "logo": "", "players": ["Yuragi", "bzm", "ATF", "Taiga", "Misha"], "seed": 4 },
+    { "id": 5, "name": "Gaimin Gladiators", "logo": "", "players": ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"], "seed": 5 },
+    { "id": 6, "name": "BetBoom Team", "logo": "", "players": ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"], "seed": 6 },
+    { "id": 7, "name": "9Pandas", "logo": "", "players": ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"], "seed": 7 },
+    { "id": 8, "name": "Natus Vincere", "logo": "", "players": ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"], "seed": 8 }
   ],
   "matches": [
     { "id": 1, "round": 1, "team1": 1, "team2": 2, "winner": null, "bracket": "upper" },
