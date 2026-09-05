@@ -30,7 +30,8 @@ const DEFAULT_DATA = {
     { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
     { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
   ],
-  schedule: {}
+  schedule: {},
+  liveMatchId: null
 };
 
 export default async (req) => {

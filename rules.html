@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Правила турнира — Compass Arena</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; line-height: 1.6; }
+    .container { max-width: 820px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 16px 0; border-bottom: 1px solid #242b35; }
+    .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
+    .wordmark em { font-style: normal; color: #c9a35a; }
+    .btn { padding: 6px 16px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
+    .btn:hover { background: #c9a35a; color: #0a0d12; }
+
+    main { padding: 56px 0 80px; }
+    h1 { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 34px; margin-bottom: 8px; }
+    .lede { color: #97a0ac; font-size: 15px; margin-bottom: 44px; max-width: 560px; }
+
+    section.rule { margin-bottom: 36px; padding-left: 20px; border-left: 2px solid #c9a35a; }
+    section.rule.ox { border-left-color: #b3695f; }
+    section.rule h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 18px; margin-bottom: 12px; color: #e3c48a; }
+    section.rule.ox h2 { color: #b3695f; }
+    section.rule p, section.rule li { color: #c9cdd4; font-size: 14.5px; }
+    section.rule ul { margin: 8px 0 0 20px; }
+    section.rule li { margin-bottom: 6px; }
+    .note { margin-top: 60px; padding: 16px 20px; background: #10141b; border: 1px dashed #242b35; border-radius: 6px; font-size: 13px; color: #5f6773; }
+    .note strong { color: #97a0ac; }
+
+    footer { border-top: 1px solid #242b35; padding: 24px 0; font-size: 12.5px; color: #5f6773; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="container header-row">
+        <a href="/" class="wordmark">COMPASS <em>ARENA</em></a>
+        <a href="/" class="btn">← На сайт</a>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>Правила турнира</h1>
+        <p class="lede">Compass Arena · Dota 2 · Double Elimination · Bo3. Этот регламент будет дополняться — если появится вопрос, которого здесь нет, пиши организатору (контакт внизу страницы).</p>
+
+        <section class="rule">
+            <h2>Регистрация и чек-ин</h2>
+            <p>Заявки принимаются до объявленной даты закрытия регистрации. Полный состав команды (5 игроков) нужно подтвердить организатору не позднее чем за 24 часа до первого матча.</p>
+            <ul>
+                <li>Каждая команда обязана пройти чек-ин за 15 минут до назначенного времени своего матча — любым удобным способом связи с организатором.</li>
+                <li>Замена игрока в составе после начала турнира согласовывается с организатором отдельно.</li>
+            </ul>
+        </section>
+
+        <section class="rule ox">
+            <h2>Неявка</h2>
+            <p>Если команда не выходит на связь и не готова начать матч в течение 15 минут после назначенного времени — засчитывается техническое поражение (0:2).</p>
+            <ul>
+                <li>При неявке на 2 матча подряд команда снимается с турнира.</li>
+                <li>Форс-мажор (обрыв связи, технические проблемы) рассматривается индивидуально при своевременном обращении к организатору.</li>
+            </ul>
+        </section>
+
+        <section class="rule">
+            <h2>Формат матчей</h2>
+            <p>Все матчи, включая гранд-финал, проходят по формату Bo3 (до двух побед).</p>
+            <ul>
+                <li>Пик/бан карт — стандартный для турнирного режима Dota 2.</li>
+                <li>Настройки лобби (регион сервера, режим) сообщаются организатором перед матчем.</li>
+            </ul>
+        </section>
+
+        <section class="rule ox">
+            <h2>Спорные ситуации</h2>
+            <p>Любой спор фиксируется скриншотом/записью и направляется организатору сразу после матча — рассмотрение споров постфактум без доказательств не проводится.</p>
+            <ul>
+                <li>Решение организатора по спорному вопросу — финальное.</li>
+                <li>Использование багов, эксплойтов или стороннего софта — дисквалификация без права обжалования.</li>
+            </ul>
+        </section>
+
+        <section class="rule">
+            <h2>Трансляция</h2>
+            <p>Матчи транслируются на Twitch и ВКонтакте. Команды соглашаются на использование записей матчей в трансляции и последующих материалах турнира.</p>
+        </section>
+
+        <div class="note">
+            <strong>Организатору:</strong> это стартовый черновик регламента — впиши конкретные даты, точный часовой пояс, призовой фонд (если есть) и свои контакты для связи, прежде чем публиковать ссылку командам.
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        Compass Arena — организатор турниров по Dota 2
+    </div>
+</footer>
+
+</body>
+</html>

@@ -199,7 +199,8 @@ function getDefaultData() {
             { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
             { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
         ],
-        schedule: {}
+        schedule: {},
+        liveMatchId: null
     };
 }
 
@@ -264,9 +265,13 @@ function saveData() {
         if (res.status === 403) {
             ADMIN_PW = null;
             showToast('⛔ Неверный пароль — изменение НЕ сохранено, экран возвращён к серверным данным');
-            // Локальная правка не прошла на сервер — откатываем экран к
-            // настоящим данным, чтобы не показывать несохранённое как факт.
             return loadData().then(renderEverything);
+        }
+        if (res.status === 429) {
+            return res.text().then(function(msg) {
+                showToast('🚫 ' + msg);
+                return loadData().then(renderEverything);
+            });
         }
         if (!res.ok) throw new Error('save failed: ' + res.status);
     }).catch(function(err) {
@@ -356,10 +361,26 @@ function renderTeams() {
         var t = DATA.teams[i];
         var div = document.createElement('div');
         div.className = 'team-item';
-        div.innerHTML = '<div class="info"><span class="name">#' + t.id + ' ' + t.name + '</span><span class="players">' + t.players.join(' · ') + '</span></div><div class="actions"><button class="btn btn-sm" onclick="editTeam(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
+        var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше по посеву">↑</button>';
+        var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже по посеву">↓</button>';
+        div.innerHTML = '<div class="info"><span class="name">Посев ' + (i+1) + ' · #' + t.id + ' ' + t.name + '</span><span class="players">' + t.players.join(' · ') + '</span></div><div class="actions">' + upBtn + downBtn + '<button class="btn btn-sm" onclick="editTeam(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
         container.appendChild(div);
     }
     if (count) count.textContent = DATA.teams.length + ' команд';
+}
+
+function moveTeam(index, direction) {
+    var newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= DATA.teams.length) return;
+    var tmp = DATA.teams[index];
+    DATA.teams[index] = DATA.teams[newIndex];
+    DATA.teams[newIndex] = tmp;
+    // Порядок в списке команд определяет пары 1-го раунда (посев 1-2 -> матч 1,
+    // 3-4 -> матч 2 и т.д.) — saveData() сам пересоберёт матчи под новый порядок.
+    saveData();
+    renderTeams();
+    renderMatches();
+    showToast('↕️ Посев обновлён — пары 1-го раунда пересобраны');
 }
 
 function renderMatches() {
@@ -376,11 +397,26 @@ function renderMatches() {
         var t2 = getTeamName(m.team2);
         var winner = m.winner ? getTeamName(m.winner) : '—';
         var isComplete = !!m.winner;
+        var isLive = DATA.liveMatchId === m.id;
         var div = document.createElement('div');
         div.className = 'match-item';
+        var canPlay = !!(m.team1 && m.team2);
+        var scoreHtml = canPlay ? (
+            '<span style="display:inline-flex;align-items:center;gap:4px;">' +
+            '<input type="number" min="0" max="9" value="' + (m.score1 != null ? m.score1 : '') + '" id="score1_' + m.id + '" style="width:32px;background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 4px;border-radius:4px;font-size:11px;text-align:center;">' +
+            '<span style="color:#5f6773;">:</span>' +
+            '<input type="number" min="0" max="9" value="' + (m.score2 != null ? m.score2 : '') + '" id="score2_' + m.id + '" style="width:32px;background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 4px;border-radius:4px;font-size:11px;text-align:center;">' +
+            '<button class="btn btn-sm" onclick="setScore(' + m.id + ')" title="Сохранить счёт">✓</button>' +
+            '</span>'
+        ) : '';
+        var liveHtml = canPlay ? (
+            isLive
+                ? '<button class="btn btn-sm" style="background:#6e3a3a;color:#e3c48a;" onclick="toggleLive(' + m.id + ')">🔴 Убрать из эфира</button>'
+                : '<button class="btn btn-sm" onclick="toggleLive(' + m.id + ')">▶ Сделать текущим</button>'
+        ) : '';
         var selectHtml = '';
         if (!isComplete) {
-            selectHtml = '<select onchange="setWinner(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 6px;border-radius:4px;font-size:11px;"><option value="">Выбрать</option>';
+            selectHtml = '<select onchange="setWinner(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 6px;border-radius:4px;font-size:11px;"><option value="">Выбрать победителя</option>';
             if (m.team1) selectHtml += '<option value="' + m.team1 + '">' + getTeamName(m.team1) + '</option>';
             if (m.team2) selectHtml += '<option value="' + m.team2 + '">' + getTeamName(m.team2) + '</option>';
             selectHtml += '</select>';
@@ -389,9 +425,33 @@ function renderMatches() {
         }
         var label = labels[m.bracket] || m.bracket;
         var cls = classes[m.bracket] || 'upper';
-        div.innerHTML = '<div class="teams"><span>' + t1 + '</span><span class="vs">vs</span><span>' + t2 + '</span>' + (isComplete ? '<span class="winner">→ ' + winner + '</span>' : '') + '</div><div class="meta"><span class="tag ' + cls + '">' + label + '</span><span>Раунд ' + m.round + '</span>' + selectHtml + '</div>';
+        var liveTag = isLive ? '<span class="tag" style="background:#6e3a3a;color:#e3c48a;">🔴 В ЭФИРЕ</span>' : '';
+        div.innerHTML = '<div class="teams"><span>' + t1 + '</span><span class="vs">vs</span><span>' + t2 + '</span>' +
+            (m.score1 != null && m.score2 != null ? '<span class="winner" style="color:#e3c48a;">' + m.score1 + ':' + m.score2 + '</span>' : '') +
+            (isComplete ? '<span class="winner">→ ' + winner + '</span>' : '') + '</div>' +
+            '<div class="meta"><span class="tag ' + cls + '">' + label + '</span>' + liveTag + '<span>Раунд ' + m.round + '</span>' + scoreHtml + liveHtml + selectHtml + '</div>';
         container.appendChild(div);
     }
+}
+
+function setScore(matchId) {
+    var s1 = document.getElementById('score1_' + matchId).value;
+    var s2 = document.getElementById('score2_' + matchId).value;
+    var match = getMatch(matchId);
+    if (!match) return;
+    match.score1 = s1 === '' ? null : parseInt(s1, 10);
+    match.score2 = s2 === '' ? null : parseInt(s2, 10);
+    saveData();
+    renderMatches();
+    if (window.renderBracket) window.renderBracket();
+    showToast('🔢 Счёт матча #' + matchId + ' сохранён');
+}
+
+function toggleLive(matchId) {
+    DATA.liveMatchId = (DATA.liveMatchId === matchId) ? null : matchId;
+    saveData();
+    renderMatches();
+    showToast(DATA.liveMatchId ? '🔴 Матч #' + matchId + ' отмечен как текущий' : '⏹ Матч убран из эфира');
 }
 
 function renderSchedule() {
@@ -477,6 +537,7 @@ function setWinner(matchId, teamId) {
     var match = getMatch(matchId);
     if (!match || !teamId) return;
     match.winner = parseInt(teamId, 10);
+    if (DATA.liveMatchId === matchId) DATA.liveMatchId = null;
     saveData();
     renderMatches();
     renderSchedule();
@@ -489,6 +550,8 @@ function resetMatch(matchId) {
     if (!match) return;
     if (!confirm('Сбросить результат матча #' + matchId + '?')) return;
     match.winner = null;
+    match.score1 = null;
+    match.score2 = null;
     saveData();
     renderMatches();
     renderSchedule();

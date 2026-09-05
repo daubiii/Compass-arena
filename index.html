@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compass Arena — турнирная сетка</title>
+    <meta name="description" content="Compass Arena — турнир по Dota 2. 8 команд, Double Elimination, Bo3. Следи за сеткой и расписанием матчей.">
+
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Compass Arena">
+    <meta property="og:title" content="Compass Arena — турнир по Dota 2">
+    <meta property="og:description" content="8 команд, Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
+    <meta property="og:image" content="https://compass-arena.netlify.app/favicon-180.png">
+    <meta property="og:url" content="https://compass-arena.netlify.app/">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Compass Arena — турнир по Dota 2">
+    <meta name="twitter:description" content="8 команд, Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
+    <meta name="twitter:image" content="https://compass-arena.netlify.app/favicon-180.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -211,6 +230,7 @@
             <span class="wordmark">COMPASS <em>ARENA</em></span>
         </div>
         <div class="header-actions">
+            <a href="/rules.html" class="btn" style="margin-right:8px;">📋 Правила</a>
             <span class="header-meta" id="headerMeta">Dota 2 · Bo3</span>
         </div>
     </div>
@@ -318,7 +338,7 @@
 <footer>
     <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
         <span>Compass Arena — организатор турниров по Dota 2</span>
-        <span>Основано в 2026</span>
+        <span><a href="/rules.html" style="color:#97a0ac;">Правила турнира</a> · Основано в 2026</span>
     </div>
 </footer>
 
@@ -375,7 +395,8 @@ var DATA = {
         { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
         { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
     ],
-    schedule: {}
+    schedule: {},
+    liveMatchId: null
 };
 
 // ============================================================
@@ -395,6 +416,7 @@ function loadSavedData() {
             if (parsed.matches) DATA.matches = parsed.matches;
             if (parsed.schedule) DATA.schedule = parsed.schedule;
             if (parsed.tournament) DATA.tournament = parsed.tournament;
+            DATA.liveMatchId = parsed.liveMatchId != null ? parsed.liveMatchId : null;
         })
         .catch(function(err) {
             // Офлайн или бэкенд ещё не развёрнут — остаёмся на данных
@@ -512,14 +534,17 @@ function renderMatch(m) {
     var id1 = t1 ? t1.id : null;
     var id2 = t2 ? t2.id : null;
     var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : '';
+    var hasScore = m.score1 != null && m.score2 != null;
     var html = '<div class="match" data-match="' + m.id + '">';
     html += '<div class="team" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
+    if (hasScore) html += '<span class="status" style="color:#e3c48a;">' + m.score1 + '</span>';
     if (m.winner) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'Победа' : 'Поражение') + '</span>';
-    else html += '<span class="status pending">ожидание</span>';
+    else if (!hasScore) html += '<span class="status pending">ожидание</span>';
     html += '</div>';
     html += '<div class="team" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
+    if (hasScore) html += '<span class="status" style="color:#e3c48a;">' + m.score2 + '</span>';
     if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'Победа' : 'Поражение') + '</span>';
-    else html += '<span class="status pending">ожидание</span>';
+    else if (!hasScore) html += '<span class="status pending">ожидание</span>';
     html += '</div>';
     if (time) html += '<div class="match-info"><span class="time">🕐 ' + time + '</span></div>';
     html += '</div>';
@@ -568,17 +593,29 @@ function renderSchedule() {
 function renderLiveMatch() {
     var now = new Date();
     var liveMatch = null;
-    for (var i = 0; i < DATA.matches.length; i++) {
-        var m = DATA.matches[i];
-        if (!m.team1 || !m.team2) continue;
-        if (m.winner) continue;
-        var time = DATA.schedule && DATA.schedule[m.id];
-        if (!time) continue;
-        try {
-            var mt = new Date(time);
-            var diff = (now - mt) / (1000 * 60);
-            if (diff > -30 && diff < 120) { liveMatch = m; break; }
-        } catch(e) {}
+
+    // Ручная отметка админа ("Сделать текущим") побеждает автоматику —
+    // она надёжнее, потому что не зависит от того, насколько точно
+    // выдержано расписание.
+    if (DATA.liveMatchId) {
+        for (var i = 0; i < DATA.matches.length; i++) {
+            if (DATA.matches[i].id === DATA.liveMatchId) { liveMatch = DATA.matches[i]; break; }
+        }
+    }
+
+    if (!liveMatch) {
+        for (var i = 0; i < DATA.matches.length; i++) {
+            var m = DATA.matches[i];
+            if (!m.team1 || !m.team2) continue;
+            if (m.winner) continue;
+            var time = DATA.schedule && DATA.schedule[m.id];
+            if (!time) continue;
+            try {
+                var mt = new Date(time);
+                var diff = (now - mt) / (1000 * 60);
+                if (diff > -30 && diff < 120) { liveMatch = m; break; }
+            } catch(e) {}
+        }
     }
     if (!liveMatch) {
         var closest = null, closestDiff = Infinity;
@@ -611,14 +648,18 @@ function renderLiveMatch() {
     }
     var t1 = getTeam(liveMatch.team1);
     var t2 = getTeam(liveMatch.team2);
-    if (team1El) team1El.textContent = t1 ? t1.name : '—';
-    if (team2El) team2El.textContent = t2 ? t2.name : '—';
+    var isManuallyLive = DATA.liveMatchId === liveMatch.id;
+    var scoreStr = (liveMatch.score1 != null && liveMatch.score2 != null) ? (' (' + liveMatch.score1 + ':' + liveMatch.score2 + ')') : '';
+    if (team1El) team1El.textContent = (t1 ? t1.name : '—');
+    if (team2El) team2El.textContent = (t2 ? t2.name : '—') + scoreStr;
     var time = DATA.schedule && DATA.schedule[liveMatch.id];
     if (timeEl) timeEl.textContent = time ? formatTime(time) : '';
+    if (label) label.innerHTML = isManuallyLive
+        ? '<span class="dot" style="background:#b3695f;box-shadow:0 0 6px #b3695f;"></span>ИДЁТ СЕЙЧАС'
+        : '<span class="dot"></span>СКОРО НАЧНЁТСЯ';
     if (linksEl) {
         linksEl.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="twitch">📺 Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="vk">📱 VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="tg">💬 Telegram</a>';
     }
-    if (label) label.innerHTML = '<span class="dot"></span>СЕЙЧАС ИГРАЮТ';
 }
 
 function renderBroadcastPlatforms() {
