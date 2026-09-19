@@ -109,12 +109,120 @@
         .live-match .links .vk { background: #4a76a8; }
         .live-match .links .tg { background: #0088cc; }
 
-        /* ===== FACTS ===== */
-        .facts { border-top: 1px solid #242b35; border-bottom: 1px solid #242b35; padding: 14px 0; margin-bottom: 24px; }
-        .facts-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #242b35; }
-        .fact { background: #0a0d12; padding: 12px 16px; text-align: center; }
-        .fact dt { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 12px; color: #e3c48a; }
-        .fact dd { font-size: 12px; color: #5f6773; margin-top: 2px; }
+        /* ===== ARENA STATS (замена фактов) ===== */
+        .arena-stats {
+            position: relative;
+            padding: 40px 0 30px;
+            border-top: 1px solid #242b35;
+            border-bottom: 1px solid #242b35;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0a0d12 0%, #0d1118 100%);
+        }
+        #particles-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .arena-inner {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 140px 1fr 200px;
+            align-items: center;
+            gap: 30px;
+        }
+        .arena-logo {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .arena-logo svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 12px rgba(201, 163, 90, 0.3));
+        }
+        .compass-needle {
+            transform-origin: 100px 100px;
+            animation: rotateNeedle 12s linear infinite;
+        }
+        @keyframes rotateNeedle {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        .arena-timer { text-align: center; }
+        .timer-label {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: #c9a35a;
+            margin-bottom: 10px;
+        }
+        .timer-blocks {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .timer-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+        .timer-block .num {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #eae6da;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(201, 163, 90, 0.4);
+        }
+        .timer-block .unit {
+            font-size: 10px;
+            color: #5f6773;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+        }
+        .timer-sep {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 24px;
+            color: #c9a35a;
+            opacity: 0.5;
+            margin-bottom: 14px;
+        }
+        .timer-date {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #97a0ac;
+            letter-spacing: 0.05em;
+        }
+        .arena-facts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 20px;
+            border-left: 1px solid #242b35;
+        }
+        .arena-fact {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .arena-fact .fact-num {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #c9a35a;
+            min-width: 40px;
+        }
+        .arena-fact .fact-txt {
+            font-size: 12px;
+            color: #97a0ac;
+        }
 
         /* ===== BRACKET ===== */
         .bracket-section { padding: 16px 0 24px; }
@@ -191,7 +299,6 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 860px) {
-            .facts-row { grid-template-columns: repeat(2, 1fr); }
             .format-grid { grid-template-columns: 1fr; }
             .broadcast-inner { flex-direction: column; align-items: flex-start; }
             .bracket { gap: 16px; min-width: 700px; }
@@ -200,6 +307,28 @@
             .live-match .teams { justify-content: center; }
             .live-match .links { justify-content: center; }
             .schedule-grid { grid-template-columns: 1fr; }
+            .arena-inner {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                text-align: center;
+            }
+            .arena-logo {
+                margin: 0 auto;
+                width: 110px;
+                height: 110px;
+            }
+            .arena-facts {
+                flex-direction: row;
+                justify-content: center;
+                border-left: none;
+                border-top: 1px solid #242b35;
+                padding-left: 0;
+                padding-top: 16px;
+                gap: 24px;
+            }
+            .timer-block .num { font-size: 22px; }
+            .timer-block { min-width: 50px; }
+            .timer-sep { font-size: 18px; }
         }
         @media (max-width: 640px) {
             .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
@@ -216,6 +345,12 @@
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 18px; }
             .hero-content { padding: 20px 16px 30px; }
+            .arena-stats { padding: 24px 0 20px; }
+            .timer-block .num { font-size: 18px; }
+            .timer-block { min-width: 42px; }
+            .timer-sep { font-size: 16px; margin-bottom: 10px; }
+            .arena-fact .fact-num { font-size: 15px; min-width: 32px; }
+            .arena-fact .fact-txt { font-size: 11px; }
         }
     </style>
 </head>
@@ -268,17 +403,58 @@
 </section>
 
 <!-- ============================================================
-     FACTS
+     HERO STATS — ЖИВАЯ АРЕНА (замена полосы фактов)
      ============================================================ -->
-<section class="facts">
+<section class="arena-stats">
     <div class="container">
-        <dl class="facts-row">
-            <div class="fact"><dt>8 команд</dt><dd>слоты открыты</dd></div>
-            <div class="fact"><dt>Double elimination</dt><dd>формат TI</dd></div>
-            <div class="fact"><dt>Bo3</dt><dd>во всех раундах</dd></div>
-            <div class="fact"><dt>Даты</dt><dd id="tournamentDates">уточняются</dd></div>
-        </dl>
+        <div class="arena-inner">
+            <!-- Анимированный логотип -->
+            <div class="arena-logo">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="#c9a35a" stroke-width="2" opacity="0.3"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#c9a35a" stroke-width="1" opacity="0.2"/>
+                    <g class="compass-needle">
+                        <polygon points="100,20 108,100 100,180 92,100" fill="#c9a35a" opacity="0.9"/>
+                        <polygon points="100,20 108,100 100,100 92,100" fill="#e3c48a"/>
+                        <circle cx="100" cy="100" r="6" fill="#0a0d12" stroke="#c9a35a" stroke-width="2"/>
+                    </g>
+                    <rect x="96" y="40" width="8" height="120" fill="#eae6da" opacity="0.85"/>
+                    <polygon points="100,30 104,45 96,45" fill="#e3c48a"/>
+                    <rect x="88" y="155" width="24" height="4" fill="#c9a35a"/>
+                    <rect x="92" y="159" width="16" height="6" fill="#c9a35a"/>
+                    <circle cx="100" cy="15" r="2" fill="#c9a35a" opacity="0.6"/>
+                    <circle cx="185" cy="100" r="2" fill="#c9a35a" opacity="0.6"/>
+                    <circle cx="100" cy="185" r="2" fill="#c9a35a" opacity="0.6"/>
+                    <circle cx="15" cy="100" r="2" fill="#c9a35a" opacity="0.6"/>
+                </svg>
+            </div>
+
+            <!-- Таймер -->
+            <div class="arena-timer">
+                <div class="timer-label">ДО СТАРТА ТУРНИРА</div>
+                <div class="timer-blocks" id="timerBlocks">
+                    <div class="timer-block"><span class="num" id="days">00</span><span class="unit">дней</span></div>
+                    <div class="timer-sep">:</div>
+                    <div class="timer-block"><span class="num" id="hours">00</span><span class="unit">часов</span></div>
+                    <div class="timer-sep">:</div>
+                    <div class="timer-block"><span class="num" id="minutes">00</span><span class="unit">минут</span></div>
+                    <div class="timer-sep">:</div>
+                    <div class="timer-block"><span class="num" id="seconds">00</span><span class="unit">секунд</span></div>
+                </div>
+                <div class="timer-date">26 сентября 2026 · 12:00</div>
+            </div>
+
+            <!-- Мини-факты -->
+            <div class="arena-facts">
+                <div class="arena-fact"><span class="fact-num">8</span><span class="fact-txt">команд</span></div>
+                <div class="arena-fact"><span class="fact-num">Bo3</span><span class="fact-txt">все матчи</span></div>
+                <div class="arena-fact"><span class="fact-num">2x</span><span class="fact-txt">elimination</span></div>
+            </div>
+        </div>
     </div>
+
+    <!-- Частицы на фоне -->
+    <canvas id="particles-canvas"></canvas>
 </section>
 
 <!-- ============================================================
@@ -402,9 +578,6 @@ var DATA = {
 // ============================================================
 // ЗАГРУЗКА ДАННЫХ
 // ============================================================
-// Данные больше не хранятся в localStorage (он виден только на этом
-// устройстве). Вместо этого сайт спрашивает их у серверной функции —
-// одинаковый ответ получают все посетители, откуда бы они ни заходили.
 function loadSavedData() {
     return fetch('/api/data', { cache: 'no-store' })
         .then(function(res) {
@@ -419,8 +592,6 @@ function loadSavedData() {
             DATA.liveMatchId = parsed.liveMatchId != null ? parsed.liveMatchId : null;
         })
         .catch(function(err) {
-            // Офлайн или бэкенд ещё не развёрнут — остаёмся на данных
-            // по умолчанию, чтобы страница не сломалась.
             console.warn('Не удалось загрузить данные с сервера, показаны значения по умолчанию', err);
         });
 }
@@ -594,9 +765,6 @@ function renderLiveMatch() {
     var now = new Date();
     var liveMatch = null;
 
-    // Ручная отметка админа ("Сделать текущим") побеждает автоматику —
-    // она надёжнее, потому что не зависит от того, насколько точно
-    // выдержано расписание.
     if (DATA.liveMatchId) {
         for (var i = 0; i < DATA.matches.length; i++) {
             if (DATA.matches[i].id === DATA.liveMatchId) { liveMatch = DATA.matches[i]; break; }
@@ -722,8 +890,6 @@ function init() {
     loadSavedData().then(renderAll);
     renderBroadcastPlatforms();
     setInterval(function() { renderLiveMatch(); }, 30000);
-    // Раз в минуту переспрашиваем сервер — если админ обновил результат
-    // во время трансляции, зрители увидят это без перезагрузки страницы.
     setInterval(function() { loadSavedData().then(renderAll); }, 60000);
     window.getTournamentData = function() { return DATA; };
     window.renderBracket = renderBracket;
@@ -733,6 +899,95 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ============================================================
+// ARENA STATS — Таймер + Частицы
+// ============================================================
+const TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
+
+function updateTimer() {
+    const now = Date.now();
+    const diff = TOURNAMENT_START - now;
+
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    if (!daysEl) return;
+
+    if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    daysEl.textContent = String(days).padStart(2, '0');
+    hoursEl.textContent = String(hours).padStart(2, '0');
+    minutesEl.textContent = String(minutes).padStart(2, '0');
+    secondsEl.textContent = String(seconds).padStart(2, '0');
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+(function initParticles() {
+    const canvas = document.getElementById('particles-canvas');
+    if (!canvas) return;
+    
+    if (window.innerWidth < 480 || navigator.hardwareConcurrency <= 2) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const PARTICLE_COUNT = window.innerWidth < 860 ? 25 : 50;
+
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + 0.5,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: -Math.random() * 0.5 - 0.1,
+            alpha: Math.random() * 0.6 + 0.2
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.y < 0) {
+                p.y = canvas.height;
+                p.x = Math.random() * canvas.width;
+            }
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(201, 163, 90, ' + p.alpha + ')';
+            ctx.fill();
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+})();
 </script>
 
 </body>
