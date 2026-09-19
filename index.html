@@ -28,8 +28,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; }
+        body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; position: relative; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Все секции выше canvas с частицами */
+        header, section, footer, .modal-overlay { position: relative; z-index: 1; }
 
         /* ===== HEADER ===== */
         header { padding: 16px 0; border-bottom: 1px solid #242b35; }
@@ -109,21 +112,14 @@
         .live-match .links .vk { background: #4a76a8; }
         .live-match .links .tg { background: #0088cc; }
 
-        /* ===== ARENA STATS (замена фактов) ===== */
+        /* ===== ARENA STATS ===== */
         .arena-stats {
             position: relative;
             padding: 40px 0 30px;
             border-top: 1px solid #242b35;
             border-bottom: 1px solid #242b35;
             overflow: hidden;
-            background: linear-gradient(180deg, #0a0d12 0%, #0d1118 100%);
-        }
-        #particles-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            background: linear-gradient(180deg, rgba(10,13,18,0.85) 0%, rgba(13,17,24,0.85) 100%);
         }
         .arena-inner {
             position: relative;
@@ -222,6 +218,18 @@
         .arena-fact .fact-txt {
             font-size: 12px;
             color: #97a0ac;
+        }
+
+        /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.7;
         }
 
         /* ===== BRACKET ===== */
@@ -403,12 +411,11 @@
 </section>
 
 <!-- ============================================================
-     HERO STATS — ЖИВАЯ АРЕНА (замена полосы фактов)
+     HERO STATS — ЖИВАЯ АРЕНА
      ============================================================ -->
 <section class="arena-stats">
     <div class="container">
         <div class="arena-inner">
-            <!-- Анимированный логотип -->
             <div class="arena-logo">
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="100" cy="100" r="90" fill="none" stroke="#c9a35a" stroke-width="2" opacity="0.3"/>
@@ -429,7 +436,6 @@
                 </svg>
             </div>
 
-            <!-- Таймер -->
             <div class="arena-timer">
                 <div class="timer-label">ДО СТАРТА ТУРНИРА</div>
                 <div class="timer-blocks" id="timerBlocks">
@@ -444,7 +450,6 @@
                 <div class="timer-date">26 сентября 2026 · 12:00</div>
             </div>
 
-            <!-- Мини-факты -->
             <div class="arena-facts">
                 <div class="arena-fact"><span class="fact-num">8</span><span class="fact-txt">команд</span></div>
                 <div class="arena-fact"><span class="fact-num">Bo3</span><span class="fact-txt">все матчи</span></div>
@@ -452,9 +457,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Частицы на фоне -->
-    <canvas id="particles-canvas"></canvas>
 </section>
 
 <!-- ============================================================
@@ -529,6 +531,11 @@
         <div id="modalPlayers"></div>
     </div>
 </div>
+
+<!-- ============================================================
+     ГЛОБАЛЬНЫЕ ЧАСТИЦЫ (фиксированный фон)
+     ============================================================ -->
+<canvas id="particles-canvas"></canvas>
 
 <!-- ============================================================
      JAVASCRIPT
@@ -901,7 +908,7 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // ============================================================
-// ARENA STATS — Таймер + Частицы
+// ARENA STATS — Таймер
 // ============================================================
 const TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
 
@@ -938,20 +945,23 @@ function updateTimer() {
 setInterval(updateTimer, 1000);
 updateTimer();
 
+// ============================================================
+// ГЛОБАЛЬНЫЕ ЧАСТИЦЫ (фиксированный фон)
+// ============================================================
 (function initParticles() {
     const canvas = document.getElementById('particles-canvas');
     if (!canvas) return;
-    
+
+    // Не запускаем частицы на слабых устройствах (экономия батареи)
     if (window.innerWidth < 480 || navigator.hardwareConcurrency <= 2) return;
 
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const PARTICLE_COUNT = window.innerWidth < 860 ? 25 : 50;
+    const PARTICLE_COUNT = window.innerWidth < 860 ? 15 : 35;
 
     function resize() {
-        const rect = canvas.parentElement.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     resize();
     window.addEventListener('resize', resize);
@@ -963,7 +973,7 @@ updateTimer();
             r: Math.random() * 1.5 + 0.5,
             vx: (Math.random() - 0.5) * 0.3,
             vy: -Math.random() * 0.5 - 0.1,
-            alpha: Math.random() * 0.6 + 0.2
+            alpha: Math.random() * 0.4 + 0.1
         });
     }
 
