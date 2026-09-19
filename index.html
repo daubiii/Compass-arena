@@ -957,7 +957,7 @@ updateTimer();
 
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const PARTICLE_COUNT = window.innerWidth < 860 ? 15 : 35;
+    const PARTICLE_COUNT = window.innerWidth < 860 ? 40 : 90;
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -967,13 +967,13 @@ updateTimer();
     window.addEventListener('resize', resize);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push({
+                particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            r: Math.random() * 1.5 + 0.5,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: -Math.random() * 0.5 - 0.1,
-            alpha: Math.random() * 0.4 + 0.1
+            r: Math.random() * 2.5 + 1.2,
+            vx: (Math.random() - 0.5) * 0.35,
+            vy: -Math.random() * 0.6 - 0.15,
+            alpha: Math.random() * 0.6 + 0.4
         });
     }
 
