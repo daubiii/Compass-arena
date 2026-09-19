@@ -953,7 +953,8 @@ updateTimer();
     if (!canvas) return;
 
     // Не запускаем частицы на слабых устройствах (экономия батареи)
-    if (window.innerWidth < 480 || navigator.hardwareConcurrency <= 2) return;
+        // Частицы работают везде, но на мобильных их меньше и они легче
+    const isMobile = window.innerWidth < 860;
 
     const ctx = canvas.getContext('2d');
     let particles = [];
