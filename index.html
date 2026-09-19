@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compass Arena — турнирная сетка</title>
     <meta name="description" content="Compass Arena — турнир по Dota 2. 8 команд, Double Elimination, Bo3. Следи за сеткой и расписанием матчей.">
+    <meta name="theme-color" content="#0a0d12">
 
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -15,14 +16,13 @@
     <meta property="og:site_name" content="Compass Arena">
     <meta property="og:title" content="Compass Arena — турнир по Dota 2">
     <meta property="og:description" content="8 команд, Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
-    <meta property="og:image" content="compass-arena.pages.dev/favicon-180.png">
-    <meta property="og:url" content="compass-arena.pages.devВ">
-    <meta name="theme-color" content="#0a0d12">
+    <meta property="og:image" content="https://compass-arena.pages.dev/favicon-180.png">
+    <meta property="og:url" content="https://compass-arena.pages.dev/">
 
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Compass Arena — турнир по Dota 2">
     <meta name="twitter:description" content="8 команд, Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
-    <meta name="twitter:image" content="https://compass-arena.netlify.app/favicon-180.png">
+    <meta name="twitter:image" content="https://compass-arena.pages.dev/favicon-180.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,6 @@
         body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; position: relative; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* Все секции выше canvas с частицами */
         header, section, footer, .modal-overlay { position: relative; z-index: 1; }
 
         /* ===== HEADER ===== */
@@ -41,9 +40,11 @@
         .header-left { display: flex; align-items: center; gap: 12px; }
         .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; }
         .wordmark em { font-style: normal; color: #c9a35a; }
-        .header-meta { font-size: 12px; color: #5f6773; }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
         .btn { padding: 6px 16px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
         .btn:hover { background: #c9a35a; color: #0a0d12; }
+        .btn-live { border-color: #e74c3c; color: #ff6b5a; }
+        .btn-live:hover { background: #e74c3c; color: #fff; }
 
         /* ===== HERO WITH BACKGROUND ===== */
         .hero-bg { padding: 16px 0 0; }
@@ -126,13 +127,15 @@
             position: relative;
             z-index: 1;
             display: grid;
-            grid-template-columns: 140px 1fr 200px;
+            grid-template-columns: 160px 1fr;
             align-items: center;
-            gap: 30px;
+            gap: 40px;
+            max-width: 820px;
+            margin: 0 auto;
         }
         .arena-logo {
-            width: 140px;
-            height: 140px;
+            width: 160px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -150,75 +153,52 @@
             from { transform: rotate(0deg); }
             to   { transform: rotate(360deg); }
         }
-        .arena-timer { text-align: center; }
+        .arena-timer { text-align: left; }
         .timer-label {
             font-family: 'Unbounded', sans-serif;
             font-size: 10px;
             letter-spacing: 0.2em;
             color: #c9a35a;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .timer-blocks {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
         .timer-block {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 60px;
+            min-width: 64px;
         }
         .timer-block .num {
             font-family: 'Unbounded', sans-serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 600;
             color: #eae6da;
             line-height: 1;
             text-shadow: 0 0 20px rgba(201, 163, 90, 0.4);
+            font-variant-numeric: tabular-nums;
         }
         .timer-block .unit {
             font-size: 10px;
             color: #5f6773;
-            margin-top: 4px;
+            margin-top: 6px;
             letter-spacing: 0.05em;
         }
         .timer-sep {
             font-family: 'Unbounded', sans-serif;
-            font-size: 24px;
+            font-size: 26px;
             color: #c9a35a;
             opacity: 0.5;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
         .timer-date {
-            margin-top: 12px;
+            margin-top: 14px;
             font-size: 12px;
             color: #97a0ac;
             letter-spacing: 0.05em;
-        }
-        .arena-facts {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-left: 20px;
-            border-left: 1px solid #242b35;
-        }
-        .arena-fact {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-        .arena-fact .fact-num {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: #c9a35a;
-            min-width: 40px;
-        }
-        .arena-fact .fact-txt {
-            font-size: 12px;
-            color: #97a0ac;
         }
 
         /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
@@ -230,49 +210,101 @@
             height: 100vh;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.7;
         }
 
         /* ===== BRACKET ===== */
-        .bracket-section { padding: 16px 0 24px; }
+        .bracket-section { padding: 24px 0 28px; }
         .bracket-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 22px; }
         .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 12px; }
-        .bracket-wrapper { overflow-x: auto; padding-bottom: 12px; }
-        .bracket-wrapper::-webkit-scrollbar { height: 6px; }
-        .bracket-wrapper::-webkit-scrollbar-track { background: #10141b; }
-        .bracket-wrapper::-webkit-scrollbar-thumb { background: #242b35; border-radius: 4px; }
-        .bracket { display: flex; gap: 24px; min-width: 900px; padding: 6px 0; }
-        .round { display: flex; flex-direction: column; gap: 20px; min-width: 140px; }
-        .round-label { font-family: 'Unbounded', sans-serif; font-size: 9px; letter-spacing: 0.08em; color: #5f6773; text-align: center; margin-bottom: 2px; }
+        .bracket-wrapper { overflow-x: auto; padding-bottom: 16px; }
+        .bracket-wrapper::-webkit-scrollbar { height: 8px; }
+        .bracket-wrapper::-webkit-scrollbar-track { background: #10141b; border-radius: 4px; }
+        .bracket-wrapper::-webkit-scrollbar-thumb { background: #2f3844; border-radius: 4px; }
+        .bracket-wrapper::-webkit-scrollbar-thumb:hover { background: #c9a35a; }
+
+        .bracket { display: flex; gap: 32px; min-width: 900px; padding: 6px 0; }
+        .round { display: flex; flex-direction: column; gap: 16px; min-width: 160px; position: relative; }
+        .round-label { font-family: 'Unbounded', sans-serif; font-size: 9px; letter-spacing: 0.1em; color: #5f6773; text-align: center; margin-bottom: 6px; text-transform: uppercase; }
         .round-label.gold { color: #c9a35a; }
         .round-label.ox { color: #b3695f; }
         .round-label.grand { color: #e3c48a; font-size: 10px; }
-        .match { background: #10141b; border: 1px solid #242b35; border-radius: 4px; padding: 6px 10px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .match:hover { border-color: #c9a35a; background: #151a22; }
-        .match .team { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 12px; color: #eae6da; }
-        .match .team .seed { font-size: 9px; color: #5f6773; width: 16px; }
+
+        /* Карточка матча — усилен контраст */
+        .match {
+            background: #151a22;
+            border: 1px solid #2f3844;
+            border-radius: 5px;
+            padding: 8px 12px;
+            min-height: 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+        .match:hover { border-color: #c9a35a; background: #1a2029; }
+        .match.is-live {
+            border-color: #c9a35a;
+            box-shadow: 0 0 0 1px rgba(201,163,90,0.4), 0 0 20px rgba(201,163,90,0.15);
+        }
+        .match.is-live::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: 8px;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: blink 1s infinite;
+        }
+        .match .team { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; color: #eae6da; }
+        .match .team .seed { font-size: 9px; color: #5f6773; width: 18px; font-weight: 600; }
         .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .match .team .score { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 600; color: #c9a35a; min-width: 16px; text-align: center; }
         .match .team .status { font-size: 8px; padding: 1px 6px; border-radius: 10px; }
         .match .team .status.win { background: #4caf50; color: #fff; }
         .match .team .status.loss { background: #e74c3c; color: #fff; }
-        .match .team .status.pending { background: #242b35; color: #5f6773; }
-        .match .match-info { display: flex; justify-content: space-between; font-size: 9px; color: #5f6773; margin-top: 2px; border-top: 1px solid #242b35; padding-top: 2px; }
+        .match .team .status.pending { background: #2f3844; color: #7a8494; }
+        .match .match-info { display: flex; justify-content: space-between; font-size: 9px; color: #7a8494; margin-top: 4px; border-top: 1px solid #2f3844; padding-top: 3px; }
         .match .match-info .time { color: #e3c48a; }
-        .match-empty { background: #10141b; border: 1px dashed #242b35; border-radius: 4px; padding: 6px 10px; min-height: 50px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
+        .match-empty { background: #10141b; border: 1px dashed #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
+
+        /* Линии между раундами (вертикальные коннекторы) */
+        .round:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: -20px;
+            width: 8px;
+            height: calc(100% - 60px);
+            border-left: 1px solid rgba(201, 163, 90, 0.15);
+            pointer-events: none;
+        }
+
+        /* Подсказка «прокрутите» — только на мобильных */
+        .bracket-hint {
+            display: none;
+            text-align: center;
+            font-size: 11px;
+            color: #5f6773;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+        }
 
         /* ===== SCHEDULE ===== */
-        .schedule-section { padding: 16px 0 10px; border-top: 1px solid #242b35; }
-        .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 10px; }
-        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
-        .schedule-item { background: #10141b; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; font-size: 12px; }
-        .schedule-item .teams { display: flex; align-items: center; gap: 6px; }
+        .schedule-section { padding: 20px 0 14px; border-top: 1px solid #242b35; }
+        .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 12px; }
+        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+        .schedule-item { background: #151a22; border: 1px solid #2f3844; border-radius: 5px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12.5px; transition: 0.2s; }
+        .schedule-item:hover { border-color: #c9a35a; }
+        .schedule-item .teams { display: flex; align-items: center; gap: 8px; }
         .schedule-item .teams .vs { color: #5f6773; font-size: 10px; }
         .schedule-item .time { color: #e3c48a; font-size: 11px; font-weight: 500; }
-        .schedule-item .tag { font-size: 8px; padding: 1px 8px; border-radius: 10px; background: #242b35; color: #5f6773; }
+        .schedule-item .tag { font-size: 8px; padding: 2px 8px; border-radius: 10px; background: #2f3844; color: #7a8494; }
         .schedule-item .tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
         .schedule-item .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
         .schedule-item .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
-        .schedule-empty { color: #5f6773; text-align: center; padding: 16px; font-size: 13px; }
+        .schedule-empty { color: #5f6773; text-align: center; padding: 20px; font-size: 13px; }
 
         /* ===== MODAL ===== */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
@@ -300,9 +332,8 @@
         .broadcast h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 18px; }
         .broadcast p { color: #97a0ac; font-size: 13px; }
         .platforms { display: flex; gap: 8px; }
-        .platform { display: flex; align-items: center; gap: 6px; border: 1px solid #242b35; padding: 6px 14px; font-family: 'Unbounded', sans-serif; font-size: 10px; color: #eae6da; border-radius: 4px; text-decoration: none; transition: 0.2s; }
+        .platform { display: flex; align-items: center; gap: 6px; border: 1px solid #2f3844; padding: 6px 14px; font-family: 'Unbounded', sans-serif; font-size: 10px; color: #eae6da; border-radius: 4px; text-decoration: none; transition: 0.2s; }
         .platform:hover { border-color: #c9a35a; }
-        .platform .dot { width: 6px; height: 6px; border-radius: 50%; background: #c9a35a; }
 
         footer { border-top: 1px solid #242b35; padding: 14px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
 
@@ -310,34 +341,20 @@
         @media (max-width: 860px) {
             .format-grid { grid-template-columns: 1fr; }
             .broadcast-inner { flex-direction: column; align-items: flex-start; }
-            .bracket { gap: 16px; min-width: 700px; }
-            .round { min-width: 110px; }
+            .bracket { gap: 24px; min-width: 700px; }
+            .round { min-width: 130px; }
             .live-match { flex-direction: column; align-items: stretch; text-align: center; }
             .live-match .teams { justify-content: center; }
             .live-match .links { justify-content: center; }
             .schedule-grid { grid-template-columns: 1fr; }
-            .arena-inner {
-                grid-template-columns: 1fr;
-                gap: 24px;
-                text-align: center;
-            }
-            .arena-logo {
-                margin: 0 auto;
-                width: 110px;
-                height: 110px;
-            }
-            .arena-facts {
-                flex-direction: row;
-                justify-content: center;
-                border-left: none;
-                border-top: 1px solid #242b35;
-                padding-left: 0;
-                padding-top: 16px;
-                gap: 24px;
-            }
-            .timer-block .num { font-size: 22px; }
-            .timer-block { min-width: 50px; }
-            .timer-sep { font-size: 18px; }
+            .arena-inner { grid-template-columns: 1fr; gap: 24px; text-align: center; max-width: 100%; }
+            .arena-logo { margin: 0 auto; width: 120px; height: 120px; }
+            .arena-timer { text-align: center; }
+            .timer-blocks { justify-content: center; }
+            .timer-block .num { font-size: 24px; }
+            .timer-block { min-width: 54px; }
+            .timer-sep { font-size: 20px; }
+            .bracket-hint { display: block; }
         }
         @media (max-width: 640px) {
             .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
@@ -355,11 +372,14 @@
             .hero-content h1 { font-size: 18px; }
             .hero-content { padding: 20px 16px 30px; }
             .arena-stats { padding: 24px 0 20px; }
-            .timer-block .num { font-size: 18px; }
-            .timer-block { min-width: 42px; }
-            .timer-sep { font-size: 16px; margin-bottom: 10px; }
-            .arena-fact .fact-num { font-size: 15px; min-width: 32px; }
-            .arena-fact .fact-txt { font-size: 11px; }
+            .timer-block .num { font-size: 20px; }
+            .timer-block { min-width: 46px; }
+            .timer-sep { font-size: 16px; margin-bottom: 12px; }
+            .bracket { gap: 16px; min-width: 640px; }
+            .round { min-width: 120px; }
+            .match { padding: 6px 10px; min-height: 50px; }
+            .match .team { font-size: 11px; gap: 6px; }
+            .match .team .score { font-size: 12px; }
         }
     </style>
 </head>
@@ -374,8 +394,7 @@
             <span class="wordmark">COMPASS <em>ARENA</em></span>
         </div>
         <div class="header-actions">
-            <a href="/rules.html" class="btn" style="margin-right:8px;">📋 Правила</a>
-            <span class="header-meta" id="headerMeta"></span>
+            <a href="/rules.html" class="btn">📋 Правила</a>
         </div>
     </div>
 </header>
@@ -450,12 +469,6 @@
                 </div>
                 <div class="timer-date">26 сентября 2026 · 12:00</div>
             </div>
-
-            <div class="arena-facts">
-                <div class="arena-fact"><span class="fact-num">8</span><span class="fact-txt">команд</span></div>
-                <div class="arena-fact"><span class="fact-num">Bo3</span><span class="fact-txt">все матчи</span></div>
-                <div class="arena-fact"><span class="fact-num">2x</span><span class="fact-txt">elimination</span></div>
-            </div>
         </div>
     </div>
 </section>
@@ -472,6 +485,7 @@
             <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#b3695f;display:inline-block;"></span> Нижняя сетка</span>
         </div>
         <div class="bracket-wrapper" id="bracketWrapper"></div>
+        <div class="bracket-hint">← прокрутите, чтобы увидеть всю сетку →</div>
     </div>
 </section>
 
@@ -534,7 +548,7 @@
 </div>
 
 <!-- ============================================================
-     ГЛОБАЛЬНЫЕ ЧАСТИЦЫ (фиксированный фон)
+     ГЛОБАЛЬНЫЕ ЧАСТИЦЫ
      ============================================================ -->
 <canvas id="particles-canvas"></canvas>
 
@@ -542,9 +556,6 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
-// ============================================================
-// ДАННЫЕ
-// ============================================================
 var BROADCAST_LINKS = {
     twitch: "https://www.twitch.tv/compassarena",
     vk: "#",
@@ -583,9 +594,6 @@ var DATA = {
     liveMatchId: null
 };
 
-// ============================================================
-// ЗАГРУЗКА ДАННЫХ
-// ============================================================
 function loadSavedData() {
     return fetch('/api/data', { cache: 'no-store' })
         .then(function(res) {
@@ -600,13 +608,10 @@ function loadSavedData() {
             DATA.liveMatchId = parsed.liveMatchId != null ? parsed.liveMatchId : null;
         })
         .catch(function(err) {
-            console.warn('Не удалось загрузить данные с сервера, показаны значения по умолчанию', err);
+            console.warn('Не удалось загрузить данные с сервера', err);
         });
 }
 
-// ============================================================
-// ВСПОМОГАТЕЛЬНЫЕ
-// ============================================================
 function getTeam(id) {
     for (var i = 0; i < DATA.teams.length; i++) {
         if (DATA.teams[i].id === id) return DATA.teams[i];
@@ -650,9 +655,6 @@ function updateMatchLinks() {
     if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
 }
 
-// ============================================================
-// ОТРИСОВКА СЕТКИ
-// ============================================================
 function renderBracket() {
     var wrapper = document.getElementById('bracketWrapper');
     if (!wrapper) return;
@@ -714,16 +716,15 @@ function renderMatch(m) {
     var id2 = t2 ? t2.id : null;
     var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : '';
     var hasScore = m.score1 != null && m.score2 != null;
-    var html = '<div class="match" data-match="' + m.id + '">';
+    var isLive = DATA.liveMatchId === m.id;
+    var html = '<div class="match' + (isLive ? ' is-live' : '') + '" data-match="' + m.id + '">';
     html += '<div class="team" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
-    if (hasScore) html += '<span class="status" style="color:#e3c48a;">' + m.score1 + '</span>';
-    if (m.winner) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'Победа' : 'Поражение') + '</span>';
-    else if (!hasScore) html += '<span class="status pending">ожидание</span>';
+    if (hasScore) html += '<span class="score">' + m.score1 + '</span>';
+    if (m.winner) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'W' : 'L') + '</span>';
     html += '</div>';
     html += '<div class="team" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
-    if (hasScore) html += '<span class="status" style="color:#e3c48a;">' + m.score2 + '</span>';
-    if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'Победа' : 'Поражение') + '</span>';
-    else if (!hasScore) html += '<span class="status pending">ожидание</span>';
+    if (hasScore) html += '<span class="score">' + m.score2 + '</span>';
+    if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'W' : 'L') + '</span>';
     html += '</div>';
     if (time) html += '<div class="match-info"><span class="time">🕐 ' + time + '</span></div>';
     html += '</div>';
@@ -738,9 +739,6 @@ function formatTime(dt) {
     } catch(e) { return dt; }
 }
 
-// ============================================================
-// РАСПИСАНИЕ
-// ============================================================
 function renderSchedule() {
     var container = document.getElementById('scheduleContainer');
     if (!container) return;
@@ -766,9 +764,6 @@ function renderSchedule() {
     container.innerHTML = html;
 }
 
-// ============================================================
-// LIVE MATCH
-// ============================================================
 function renderLiveMatch() {
     var now = new Date();
     var liveMatch = null;
@@ -844,9 +839,6 @@ function renderBroadcastPlatforms() {
     container.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="platform"><span class="dot"></span> Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="platform"><span class="dot"></span> VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="platform"><span class="dot"></span> Telegram</a>';
 }
 
-// ============================================================
-// МОДАЛЬНОЕ ОКНО
-// ============================================================
 function openModal(teamId) {
     var team = getTeam(teamId);
     if (!team) return;
@@ -881,14 +873,7 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
 
-// ============================================================
-// ИНИЦИАЛИЗАЦИЯ
-// ============================================================
 function renderAll() {
-    var dates = document.getElementById('tournamentDates');
-    if (dates) dates.textContent = DATA.tournament.dates || 'уточняются';
-    var meta = document.getElementById('headerMeta');
-    if (meta) meta.textContent = DATA.tournament.game + ' · ' + DATA.tournament.matches;
     renderBracket();
     renderSchedule();
     renderLiveMatch();
@@ -903,7 +888,6 @@ function init() {
     window.renderBracket = renderBracket;
     window.renderSchedule = renderSchedule;
     window.renderLiveMatch = renderLiveMatch;
-    console.log('✅ Compass Arena загружена!');
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -916,14 +900,11 @@ const TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
 function updateTimer() {
     const now = Date.now();
     const diff = TOURNAMENT_START - now;
-
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
     const secondsEl = document.getElementById('seconds');
-
     if (!daysEl) return;
-
     if (diff <= 0) {
         daysEl.textContent = '00';
         hoursEl.textContent = '00';
@@ -931,45 +912,36 @@ function updateTimer() {
         secondsEl.textContent = '00';
         return;
     }
-
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
     daysEl.textContent = String(days).padStart(2, '0');
     hoursEl.textContent = String(hours).padStart(2, '0');
     minutesEl.textContent = String(minutes).padStart(2, '0');
     secondsEl.textContent = String(seconds).padStart(2, '0');
 }
-
 setInterval(updateTimer, 1000);
 updateTimer();
 
 // ============================================================
-// ГЛОБАЛЬНЫЕ ЧАСТИЦЫ (фиксированный фон)
+// ГЛОБАЛЬНЫЕ ЧАСТИЦЫ
 // ============================================================
 (function initParticles() {
     const canvas = document.getElementById('particles-canvas');
     if (!canvas) return;
-
-    // Не запускаем частицы на слабых устройствах (экономия батареи)
-        // Частицы работают везде, но на мобильных их меньше и они легче
     const isMobile = window.innerWidth < 860;
-
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const PARTICLE_COUNT = window.innerWidth < 860 ? 40 : 90;
-
+    const PARTICLE_COUNT = isMobile ? 40 : 90;
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
     resize();
     window.addEventListener('resize', resize);
-
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-                particles.push({
+        particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             r: Math.random() * 2.5 + 1.2,
@@ -978,19 +950,14 @@ updateTimer();
             alpha: Math.random() * 0.6 + 0.4
         });
     }
-
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let p of particles) {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.y < 0) {
-                p.y = canvas.height;
-                p.x = Math.random() * canvas.width;
-            }
+            if (p.y < 0) { p.y = canvas.height; p.x = Math.random() * canvas.width; }
             if (p.x < 0) p.x = canvas.width;
             if (p.x > canvas.width) p.x = 0;
-
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(201, 163, 90, ' + p.alpha + ')';
