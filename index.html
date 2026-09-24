@@ -99,7 +99,7 @@
 
         /* ===== TWITCH EMBED ===== */
         .twitch-wrap {
-            margin: 20px 0 24px;
+            margin: 20px 0 40px;
             border: 1px solid #2f3844;
             border-radius: 10px;
             overflow: hidden;
@@ -146,7 +146,7 @@
             animation: blink 1.2s infinite;
         }
 
-        /* ===== ARENA STATS ===== */
+        /* ===== ARENA (COUNTDOWN ONLY) ===== */
         .arena-stats {
             position: relative;
             padding: 32px 0 26px;
@@ -170,9 +170,7 @@
         .compass-needle { transform-origin: 100px 100px; animation: rotateNeedle 12s linear infinite; }
         @keyframes rotateNeedle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* STATE: COUNTDOWN (default) */
-        .arena-timer { display: block; text-align: left; }
-        .arena-timer.hidden { display: none !important; }
+        .arena-timer { text-align: left; }
         .timer-label {
             font-family: 'Manrope', sans-serif;
             font-size: 10px;
@@ -196,38 +194,32 @@
         .timer-sep { font-family: 'Unbounded', sans-serif; font-size: 26px; color: #c9a35a; opacity: 0.5; margin-bottom: 16px; }
         .timer-date { margin-top: 14px; font-size: 12px; color: #97a0ac; letter-spacing: 0.05em; }
 
-        /* STATE: LIVE */
-        .arena-live { display: none !important; text-align: left; }
-        .arena-live.active { display: block !important; }
-        .arena-live .live-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+        /* ===== БАННЕР «ТУРНИРНАЯ СЕТКА» ===== */
+        .bracket-banner {
+            padding: 40px 0 24px;
+            border-top: 1px solid #242b35;
+            border-bottom: 1px solid #242b35;
+            margin-top: 0;
+            background: linear-gradient(180deg, rgba(13,17,24,0.6) 0%, rgba(10,13,18,0.2) 100%);
+        }
+        .bracket-banner-inner { text-align: center; }
+        .bracket-banner-title {
             font-family: 'Unbounded', sans-serif;
-            font-size: 22px;
             font-weight: 600;
+            font-size: 38px;
+            letter-spacing: 0.02em;
             color: #eae6da;
-            letter-spacing: 0.05em;
+            line-height: 1.1;
+            margin-bottom: 8px;
         }
-        .arena-live .live-tag .dot {
-            width: 10px; height: 10px; border-radius: 50%; background: #e74c3c;
-            animation: blink 1.2s infinite;
-        }
-        .arena-live .live-sub { margin-top: 10px; font-size: 14px; color: #b0b8c4; }
-        .arena-live .live-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .arena-live .btn { padding: 10px 20px; font-size: 11px; }
-
-        /* STATE: FINISHED */
-        .arena-finished { display: none !important; text-align: left; }
-        .arena-finished.active { display: block !important; }
-        .arena-finished .finished-tag {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 22px;
+        .bracket-banner-sub {
+            font-family: 'Manrope', sans-serif;
             font-weight: 600;
-            color: #c9a35a;
-            letter-spacing: 0.05em;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #7a8494;
         }
-        .arena-finished .finished-sub { margin-top: 10px; font-size: 14px; color: #b0b8c4; }
 
         /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
         #particles-canvas {
@@ -239,8 +231,7 @@
         }
 
         /* ===== BRACKET ===== */
-        .bracket-section { padding: 24px 0 28px; }
-        .bracket-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 22px; }
+        .bracket-section { padding: 24px 0 40px; }
         .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 12px; }
         .bracket-wrapper { overflow-x: auto; padding-bottom: 16px; }
         .bracket-wrapper::-webkit-scrollbar { height: 8px; }
@@ -274,20 +265,37 @@
             flex-direction: column;
             justify-content: center;
             cursor: pointer;
-            transition: 0.2s;
+            transition: border-color 0.2s, background 0.2s;
             position: relative;
         }
         .match:hover { border-color: #c9a35a; background: #1a2029; }
-        .match.is-live { border-color: #c9a35a; }
-        .match.is-live::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: 8px;
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #e74c3c;
-            animation: blink 1s infinite;
+
+        /* LIVE MATCH — усиленный индикатор */
+        .match.is-live {
+            border-color: #e74c3c;
+            background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, #151a22 100%);
+            animation: livePulse 1.8s ease-in-out infinite;
         }
+        .match.is-live::before {
+            content: 'LIVE';
+            position: absolute;
+            top: -10px;
+            left: 8px;
+            padding: 2px 8px;
+            background: #e74c3c;
+            color: #fff;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 9px;
+            letter-spacing: 0.14em;
+            border-radius: 3px;
+            animation: blink 1.2s infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { border-color: rgba(231, 76, 60, 0.9); }
+            50%      { border-color: rgba(231, 76, 60, 0.4); }
+        }
+
         .match .team { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; color: #eae6da; }
         .match .team .seed { font-size: 9px; color: #5f6773; width: 18px; font-weight: 600; }
         .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -355,6 +363,9 @@
         footer a { color: #97a0ac; text-decoration: none; transition: 0.2s; }
         footer a:hover { color: #c9a35a; }
 
+        /* ===== ANIMATIONS ===== */
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 860px) {
             .format-grid { grid-template-columns: 1fr; }
@@ -369,8 +380,7 @@
             .timer-block { min-width: 54px; }
             .timer-sep { font-size: 20px; }
             .bracket-hint { display: block; }
-            .arena-live, .arena-finished { text-align: center; }
-            .arena-live .live-actions { justify-content: center; }
+            .bracket-banner-title { font-size: 26px; }
         }
         @media (max-width: 640px) {
             .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
@@ -383,7 +393,10 @@
             .modal { padding: 16px; }
             .wordmark { font-size: 14px; }
             .btn { padding: 6px 12px; font-size: 10px; letter-spacing: 0.06em; }
-            .twitch-wrap { margin: 14px 0 18px; }
+            .twitch-wrap { margin: 14px 0 24px; }
+            .bracket-banner { padding: 28px 0 18px; }
+            .bracket-banner-title { font-size: 22px; }
+            .bracket-banner-sub { font-size: 10px; letter-spacing: 0.18em; }
         }
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 18px; }
@@ -397,8 +410,7 @@
             .match { padding: 6px 10px; min-height: 50px; }
             .match .team { font-size: 11px; gap: 6px; }
             .match .team .score { font-size: 12px; }
-            .arena-live .live-tag { font-size: 16px; }
-            .arena-finished .finished-tag { font-size: 16px; }
+            .bracket-banner-title { font-size: 18px; }
         }
     </style>
 </head>
@@ -456,9 +468,9 @@
 </section>
 
 <!-- ============================================================
-     ARENA STATS — ТАЙМЕР / LIVE / FINISHED
+     ARENA — ТОЛЬКО ТАЙМЕР (до старта турнира)
      ============================================================ -->
-<section class="arena-stats">
+<section class="arena-stats" id="arenaSection">
     <div class="container">
         <div class="arena-inner">
             <div class="arena-logo">
@@ -480,8 +492,6 @@
                     <circle cx="15" cy="100" r="2" fill="#c9a35a" opacity="0.6"/>
                 </svg>
             </div>
-
-            <!-- STATE 1: COUNTDOWN -->
             <div class="arena-timer" id="arenaTimer">
                 <div class="timer-label">До старта турнира</div>
                 <div class="timer-blocks">
@@ -495,34 +505,29 @@
                 </div>
                 <div class="timer-date">26 сентября 2026 · 12:00</div>
             </div>
-
-            <!-- STATE 2: LIVE -->
-            <div class="arena-live" id="arenaLive">
-                <div class="live-tag"><span class="dot"></span>ТУРНИР ИДЁТ</div>
-                <div class="live-sub">Матчи идут прямо сейчас. Подключайся к трансляции.</div>
-                <div class="live-actions">
-                    <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">Смотреть трансляцию</a>
-                    <a href="/schedule.html" class="btn">Расписание</a>
-                </div>
-            </div>
-
-            <!-- STATE 3: FINISHED -->
-            <div class="arena-finished" id="arenaFinished">
-                <div class="finished-tag">ТУРНИР ЗАВЕРШЁН</div>
-                <div class="finished-sub">Спасибо всем командам и зрителям. Сетка и результаты — ниже.</div>
-            </div>
         </div>
     </div>
 </section>
 
 <!-- ============================================================
-     BRACKET
+     БАННЕР «ТУРНИРНАЯ СЕТКА» — показывается после старта
+     ============================================================ -->
+<section class="bracket-banner" id="bracketBanner" style="display:none;">
+    <div class="container">
+        <div class="bracket-banner-inner">
+            <h1 class="bracket-banner-title">Турнирная сетка</h1>
+            <div class="bracket-banner-sub">Double Elimination · Bo3 · 8 команд</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     СЕТКА
      ============================================================ -->
 <section class="bracket-section">
     <div class="container">
-        <h2>Путь к трофею</h2>
         <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;font-size:12px;color:#97a0ac;">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 20px;font-size:12px;color:#97a0ac;">
             <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#c9a35a;display:inline-block;"></span> Верхняя сетка</span>
             <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#b3695f;display:inline-block;"></span> Нижняя сетка</span>
         </div>
@@ -893,51 +898,28 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // ============================================================
-// ARENA STATE MACHINE (countdown / live / finished)
+// ARENA STATE: COUNTDOWN → скрыть арену, показать баннер сетки
 // ============================================================
 var TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
-var TOURNAMENT_END = TOURNAMENT_START + (2 * 24 * 60 * 60 * 1000);
 
-// Отладочный режим: если true — updateTimer НЕ перебивает ручное состояние
-var ARENA_DEBUG = false;
-
-function setArenaState(state, manual) {
-    var timer = document.getElementById('arenaTimer');
-    var live = document.getElementById('arenaLive');
-    var finished = document.getElementById('arenaFinished');
-    if (!timer || !live || !finished) {
-        console.warn('[arena] элементы состояний не найдены');
-        return;
-    }
-    timer.style.display = (state === 'countdown') ? 'block' : 'none';
-    live.style.display = (state === 'live') ? 'block' : 'none';
-    finished.style.display = (state === 'finished') ? 'block' : 'none';
-
-    if (manual) ARENA_DEBUG = true;
-
-    if (window.console && console.log) {
-        console.log('[arena] state =', state, manual ? '(manual, debug ON)' : '');
-    }
+function switchToBracketMode() {
+    var arena = document.getElementById('arenaSection');
+    var banner = document.getElementById('bracketBanner');
+    if (arena) arena.style.display = 'none';
+    if (banner) banner.style.display = 'block';
 }
 
 function updateTimer() {
-    if (ARENA_DEBUG) return; // не перебиваем ручное состояние
-
     var now = Date.now();
     var diff = TOURNAMENT_START - now;
 
-    if (now >= TOURNAMENT_END) {
-        setArenaState('finished');
-        return;
-    }
-
+    // Турнир начался — скрываем арену, показываем баннер сетки
     if (diff <= 0) {
-        setArenaState('live');
+        switchToBracketMode();
         return;
     }
 
-    setArenaState('countdown');
-
+    // Иначе — показываем таймер
     var daysEl = document.getElementById('days');
     var hoursEl = document.getElementById('hours');
     var minutesEl = document.getElementById('minutes');
@@ -954,7 +936,6 @@ function updateTimer() {
     secondsEl.textContent = String(seconds).padStart(2, '0');
 }
 
-// Запуск после DOMContentLoaded, чтобы не было гонки
 document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateTimer, 1000);
     updateTimer();
