@@ -35,18 +35,19 @@
         header, section, footer, .modal-overlay { position: relative; z-index: 1; }
 
         /* ===== HEADER ===== */
-        header { padding: 16px 0; border-bottom: 1px solid #242b35; }
+        header { padding: 14px 0; border-bottom: 1px solid #242b35; }
         .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
         .header-left { display: flex; align-items: center; gap: 12px; }
-        .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; }
+        .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
         .wordmark em { font-style: normal; color: #c9a35a; }
-        .header-actions { display: flex; align-items: center; gap: 8px; }
-        .btn { padding: 6px 16px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .btn { padding: 6px 14px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
         .btn:hover { background: #c9a35a; color: #0a0d12; }
-        .btn-live { border-color: #e74c3c; color: #ff6b5a; }
+        .btn-live { border-color: #e74c3c; color: #ff8a7a; }
         .btn-live:hover { background: #e74c3c; color: #fff; }
+        .btn-live .pulse { width: 6px; height: 6px; border-radius: 50%; background: #e74c3c; animation: blink 1.2s infinite; }
 
-        /* ===== HERO WITH BACKGROUND ===== */
+        /* ===== HERO ===== */
         .hero-bg { padding: 16px 0 0; }
         .hero-bg-inner {
             background-image: url('gt.png');
@@ -63,61 +64,69 @@
         .hero-bg-inner::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            inset: 0;
             background: rgba(10, 13, 18, 0.55);
             z-index: 0;
             border-radius: 16px 16px 0 0;
         }
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            padding: 50px 40px 60px;
-            max-width: 640px;
-        }
-        .hero-content h1 {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 36px;
-            font-weight: 600;
-            line-height: 1.1;
-            color: #eae6da;
-        }
+        .hero-content { position: relative; z-index: 1; padding: 50px 40px 60px; max-width: 640px; }
+        .hero-content h1 { font-family: 'Unbounded', sans-serif; font-size: 36px; font-weight: 600; line-height: 1.1; color: #eae6da; }
         .hero-content h1 .accent { color: #c9a35a; }
-        .hero-content p {
-            color: #b0b8c4;
-            font-size: 15px;
-            max-width: 480px;
-            margin-top: 12px;
-            line-height: 1.7;
-        }
+        .hero-content p { color: #b0b8c4; font-size: 15px; max-width: 480px; margin-top: 12px; line-height: 1.7; }
         .hero-fade {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
+            position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
             background: linear-gradient(to bottom, transparent 0%, #0a0d12 100%);
-            z-index: 1;
-            pointer-events: none;
+            z-index: 1; pointer-events: none;
         }
 
-        /* ===== LIVE MATCH ===== */
-        .live-match { background: #10141b; border: 2px solid #c9a35a; border-radius: 8px; padding: 14px 20px; margin: 10px 0 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-        .live-match .label { display: flex; align-items: center; gap: 10px; font-family: 'Unbounded', sans-serif; font-size: 12px; color: #e3c48a; }
-        .live-match .label .dot { width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; animation: blink 1s infinite; }
-        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
-        .live-match .teams { display: flex; align-items: center; gap: 14px; font-size: 16px; font-weight: 600; }
-        .live-match .teams .vs { color: #5f6773; font-size: 13px; font-weight: 400; }
-        .live-match .time { font-size: 12px; color: #5f6773; }
-        .live-match .links { display: flex; gap: 8px; }
-        .live-match .links a { padding: 4px 12px; border-radius: 4px; font-size: 11px; font-family: 'Unbounded', sans-serif; color: #fff; text-decoration: none; }
-        .live-match .links .twitch { background: #6441a5; }
-        .live-match .links .vk { background: #4a76a8; }
-        .live-match .links .tg { background: #0088cc; }
+        /* ===== TWITCH EMBED ===== */
+        .twitch-wrap {
+            margin: 20px 0 24px;
+            border: 1px solid #2f3844;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 16 / 9;
+            max-height: 520px;
+            position: relative;
+        }
+        .twitch-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+        .twitch-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .twitch-header .title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 13px;
+            color: #e3c48a;
+            letter-spacing: 0.1em;
+        }
+        .twitch-header .live-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #ff8a7a;
+            font-family: 'Unbounded', sans-serif;
+        }
+        .twitch-header .live-dot span {
+            width: 8px; height: 8px; border-radius: 50%; background: #e74c3c;
+            animation: blink 1.2s infinite;
+        }
 
         /* ===== ARENA STATS ===== */
         .arena-stats {
             position: relative;
-            padding: 40px 0 30px;
+            padding: 32px 0 26px;
             border-top: 1px solid #242b35;
             border-bottom: 1px solid #242b35;
             overflow: hidden;
@@ -127,51 +136,20 @@
             position: relative;
             z-index: 1;
             display: grid;
-            grid-template-columns: 160px 1fr;
+            grid-template-columns: 150px 1fr;
             align-items: center;
             gap: 40px;
             max-width: 820px;
             margin: 0 auto;
         }
-        .arena-logo {
-            width: 160px;
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .arena-logo svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 12px rgba(201, 163, 90, 0.3));
-        }
-        .compass-needle {
-            transform-origin: 100px 100px;
-            animation: rotateNeedle 12s linear infinite;
-        }
-        @keyframes rotateNeedle {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
+        .arena-logo { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; }
+        .arena-logo svg { width: 100%; height: 100%; filter: drop-shadow(0 0 12px rgba(201, 163, 90, 0.3)); }
+        .compass-needle { transform-origin: 100px 100px; animation: rotateNeedle 12s linear infinite; }
+        @keyframes rotateNeedle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .arena-timer { text-align: left; }
-        .timer-label {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            color: #c9a35a;
-            margin-bottom: 12px;
-        }
-        .timer-blocks {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .timer-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 64px;
-        }
+        .timer-label { font-family: 'Unbounded', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: #c9a35a; margin-bottom: 12px; }
+        .timer-blocks { display: flex; align-items: center; gap: 10px; }
+        .timer-block { display: flex; flex-direction: column; align-items: center; min-width: 64px; }
         .timer-block .num {
             font-family: 'Unbounded', sans-serif;
             font-size: 32px;
@@ -181,33 +159,61 @@
             text-shadow: 0 0 20px rgba(201, 163, 90, 0.4);
             font-variant-numeric: tabular-nums;
         }
-        .timer-block .unit {
-            font-size: 10px;
-            color: #5f6773;
-            margin-top: 6px;
-            letter-spacing: 0.05em;
-        }
-        .timer-sep {
+        .timer-block .unit { font-size: 10px; color: #5f6773; margin-top: 6px; letter-spacing: 0.05em; }
+        .timer-sep { font-family: 'Unbounded', sans-serif; font-size: 26px; color: #c9a35a; opacity: 0.5; margin-bottom: 16px; }
+        .timer-date { margin-top: 14px; font-size: 12px; color: #97a0ac; letter-spacing: 0.05em; }
+
+        /* LIVE state */
+        .arena-live { display: none; text-align: left; }
+        .arena-live.active { display: block; }
+        .arena-live .live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             font-family: 'Unbounded', sans-serif;
-            font-size: 26px;
-            color: #c9a35a;
-            opacity: 0.5;
-            margin-bottom: 16px;
-        }
-        .timer-date {
-            margin-top: 14px;
-            font-size: 12px;
-            color: #97a0ac;
+            font-size: 22px;
+            font-weight: 600;
+            color: #eae6da;
             letter-spacing: 0.05em;
         }
+        .arena-live .live-tag .dot {
+            width: 14px; height: 14px; border-radius: 50%; background: #e74c3c;
+            animation: blink 1.2s infinite;
+            box-shadow: 0 0 12px rgba(231, 76, 60, 0.8);
+        }
+        .arena-live .live-sub {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #b0b8c4;
+        }
+        .arena-live .live-actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .arena-live .btn { padding: 10px 20px; font-size: 11px; }
+
+        /* FINISHED state */
+        .arena-finished { display: none; text-align: left; }
+        .arena-finished.active { display: block; }
+        .arena-finished .finished-tag {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #c9a35a;
+            letter-spacing: 0.05em;
+        }
+        .arena-finished .finished-sub { margin-top: 10px; font-size: 14px; color: #b0b8c4; }
+
+        /* Скрываем таймер когда live/finished активны */
+        .arena-timer.hidden { display: none; }
 
         /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
         #particles-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             pointer-events: none;
             z-index: 0;
         }
@@ -229,7 +235,6 @@
         .round-label.ox { color: #b3695f; }
         .round-label.grand { color: #e3c48a; font-size: 10px; }
 
-        /* Карточка матча — усилен контраст */
         .match {
             background: #151a22;
             border: 1px solid #2f3844;
@@ -269,29 +274,19 @@
         .match .match-info .time { color: #e3c48a; }
         .match-empty { background: #10141b; border: 1px dashed #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
 
-        /* Линии между раундами (вертикальные коннекторы) */
         .round:not(:last-child)::after {
             content: '';
             position: absolute;
-            top: 30px;
-            right: -20px;
+            top: 30px; right: -20px;
             width: 8px;
             height: calc(100% - 60px);
             border-left: 1px solid rgba(201, 163, 90, 0.15);
             pointer-events: none;
         }
 
-        /* Подсказка «прокрутите» — только на мобильных */
-        .bracket-hint {
-            display: none;
-            text-align: center;
-            font-size: 11px;
-            color: #5f6773;
-            margin-top: 4px;
-            letter-spacing: 0.05em;
-        }
+        .bracket-hint { display: none; text-align: center; font-size: 11px; color: #5f6773; margin-top: 4px; letter-spacing: 0.05em; }
 
-        /* ===== SCHEDULE ===== */
+        /* ===== SCHEDULE PREVIEW ===== */
         .schedule-section { padding: 20px 0 14px; border-top: 1px solid #242b35; }
         .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 12px; }
         .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
@@ -305,9 +300,11 @@
         .schedule-item .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
         .schedule-item .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
         .schedule-empty { color: #5f6773; text-align: center; padding: 20px; font-size: 13px; }
+        .schedule-more { display: block; text-align: center; margin-top: 14px; }
+        .schedule-more .btn { padding: 10px 24px; font-size: 11px; }
 
         /* ===== MODAL ===== */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 380px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
         .modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; color: #5f6773; font-size: 22px; cursor: pointer; }
@@ -326,28 +323,19 @@
         .format-item h3 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 13px; margin-bottom: 4px; }
         .format-item p { font-size: 12px; color: #97a0ac; line-height: 1.6; }
 
-        /* ===== BROADCAST ===== */
-        .broadcast { padding: 24px 0 40px; border-top: 1px solid #242b35; }
-        .broadcast-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-        .broadcast h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 18px; }
-        .broadcast p { color: #97a0ac; font-size: 13px; }
-        .platforms { display: flex; gap: 8px; }
-        .platform { display: flex; align-items: center; gap: 6px; border: 1px solid #2f3844; padding: 6px 14px; font-family: 'Unbounded', sans-serif; font-size: 10px; color: #eae6da; border-radius: 4px; text-decoration: none; transition: 0.2s; }
-        .platform:hover { border-color: #c9a35a; }
-
-        footer { border-top: 1px solid #242b35; padding: 14px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+        /* ===== FOOTER ===== */
+        footer { border-top: 1px solid #242b35; padding: 20px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+        footer .f-links { display: flex; gap: 14px; flex-wrap: wrap; }
+        footer a { color: #97a0ac; text-decoration: none; transition: 0.2s; }
+        footer a:hover { color: #c9a35a; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 860px) {
             .format-grid { grid-template-columns: 1fr; }
-            .broadcast-inner { flex-direction: column; align-items: flex-start; }
             .bracket { gap: 24px; min-width: 700px; }
             .round { min-width: 130px; }
-            .live-match { flex-direction: column; align-items: stretch; text-align: center; }
-            .live-match .teams { justify-content: center; }
-            .live-match .links { justify-content: center; }
             .schedule-grid { grid-template-columns: 1fr; }
-            .arena-inner { grid-template-columns: 1fr; gap: 24px; text-align: center; max-width: 100%; }
+            .arena-inner { grid-template-columns: 1fr; gap: 20px; text-align: center; max-width: 100%; }
             .arena-logo { margin: 0 auto; width: 120px; height: 120px; }
             .arena-timer { text-align: center; }
             .timer-blocks { justify-content: center; }
@@ -355,6 +343,8 @@
             .timer-block { min-width: 54px; }
             .timer-sep { font-size: 20px; }
             .bracket-hint { display: block; }
+            .arena-live, .arena-finished { text-align: center; }
+            .arena-live .live-actions { justify-content: center; }
         }
         @media (max-width: 640px) {
             .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
@@ -365,8 +355,9 @@
             .hero-fade { height: 50px; }
             .container { padding: 0 12px; }
             .modal { padding: 16px; }
-            .live-match .teams { font-size: 13px; gap: 8px; }
-            .wordmark { font-size: 13px; }
+            .wordmark { font-size: 14px; }
+            .btn { padding: 5px 10px; font-size: 9px; }
+            .twitch-wrap { margin: 14px 0 18px; }
         }
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 18px; }
@@ -380,6 +371,8 @@
             .match { padding: 6px 10px; min-height: 50px; }
             .match .team { font-size: 11px; gap: 6px; }
             .match .team .score { font-size: 12px; }
+            .arena-live .live-tag { font-size: 16px; }
+            .arena-finished .finished-tag { font-size: 16px; }
         }
     </style>
 </head>
@@ -391,16 +384,18 @@
 <header>
     <div class="container header-row">
         <div class="header-left">
-            <span class="wordmark">COMPASS <em>ARENA</em></span>
+            <a href="/" class="wordmark">COMPASS <em>ARENA</em></a>
         </div>
         <div class="header-actions">
+            <a href="/schedule.html" class="btn">📅 Расписание</a>
             <a href="/rules.html" class="btn">📋 Правила</a>
+            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live"><span class="pulse"></span> Смотреть</a>
         </div>
     </div>
 </header>
 
 <!-- ============================================================
-     ГЕРОЙ С ФОНОМ
+     HERO
      ============================================================ -->
 <section class="hero-bg">
     <div class="container">
@@ -415,23 +410,27 @@
 </section>
 
 <!-- ============================================================
-     LIVE MATCH
+     TWITCH EMBED
      ============================================================ -->
 <section class="container">
-    <div class="live-match" id="liveMatch">
-        <div class="label"><span class="dot"></span>СЕЙЧАС ИГРАЮТ</div>
-        <div class="teams" id="liveTeams">
-            <span class="team-name" id="liveTeam1">—</span>
-            <span class="vs">⚔️</span>
-            <span class="team-name" id="liveTeam2">—</span>
+    <div style="padding: 14px 0 0;">
+        <div class="twitch-header">
+            <div class="title">📺 ПРЯМАЯ ТРАНСЛЯЦИЯ</div>
+            <div class="live-dot"><span></span> Twitch · compassarena</div>
         </div>
-        <div class="time" id="liveTime"></div>
-        <div class="links" id="liveLinks"></div>
+        <div class="twitch-wrap">
+            <iframe
+                src="https://player.twitch.tv/?channel=compassarena&parent=compass-arena.pages.dev&muted=true&autoplay=true"
+                allowfullscreen="true"
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                title="Compass Arena — прямая трансляция">
+            </iframe>
+        </div>
     </div>
 </section>
 
 <!-- ============================================================
-     HERO STATS — ЖИВАЯ АРЕНА
+     ARENA STATS — ТАЙМЕР / LIVE / FINISHED
      ============================================================ -->
 <section class="arena-stats">
     <div class="container">
@@ -456,9 +455,10 @@
                 </svg>
             </div>
 
-            <div class="arena-timer">
+            <!-- STATE 1: COUNTDOWN -->
+            <div class="arena-timer" id="arenaTimer">
                 <div class="timer-label">ДО СТАРТА ТУРНИРА</div>
-                <div class="timer-blocks" id="timerBlocks">
+                <div class="timer-blocks">
                     <div class="timer-block"><span class="num" id="days">00</span><span class="unit">дней</span></div>
                     <div class="timer-sep">:</div>
                     <div class="timer-block"><span class="num" id="hours">00</span><span class="unit">часов</span></div>
@@ -468,6 +468,22 @@
                     <div class="timer-block"><span class="num" id="seconds">00</span><span class="unit">секунд</span></div>
                 </div>
                 <div class="timer-date">26 сентября 2026 · 12:00</div>
+            </div>
+
+            <!-- STATE 2: LIVE -->
+            <div class="arena-live" id="arenaLive">
+                <div class="live-tag"><span class="dot"></span> LIVE · ТУРНИР ИДЁТ</div>
+                <div class="live-sub">Матчи идут прямо сейчас. Подключайся к трансляции!</div>
+                <div class="live-actions">
+                    <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">📺 Смотреть трансляцию</a>
+                    <a href="/schedule.html" class="btn">📅 Расписание</a>
+                </div>
+            </div>
+
+            <!-- STATE 3: FINISHED -->
+            <div class="arena-finished" id="arenaFinished">
+                <div class="finished-tag">🏆 ТУРНИР ЗАВЕРШЁН</div>
+                <div class="finished-sub">Спасибо всем командам и зрителям! Сетка и результаты — ниже.</div>
             </div>
         </div>
     </div>
@@ -490,12 +506,15 @@
 </section>
 
 <!-- ============================================================
-     SCHEDULE
+     SCHEDULE PREVIEW (3 ближайших)
      ============================================================ -->
 <section class="schedule-section">
     <div class="container">
-        <h2>📅 Расписание матчей</h2>
+        <h2>📅 Ближайшие матчи</h2>
         <div id="scheduleContainer"><div class="schedule-empty">Загрузка...</div></div>
+        <div class="schedule-more" id="scheduleMore" style="display:none;">
+            <a href="/schedule.html" class="btn">Все матчи →</a>
+        </div>
     </div>
 </section>
 
@@ -513,25 +532,17 @@
 </section>
 
 <!-- ============================================================
-     BROADCAST
-     ============================================================ -->
-<section class="broadcast">
-    <div class="container broadcast-inner">
-        <div>
-            <h2>📺 Смотрите вживую</h2>
-            <p>Все матчи в прямом эфире. Подключайтесь!</p>
-        </div>
-        <div class="platforms" id="broadcastPlatforms"></div>
-    </div>
-</section>
-
-<!-- ============================================================
      FOOTER
      ============================================================ -->
 <footer>
-    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
         <span>Compass Arena — организатор турниров по Dota 2</span>
-        <span><a href="/rules.html" style="color:#97a0ac;">Правила турнира</a> · Основано в 2026</span>
+        <div class="f-links">
+            <a href="/schedule.html">Расписание</a>
+            <a href="/rules.html">Правила</a>
+            <a href="https://www.twitch.tv/compassarena" target="_blank">Twitch</a>
+            <a href="https://t.me/compassarenaa" target="_blank">Telegram</a>
+        </div>
     </div>
 </footer>
 
@@ -563,7 +574,7 @@ var BROADCAST_LINKS = {
 };
 
 var DATA = {
-    tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "уточняются" },
+    tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
     teams: [
         { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
         { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
@@ -741,20 +752,40 @@ function formatTime(dt) {
 
 function renderSchedule() {
     var container = document.getElementById('scheduleContainer');
+    var moreBtn = document.getElementById('scheduleMore');
     if (!container) return;
-    var matches = [];
+    var now = Date.now();
+    var upcoming = [];
+    var completed = [];
     for (var i = 0; i < DATA.matches.length; i++) {
-        if (DATA.matches[i].team1 && DATA.matches[i].team2) matches.push(DATA.matches[i]);
+        var m = DATA.matches[i];
+        if (!m.team1 || !m.team2) continue;
+        if (m.winner) { completed.push(m); continue; }
+        var t = DATA.schedule && DATA.schedule[m.id];
+        if (t) {
+            try {
+                var ts = new Date(t).getTime();
+                if (ts >= now) upcoming.push({ m: m, ts: ts });
+            } catch(e) { upcoming.push({ m: m, ts: 0 }); }
+        } else {
+            upcoming.push({ m: m, ts: 0 });
+        }
     }
-    if (matches.length === 0) {
+    upcoming.sort(function(a, b) { return a.ts - b.ts; });
+    var preview = upcoming.slice(0, 3);
+
+    if (preview.length === 0 && completed.length === 0) {
         container.innerHTML = '<div class="schedule-empty">📭 Расписание пока не заполнено</div>';
+        if (moreBtn) moreBtn.style.display = 'none';
         return;
     }
+
     var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
     var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
     var html = '<div class="schedule-grid">';
-    for (var i = 0; i < matches.length; i++) {
-        var m = matches[i];
+    var list = preview.length > 0 ? preview.map(function(x){return x.m;}) : completed.slice(-3);
+    for (var i = 0; i < list.length; i++) {
+        var m = list[i];
         var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : 'Время не указано';
         var label = labels[m.bracket] || m.bracket;
         var cls = classes[m.bracket] || 'upper';
@@ -762,81 +793,7 @@ function renderSchedule() {
     }
     html += '</div>';
     container.innerHTML = html;
-}
-
-function renderLiveMatch() {
-    var now = new Date();
-    var liveMatch = null;
-
-    if (DATA.liveMatchId) {
-        for (var i = 0; i < DATA.matches.length; i++) {
-            if (DATA.matches[i].id === DATA.liveMatchId) { liveMatch = DATA.matches[i]; break; }
-        }
-    }
-
-    if (!liveMatch) {
-        for (var i = 0; i < DATA.matches.length; i++) {
-            var m = DATA.matches[i];
-            if (!m.team1 || !m.team2) continue;
-            if (m.winner) continue;
-            var time = DATA.schedule && DATA.schedule[m.id];
-            if (!time) continue;
-            try {
-                var mt = new Date(time);
-                var diff = (now - mt) / (1000 * 60);
-                if (diff > -30 && diff < 120) { liveMatch = m; break; }
-            } catch(e) {}
-        }
-    }
-    if (!liveMatch) {
-        var closest = null, closestDiff = Infinity;
-        for (var i = 0; i < DATA.matches.length; i++) {
-            var m = DATA.matches[i];
-            if (!m.team1 || !m.team2) continue;
-            if (m.winner) continue;
-            var time = DATA.schedule && DATA.schedule[m.id];
-            if (!time) continue;
-            try {
-                var mt = new Date(time);
-                var diff = (mt - now) / (1000 * 60);
-                if (diff > -30 && diff < closestDiff) { closestDiff = diff; closest = m; }
-            } catch(e) {}
-        }
-        if (closest) liveMatch = closest;
-    }
-    var team1El = document.getElementById('liveTeam1');
-    var team2El = document.getElementById('liveTeam2');
-    var timeEl = document.getElementById('liveTime');
-    var linksEl = document.getElementById('liveLinks');
-    var label = document.querySelector('.live-match .label');
-    if (!liveMatch) {
-        if (team1El) team1El.textContent = '—';
-        if (team2El) team2El.textContent = '—';
-        if (timeEl) timeEl.textContent = '';
-        if (linksEl) linksEl.innerHTML = '';
-        if (label) label.innerHTML = '<span class="dot" style="opacity:0.3;"></span>ОЖИДАНИЕ МАТЧА';
-        return;
-    }
-    var t1 = getTeam(liveMatch.team1);
-    var t2 = getTeam(liveMatch.team2);
-    var isManuallyLive = DATA.liveMatchId === liveMatch.id;
-    var scoreStr = (liveMatch.score1 != null && liveMatch.score2 != null) ? (' (' + liveMatch.score1 + ':' + liveMatch.score2 + ')') : '';
-    if (team1El) team1El.textContent = (t1 ? t1.name : '—');
-    if (team2El) team2El.textContent = (t2 ? t2.name : '—') + scoreStr;
-    var time = DATA.schedule && DATA.schedule[liveMatch.id];
-    if (timeEl) timeEl.textContent = time ? formatTime(time) : '';
-    if (label) label.innerHTML = isManuallyLive
-        ? '<span class="dot" style="background:#b3695f;box-shadow:0 0 6px #b3695f;"></span>ИДЁТ СЕЙЧАС'
-        : '<span class="dot"></span>СКОРО НАЧНЁТСЯ';
-    if (linksEl) {
-        linksEl.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="twitch">📺 Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="vk">📱 VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="tg">💬 Telegram</a>';
-    }
-}
-
-function renderBroadcastPlatforms() {
-    var container = document.getElementById('broadcastPlatforms');
-    if (!container) return;
-    container.innerHTML = '<a href="' + BROADCAST_LINKS.twitch + '" target="_blank" class="platform"><span class="dot"></span> Twitch</a><a href="' + BROADCAST_LINKS.vk + '" target="_blank" class="platform"><span class="dot"></span> VK</a><a href="' + BROADCAST_LINKS.tg + '" target="_blank" class="platform"><span class="dot"></span> Telegram</a>';
+    if (moreBtn) moreBtn.style.display = 'block';
 }
 
 function openModal(teamId) {
@@ -876,42 +833,59 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 function renderAll() {
     renderBracket();
     renderSchedule();
-    renderLiveMatch();
 }
 
 function init() {
     loadSavedData().then(renderAll);
-    renderBroadcastPlatforms();
-    setInterval(function() { renderLiveMatch(); }, 30000);
     setInterval(function() { loadSavedData().then(renderAll); }, 60000);
     window.getTournamentData = function() { return DATA; };
     window.renderBracket = renderBracket;
     window.renderSchedule = renderSchedule;
-    window.renderLiveMatch = renderLiveMatch;
 }
 
 document.addEventListener('DOMContentLoaded', init);
 
 // ============================================================
-// ARENA STATS — Таймер
+// TIMER + STATE MACHINE
 // ============================================================
 const TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
+// Финал — через 2 дня после старта (можно поменять)
+const TOURNAMENT_END = TOURNAMENT_START + (2 * 24 * 60 * 60 * 1000);
+
+function setArenaState(state) {
+    var timer = document.getElementById('arenaTimer');
+    var live = document.getElementById('arenaLive');
+    var finished = document.getElementById('arenaFinished');
+    if (!timer || !live || !finished) return;
+    timer.classList.toggle('hidden', state !== 'countdown');
+    live.classList.toggle('active', state === 'live');
+    finished.classList.toggle('active', state === 'finished');
+}
 
 function updateTimer() {
     const now = Date.now();
     const diff = TOURNAMENT_START - now;
+
+    // После финала
+    if (now >= TOURNAMENT_END) {
+        setArenaState('finished');
+        return;
+    }
+
+    // Турнир идёт
+    if (diff <= 0) {
+        setArenaState('live');
+        return;
+    }
+
+    // До старта — таймер
+    setArenaState('countdown');
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
     const secondsEl = document.getElementById('seconds');
     if (!daysEl) return;
-    if (diff <= 0) {
-        daysEl.textContent = '00';
-        hoursEl.textContent = '00';
-        minutesEl.textContent = '00';
-        secondsEl.textContent = '00';
-        return;
-    }
+
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -925,7 +899,7 @@ setInterval(updateTimer, 1000);
 updateTimer();
 
 // ============================================================
-// ГЛОБАЛЬНЫЕ ЧАСТИЦЫ
+// ЧАСТИЦЫ
 // ============================================================
 (function initParticles() {
     const canvas = document.getElementById('particles-canvas');
