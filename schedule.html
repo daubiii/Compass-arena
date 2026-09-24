@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание матчей — Compass Arena</title>
+    <meta name="description" content="Расписание всех матчей турнира Compass Arena по Dota 2.">
+    <meta name="theme-color" content="#0a0d12">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; position: relative; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        header, main, footer { position: relative; z-index: 1; }
+
+        header { padding: 14px 0; border-bottom: 1px solid #242b35; }
+        .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
+        .wordmark em { font-style: normal; color: #c9a35a; }
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .btn { padding: 6px 14px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .btn:hover { background: #c9a35a; color: #0a0d12; }
+        .btn-live { border-color: #e74c3c; color: #ff8a7a; }
+        .btn-live:hover { background: #e74c3c; color: #fff; }
+
+        main { padding: 32px 0 60px; }
+        h1 { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 8px; }
+        .lede { color: #97a0ac; font-size: 14px; margin-bottom: 24px; }
+
+        /* Фильтры */
+        .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter {
+            padding: 8px 18px;
+            background: #151a22;
+            border: 1px solid #2f3844;
+            color: #97a0ac;
+            border-radius: 4px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter:hover { border-color: #c9a35a; color: #eae6da; }
+        .filter.active { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+
+        /* Группы по датам */
+        .day-group { margin-bottom: 28px; }
+        .day-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #c9a35a;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #242b35;
+            letter-spacing: 0.05em;
+        }
+        .match-list { display: flex; flex-direction: column; gap: 8px; }
+
+        .match-row {
+            background: #151a22;
+            border: 1px solid #2f3844;
+            border-radius: 6px;
+            padding: 14px 18px;
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            align-items: center;
+            gap: 16px;
+            transition: 0.2s;
+            position: relative;
+        }
+        .match-row:hover { border-color: #c9a35a; background: #1a2029; }
+        .match-row.is-live {
+            border-color: #c9a35a;
+            box-shadow: 0 0 0 1px rgba(201,163,90,0.4), 0 0 20px rgba(201,163,90,0.15);
+        }
+        .match-row.is-live::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: 14px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: blink 1s infinite;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.8);
+        }
+
+        .match-time {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 13px;
+            color: #e3c48a;
+            font-weight: 500;
+        }
+        .match-time .date-sub {
+            display: block;
+            font-size: 9px;
+            color: #5f6773;
+            margin-top: 2px;
+            letter-spacing: 0.05em;
+        }
+        .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .match-teams .vs {
+            color: #5f6773;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+        .match-teams .team-name { color: #eae6da; }
+        .match-teams .winner { color: #c9a35a; }
+        .match-teams .winner::after {
+            content: '✓';
+            margin-left: 6px;
+            font-size: 12px;
+        }
+        .match-score {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #c9a35a;
+            margin-left: 6px;
+        }
+        .match-tag {
+            font-size: 9px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            background: #2f3844;
+            color: #7a8494;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+        .match-tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
+        .match-tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
+        .match-tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #5f6773;
+            font-size: 14px;
+        }
+
+        footer { border-top: 1px solid #242b35; padding: 20px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+        footer .f-links { display: flex; gap: 14px; flex-wrap: wrap; }
+        footer a { color: #97a0ac; text-decoration: none; transition: 0.2s; }
+        footer a:hover { color: #c9a35a; }
+
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 22px; }
+            .match-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 12px 14px;
+            }
+            .match-time { font-size: 12px; }
+            .match-teams { font-size: 13px; flex-wrap: wrap; }
+            .match-tag { justify-self: start; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container header-row">
+        <a href="/" class="wordmark">COMPASS <em>ARENA</em></a>
+        <div class="header-actions">
+            <a href="/" class="btn">← На главную</a>
+            <a href="/rules.html" class="btn">📋 Правила</a>
+            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">📺 Смотреть</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>📅 Расписание матчей</h1>
+        <p class="lede">Полное расписание турнира Compass Arena. Все матчи — Bo3, Double Elimination.</p>
+
+        <div class="filters" id="filters">
+            <button class="filter active" data-filter="all">Все матчи</button>
+            <button class="filter" data-filter="upper">Верхняя сетка</button>
+            <button class="filter" data-filter="lower">Нижняя сетка</button>
+            <button class="filter" data-filter="grand">Гранд-финал</button>
+            <button class="filter" data-filter="completed">Завершённые</button>
+        </div>
+
+        <div id="scheduleList"><div class="empty-state">Загрузка...</div></div>
+    </div>
+</main>
+
+<footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
+        <span>Compass Arena — организатор турниров по Dota 2</span>
+        <div class="f-links">
+            <a href="/">Главная</a>
+            <a href="/rules.html">Правила</a>
+            <a href="https://www.twitch.tv/compassarena" target="_blank">Twitch</a>
+            <a href="https://t.me/compassarenaa" target="_blank">Telegram</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+var DATA = {
+    teams: [],
+    matches: [],
+    schedule: {},
+    liveMatchId: null
+};
+
+var CURRENT_FILTER = 'all';
+
+function loadData() {
+    return fetch('/api/data', { cache: 'no-store' })
+        .then(function(res) { return res.json(); })
+        .then(function(parsed) {
+            if (parsed.teams) DATA.teams = parsed.teams;
+            if (parsed.matches) DATA.matches = parsed.matches;
+            if (parsed.schedule) DATA.schedule = parsed.schedule;
+            DATA.liveMatchId = parsed.liveMatchId != null ? parsed.liveMatchId : null;
+        })
+        .catch(function(err) {
+            console.warn('Не удалось загрузить данные', err);
+        });
+}
+
+function getTeamName(id) {
+    for (var i = 0; i < DATA.teams.length; i++) {
+        if (DATA.teams[i].id === id) return DATA.teams[i].name;
+    }
+    return '—';
+}
+
+function formatTime(dt) {
+    if (!dt) return { time: '—', date: '' };
+    try {
+        var d = new Date(dt);
+        var time = d.toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        var date = d.toLocaleString('ru-RU', { day: '2-digit', month: 'long', weekday: 'short' });
+        return { time: time, date: date };
+    } catch(e) {
+        return { time: dt, date: '' };
+    }
+}
+
+function groupByDay(matches) {
+    var groups = {};
+    for (var i = 0; i < matches.length; i++) {
+        var m = matches[i];
+        var ts = DATA.schedule[m.id];
+        var key = 'no-date';
+        if (ts) {
+            try {
+                var d = new Date(ts);
+                key = d.toLocaleString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' });
+            } catch(e) {}
+        }
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(m);
+    }
+    return groups;
+}
+
+function render() {
+    var container = document.getElementById('scheduleList');
+    if (!container) return;
+
+    var matches = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.team1 || !m.team2) continue;
+
+        if (CURRENT_FILTER === 'completed') {
+            if (!m.winner) continue;
+        } else if (CURRENT_FILTER !== 'all') {
+            if (m.bracket !== CURRENT_FILTER) continue;
+        }
+        matches.push(m);
+    }
+
+    if (matches.length === 0) {
+        container.innerHTML = '<div class="empty-state">Матчей по этому фильтру пока нет</div>';
+        return;
+    }
+
+    var groups = groupByDay(matches);
+    var keys = Object.keys(groups).sort(function(a, b) {
+        if (a === 'no-date') return 1;
+        if (b === 'no-date') return -1;
+        return 0;
+    });
+
+    var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
+    var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
+
+    var html = '';
+    for (var k = 0; k < keys.length; k++) {
+        var day = keys[k];
+        html += '<div class="day-group">';
+        html += '<div class="day-title">' + (day === 'no-date' ? 'Дата не указана' : day) + '</div>';
+        html += '<div class="match-list">';
+        for (var j = 0; j < groups[day].length; j++) {
+            var m = groups[day][j];
+            var t = formatTime(DATA.schedule[m.id]);
+            var label = labels[m.bracket] || m.bracket;
+            var cls = classes[m.bracket] || 'upper';
+            var isLive = DATA.liveMatchId === m.id;
+            var hasScore = m.score1 != null && m.score2 != null;
+
+            var team1Class = m.winner === m.team1 ? 'winner' : 'team-name';
+            var team2Class = m.winner === m.team2 ? 'winner' : 'team-name';
+
+            html += '<div class="match-row' + (isLive ? ' is-live' : '') + '">';
+            html += '<div class="match-time">' + t.time + (t.date ? '<span class="date-sub">' + t.date + '</span>' : '') + '</div>';
+            html += '<div class="match-teams">';
+            html += '<span class="' + team1Class + '">' + getTeamName(m.team1) + '</span>';
+            if (hasScore) html += '<span class="match-score">' + m.score1 + ':' + m.score2 + '</span>';
+            html += '<span class="vs">VS</span>';
+            html += '<span class="' + team2Class + '">' + getTeamName(m.team2) + '</span>';
+            html += '</div>';
+            html += '<div class="match-tag ' + cls + '">' + label + '</div>';
+            html += '</div>';
+        }
+        html += '</div>';
+        html += '</div>';
+    }
+    container.innerHTML = html;
+}
+
+document.getElementById('filters').addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter');
+    if (!btn) return;
+    var all = this.querySelectorAll('.filter');
+    for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+    btn.classList.add('active');
+    CURRENT_FILTER = btn.dataset.filter;
+    render();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadData().then(render);
+});
+</script>
+
+</body>
+</html>
