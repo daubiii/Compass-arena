@@ -170,7 +170,9 @@
         .compass-needle { transform-origin: 100px 100px; animation: rotateNeedle 12s linear infinite; }
         @keyframes rotateNeedle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .arena-timer { text-align: left; }
+        /* STATE: COUNTDOWN (default) */
+        .arena-timer { display: block; text-align: left; }
+        .arena-timer.hidden { display: none !important; }
         .timer-label {
             font-family: 'Manrope', sans-serif;
             font-size: 10px;
@@ -194,9 +196,9 @@
         .timer-sep { font-family: 'Unbounded', sans-serif; font-size: 26px; color: #c9a35a; opacity: 0.5; margin-bottom: 16px; }
         .timer-date { margin-top: 14px; font-size: 12px; color: #97a0ac; letter-spacing: 0.05em; }
 
-        /* LIVE state */
-        .arena-live { display: none; text-align: left; }
-        .arena-live.active { display: block; }
+        /* STATE: LIVE */
+        .arena-live { display: none !important; text-align: left; }
+        .arena-live.active { display: block !important; }
         .arena-live .live-tag {
             display: inline-flex;
             align-items: center;
@@ -215,9 +217,9 @@
         .arena-live .live-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
         .arena-live .btn { padding: 10px 20px; font-size: 11px; }
 
-        /* FINISHED state */
-        .arena-finished { display: none; text-align: left; }
-        .arena-finished.active { display: block; }
+        /* STATE: FINISHED */
+        .arena-finished { display: none !important; text-align: left; }
+        .arena-finished.active { display: block !important; }
         .arena-finished .finished-tag {
             font-family: 'Unbounded', sans-serif;
             font-size: 22px;
@@ -226,8 +228,6 @@
             letter-spacing: 0.05em;
         }
         .arena-finished .finished-sub { margin-top: 10px; font-size: 14px; color: #b0b8c4; }
-
-        .arena-timer.hidden { display: none; }
 
         /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
         #particles-canvas {
@@ -881,10 +881,18 @@ function setArenaState(state) {
     var timer = document.getElementById('arenaTimer');
     var live = document.getElementById('arenaLive');
     var finished = document.getElementById('arenaFinished');
-    if (!timer || !live || !finished) return;
-    timer.classList.toggle('hidden', state !== 'countdown');
-    live.classList.toggle('active', state === 'live');
-    finished.classList.toggle('active', state === 'finished');
+    if (!timer || !live || !finished) {
+        console.warn('[arena] элементы состояний не найдены');
+        return;
+    }
+    // Жёсткое управление видимостью через inline-style — перебивает любой CSS
+    timer.style.display = (state === 'countdown') ? 'block' : 'none';
+    live.style.display = (state === 'live') ? 'block' : 'none';
+    finished.style.display = (state === 'finished') ? 'block' : 'none';
+
+    if (window.console && console.log) {
+        console.log('[arena] state =', state);
+    }
 }
 
 function updateTimer() {
@@ -902,6 +910,7 @@ function updateTimer() {
     }
 
     setArenaState('countdown');
+
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
@@ -917,8 +926,12 @@ function updateTimer() {
     minutesEl.textContent = String(minutes).padStart(2, '0');
     secondsEl.textContent = String(seconds).padStart(2, '0');
 }
-setInterval(updateTimer, 1000);
-updateTimer();
+
+// Запуск строго после DOMContentLoaded, чтобы не было гонки
+document.addEventListener('DOMContentLoaded', function() {
+    setInterval(updateTimer, 1000);
+    updateTimer();
+});
 
 // ============================================================
 // ЧАСТИЦЫ
