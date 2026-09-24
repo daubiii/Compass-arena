@@ -593,6 +593,9 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
+// ============================================================
+// ДАННЫЕ
+// ============================================================
 var BROADCAST_LINKS = {
     twitch: "https://www.twitch.tv/compassarena",
     vk: "#",
@@ -631,6 +634,9 @@ var DATA = {
     liveMatchId: null
 };
 
+// ============================================================
+// ЗАГРУЗКА ДАННЫХ
+// ============================================================
 function loadSavedData() {
     return fetch('/api/data', { cache: 'no-store' })
         .then(function(res) {
@@ -649,6 +655,9 @@ function loadSavedData() {
         });
 }
 
+// ============================================================
+// ВСПОМОГАТЕЛЬНЫЕ
+// ============================================================
 function getTeam(id) {
     for (var i = 0; i < DATA.teams.length; i++) {
         if (DATA.teams[i].id === id) return DATA.teams[i];
@@ -692,6 +701,9 @@ function updateMatchLinks() {
     if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
 }
 
+// ============================================================
+// СЕТКА
+// ============================================================
 function renderBracket() {
     var wrapper = document.getElementById('bracketWrapper');
     if (!wrapper) return;
@@ -776,6 +788,9 @@ function formatTime(dt) {
     } catch(e) { return dt; }
 }
 
+// ============================================================
+// РАСПИСАНИЕ (превью — 3 матча)
+// ============================================================
 function renderSchedule() {
     var container = document.getElementById('scheduleContainer');
     var moreBtn = document.getElementById('scheduleMore');
@@ -822,6 +837,9 @@ function renderSchedule() {
     if (moreBtn) moreBtn.style.display = 'block';
 }
 
+// ============================================================
+// МОДАЛЬНОЕ ОКНО
+// ============================================================
 function openModal(teamId) {
     var team = getTeam(teamId);
     if (!team) return;
@@ -856,6 +874,9 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
 
+// ============================================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================================
 function renderAll() {
     renderBracket();
     renderSchedule();
@@ -872,12 +893,15 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // ============================================================
-// TIMER + STATE MACHINE
+// ARENA STATE MACHINE (countdown / live / finished)
 // ============================================================
-const TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
-const TOURNAMENT_END = TOURNAMENT_START + (2 * 24 * 60 * 60 * 1000);
+var TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
+var TOURNAMENT_END = TOURNAMENT_START + (2 * 24 * 60 * 60 * 1000);
 
-function setArenaState(state) {
+// Отладочный режим: если true — updateTimer НЕ перебивает ручное состояние
+var ARENA_DEBUG = false;
+
+function setArenaState(state, manual) {
     var timer = document.getElementById('arenaTimer');
     var live = document.getElementById('arenaLive');
     var finished = document.getElementById('arenaFinished');
@@ -885,19 +909,22 @@ function setArenaState(state) {
         console.warn('[arena] элементы состояний не найдены');
         return;
     }
-    // Жёсткое управление видимостью через inline-style — перебивает любой CSS
     timer.style.display = (state === 'countdown') ? 'block' : 'none';
     live.style.display = (state === 'live') ? 'block' : 'none';
     finished.style.display = (state === 'finished') ? 'block' : 'none';
 
+    if (manual) ARENA_DEBUG = true;
+
     if (window.console && console.log) {
-        console.log('[arena] state =', state);
+        console.log('[arena] state =', state, manual ? '(manual, debug ON)' : '');
     }
 }
 
 function updateTimer() {
-    const now = Date.now();
-    const diff = TOURNAMENT_START - now;
+    if (ARENA_DEBUG) return; // не перебиваем ручное состояние
+
+    var now = Date.now();
+    var diff = TOURNAMENT_START - now;
 
     if (now >= TOURNAMENT_END) {
         setArenaState('finished');
@@ -911,23 +938,23 @@ function updateTimer() {
 
     setArenaState('countdown');
 
-    const daysEl = document.getElementById('days');
-    const hoursEl = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
+    var daysEl = document.getElementById('days');
+    var hoursEl = document.getElementById('hours');
+    var minutesEl = document.getElementById('minutes');
+    var secondsEl = document.getElementById('seconds');
     if (!daysEl) return;
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((diff % (1000 * 60)) / 1000);
     daysEl.textContent = String(days).padStart(2, '0');
     hoursEl.textContent = String(hours).padStart(2, '0');
     minutesEl.textContent = String(minutes).padStart(2, '0');
     secondsEl.textContent = String(seconds).padStart(2, '0');
 }
 
-// Запуск строго после DOMContentLoaded, чтобы не было гонки
+// Запуск после DOMContentLoaded, чтобы не было гонки
 document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateTimer, 1000);
     updateTimer();
@@ -937,19 +964,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // ЧАСТИЦЫ
 // ============================================================
 (function initParticles() {
-    const canvas = document.getElementById('particles-canvas');
+    var canvas = document.getElementById('particles-canvas');
     if (!canvas) return;
-    const isMobile = window.innerWidth < 860;
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const PARTICLE_COUNT = isMobile ? 40 : 90;
+    var isMobile = window.innerWidth < 860;
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var PARTICLE_COUNT = isMobile ? 40 : 90;
+
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
     resize();
     window.addEventListener('resize', resize);
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
@@ -959,9 +988,11 @@ document.addEventListener('DOMContentLoaded', function() {
             alpha: Math.random() * 0.6 + 0.4
         });
     }
+
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let p of particles) {
+        for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
             p.x += p.vx;
             p.y += p.vy;
             if (p.y < 0) { p.y = canvas.height; p.x = Math.random() * canvas.width; }
