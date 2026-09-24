@@ -41,10 +41,28 @@
         .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
         .wordmark em { font-style: normal; color: #c9a35a; }
         .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .btn { padding: 6px 14px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .btn:hover { background: #c9a35a; color: #0a0d12; }
-        .btn-live { border-color: #e74c3c; color: #ff8a7a; }
-        .btn-live:hover { background: #e74c3c; color: #fff; }
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(201, 163, 90, 0.3);
+            background: transparent;
+            color: #e3c48a;
+            border-radius: 4px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+        .btn:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+        .btn-live { border-color: rgba(231, 76, 60, 0.4); color: #ff8a7a; }
+        .btn-live:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
         .btn-live .pulse { width: 6px; height: 6px; border-radius: 50%; background: #e74c3c; animation: blink 1.2s infinite; }
 
         /* ===== HERO ===== */
@@ -105,18 +123,23 @@
             gap: 8px;
         }
         .twitch-header .title {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 13px;
-            color: #e3c48a;
-            letter-spacing: 0.1em;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #7a8494;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
         }
         .twitch-header .live-dot {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 11px;
-            color: #ff8a7a;
-            font-family: 'Unbounded', sans-serif;
+            font-size: 10px;
+            color: #7a8494;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
         .twitch-header .live-dot span {
             width: 8px; height: 8px; border-radius: 50%; background: #e74c3c;
@@ -143,11 +166,20 @@
             margin: 0 auto;
         }
         .arena-logo { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; }
-        .arena-logo svg { width: 100%; height: 100%; filter: drop-shadow(0 0 12px rgba(201, 163, 90, 0.3)); }
+        .arena-logo svg { width: 100%; height: 100%; }
         .compass-needle { transform-origin: 100px 100px; animation: rotateNeedle 12s linear infinite; }
         @keyframes rotateNeedle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
         .arena-timer { text-align: left; }
-        .timer-label { font-family: 'Unbounded', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: #c9a35a; margin-bottom: 12px; }
+        .timer-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            color: #7a8494;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
         .timer-blocks { display: flex; align-items: center; gap: 10px; }
         .timer-block { display: flex; flex-direction: column; align-items: center; min-width: 64px; }
         .timer-block .num {
@@ -156,7 +188,6 @@
             font-weight: 600;
             color: #eae6da;
             line-height: 1;
-            text-shadow: 0 0 20px rgba(201, 163, 90, 0.4);
             font-variant-numeric: tabular-nums;
         }
         .timer-block .unit { font-size: 10px; color: #5f6773; margin-top: 6px; letter-spacing: 0.05em; }
@@ -177,21 +208,11 @@
             letter-spacing: 0.05em;
         }
         .arena-live .live-tag .dot {
-            width: 14px; height: 14px; border-radius: 50%; background: #e74c3c;
+            width: 10px; height: 10px; border-radius: 50%; background: #e74c3c;
             animation: blink 1.2s infinite;
-            box-shadow: 0 0 12px rgba(231, 76, 60, 0.8);
         }
-        .arena-live .live-sub {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #b0b8c4;
-        }
-        .arena-live .live-actions {
-            margin-top: 16px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .arena-live .live-sub { margin-top: 10px; font-size: 14px; color: #b0b8c4; }
+        .arena-live .live-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
         .arena-live .btn { padding: 10px 20px; font-size: 11px; }
 
         /* FINISHED state */
@@ -206,7 +227,6 @@
         }
         .arena-finished .finished-sub { margin-top: 10px; font-size: 14px; color: #b0b8c4; }
 
-        /* Скрываем таймер когда live/finished активны */
         .arena-timer.hidden { display: none; }
 
         /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
@@ -230,10 +250,19 @@
 
         .bracket { display: flex; gap: 32px; min-width: 900px; padding: 6px 0; }
         .round { display: flex; flex-direction: column; gap: 16px; min-width: 160px; position: relative; }
-        .round-label { font-family: 'Unbounded', sans-serif; font-size: 9px; letter-spacing: 0.1em; color: #5f6773; text-align: center; margin-bottom: 6px; text-transform: uppercase; }
-        .round-label.gold { color: #c9a35a; }
-        .round-label.ox { color: #b3695f; }
-        .round-label.grand { color: #e3c48a; font-size: 10px; }
+        .round-label {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            color: #5f6773;
+            text-align: center;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .round-label.gold { color: #7a8494; }
+        .round-label.ox { color: #7a8494; }
+        .round-label.grand { color: #c9a35a; font-size: 10px; }
 
         .match {
             background: #151a22;
@@ -249,10 +278,7 @@
             position: relative;
         }
         .match:hover { border-color: #c9a35a; background: #1a2029; }
-        .match.is-live {
-            border-color: #c9a35a;
-            box-shadow: 0 0 0 1px rgba(201,163,90,0.4), 0 0 20px rgba(201,163,90,0.15);
-        }
+        .match.is-live { border-color: #c9a35a; }
         .match.is-live::before {
             content: '';
             position: absolute;
@@ -356,7 +382,7 @@
             .container { padding: 0 12px; }
             .modal { padding: 16px; }
             .wordmark { font-size: 14px; }
-            .btn { padding: 5px 10px; font-size: 9px; }
+            .btn { padding: 6px 12px; font-size: 10px; letter-spacing: 0.06em; }
             .twitch-wrap { margin: 14px 0 18px; }
         }
         @media (max-width: 480px) {
@@ -387,9 +413,9 @@
             <a href="/" class="wordmark">COMPASS <em>ARENA</em></a>
         </div>
         <div class="header-actions">
-            <a href="/schedule.html" class="btn">📅 Расписание</a>
-            <a href="/rules.html" class="btn">📋 Правила</a>
-            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live"><span class="pulse"></span> Смотреть</a>
+            <a href="/schedule.html" class="btn">Расписание</a>
+            <a href="/rules.html" class="btn">Правила</a>
+            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live"><span class="pulse"></span>Смотреть</a>
         </div>
     </div>
 </header>
@@ -415,8 +441,8 @@
 <section class="container">
     <div style="padding: 14px 0 0;">
         <div class="twitch-header">
-            <div class="title">📺 ПРЯМАЯ ТРАНСЛЯЦИЯ</div>
-            <div class="live-dot"><span></span> Twitch · compassarena</div>
+            <div class="title">Прямая трансляция</div>
+            <div class="live-dot"><span></span>Twitch · Compassarena</div>
         </div>
         <div class="twitch-wrap">
             <iframe
@@ -457,7 +483,7 @@
 
             <!-- STATE 1: COUNTDOWN -->
             <div class="arena-timer" id="arenaTimer">
-                <div class="timer-label">ДО СТАРТА ТУРНИРА</div>
+                <div class="timer-label">До старта турнира</div>
                 <div class="timer-blocks">
                     <div class="timer-block"><span class="num" id="days">00</span><span class="unit">дней</span></div>
                     <div class="timer-sep">:</div>
@@ -472,18 +498,18 @@
 
             <!-- STATE 2: LIVE -->
             <div class="arena-live" id="arenaLive">
-                <div class="live-tag"><span class="dot"></span> LIVE · ТУРНИР ИДЁТ</div>
-                <div class="live-sub">Матчи идут прямо сейчас. Подключайся к трансляции!</div>
+                <div class="live-tag"><span class="dot"></span>ТУРНИР ИДЁТ</div>
+                <div class="live-sub">Матчи идут прямо сейчас. Подключайся к трансляции.</div>
                 <div class="live-actions">
-                    <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">📺 Смотреть трансляцию</a>
-                    <a href="/schedule.html" class="btn">📅 Расписание</a>
+                    <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">Смотреть трансляцию</a>
+                    <a href="/schedule.html" class="btn">Расписание</a>
                 </div>
             </div>
 
             <!-- STATE 3: FINISHED -->
             <div class="arena-finished" id="arenaFinished">
-                <div class="finished-tag">🏆 ТУРНИР ЗАВЕРШЁН</div>
-                <div class="finished-sub">Спасибо всем командам и зрителям! Сетка и результаты — ниже.</div>
+                <div class="finished-tag">ТУРНИР ЗАВЕРШЁН</div>
+                <div class="finished-sub">Спасибо всем командам и зрителям. Сетка и результаты — ниже.</div>
             </div>
         </div>
     </div>
@@ -506,11 +532,11 @@
 </section>
 
 <!-- ============================================================
-     SCHEDULE PREVIEW (3 ближайших)
+     SCHEDULE PREVIEW
      ============================================================ -->
 <section class="schedule-section">
     <div class="container">
-        <h2>📅 Ближайшие матчи</h2>
+        <h2>Ближайшие матчи</h2>
         <div id="scheduleContainer"><div class="schedule-empty">Загрузка...</div></div>
         <div class="schedule-more" id="scheduleMore" style="display:none;">
             <a href="/schedule.html" class="btn">Все матчи →</a>
@@ -737,7 +763,7 @@ function renderMatch(m) {
     if (hasScore) html += '<span class="score">' + m.score2 + '</span>';
     if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'W' : 'L') + '</span>';
     html += '</div>';
-    if (time) html += '<div class="match-info"><span class="time">🕐 ' + time + '</span></div>';
+    if (time) html += '<div class="match-info"><span class="time">' + time + '</span></div>';
     html += '</div>';
     return html;
 }
@@ -775,7 +801,7 @@ function renderSchedule() {
     var preview = upcoming.slice(0, 3);
 
     if (preview.length === 0 && completed.length === 0) {
-        container.innerHTML = '<div class="schedule-empty">📭 Расписание пока не заполнено</div>';
+        container.innerHTML = '<div class="schedule-empty">Расписание пока не заполнено</div>';
         if (moreBtn) moreBtn.style.display = 'none';
         return;
     }
@@ -849,7 +875,6 @@ document.addEventListener('DOMContentLoaded', init);
 // TIMER + STATE MACHINE
 // ============================================================
 const TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
-// Финал — через 2 дня после старта (можно поменять)
 const TOURNAMENT_END = TOURNAMENT_START + (2 * 24 * 60 * 60 * 1000);
 
 function setArenaState(state) {
@@ -866,19 +891,16 @@ function updateTimer() {
     const now = Date.now();
     const diff = TOURNAMENT_START - now;
 
-    // После финала
     if (now >= TOURNAMENT_END) {
         setArenaState('finished');
         return;
     }
 
-    // Турнир идёт
     if (diff <= 0) {
         setArenaState('live');
         return;
     }
 
-    // До старта — таймер
     setArenaState('countdown');
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
