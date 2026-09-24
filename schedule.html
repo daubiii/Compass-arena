@@ -22,10 +22,28 @@
         .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
         .wordmark em { font-style: normal; color: #c9a35a; }
         .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .btn { padding: 6px 14px; border: 1px solid #c9a35a; background: transparent; color: #e3c48a; border-radius: 4px; font-family: 'Unbounded', sans-serif; font-size: 10px; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .btn:hover { background: #c9a35a; color: #0a0d12; }
-        .btn-live { border-color: #e74c3c; color: #ff8a7a; }
-        .btn-live:hover { background: #e74c3c; color: #fff; }
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(201, 163, 90, 0.3);
+            background: transparent;
+            color: #e3c48a;
+            border-radius: 4px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+        .btn:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+        .btn-live { border-color: rgba(231, 76, 60, 0.4); color: #ff8a7a; }
+        .btn-live:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
 
         main { padding: 32px 0 60px; }
         h1 { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 8px; }
@@ -34,14 +52,16 @@
         /* Фильтры */
         .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .filter {
-            padding: 8px 18px;
+            padding: 8px 16px;
             background: #151a22;
             border: 1px solid #2f3844;
-            color: #97a0ac;
+            color: #7a8494;
             border-radius: 4px;
-            font-family: 'Unbounded', sans-serif;
-            font-size: 10px;
-            letter-spacing: 0.05em;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -51,14 +71,15 @@
         /* Группы по датам */
         .day-group { margin-bottom: 28px; }
         .day-title {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color: #c9a35a;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #7a8494;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
             padding-bottom: 8px;
             margin-bottom: 12px;
             border-bottom: 1px solid #242b35;
-            letter-spacing: 0.05em;
         }
         .match-list { display: flex; flex-direction: column; gap: 8px; }
 
@@ -68,26 +89,22 @@
             border-radius: 6px;
             padding: 14px 18px;
             display: grid;
-            grid-template-columns: 80px 1fr auto;
+            grid-template-columns: 90px 1fr auto;
             align-items: center;
             gap: 16px;
             transition: 0.2s;
             position: relative;
         }
         .match-row:hover { border-color: #c9a35a; background: #1a2029; }
-        .match-row.is-live {
-            border-color: #c9a35a;
-            box-shadow: 0 0 0 1px rgba(201,163,90,0.4), 0 0 20px rgba(201,163,90,0.15);
-        }
+        .match-row.is-live { border-color: #c9a35a; }
         .match-row.is-live::before {
             content: '';
             position: absolute;
             top: -3px; left: 14px;
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             border-radius: 50%;
             background: #e74c3c;
             animation: blink 1s infinite;
-            box-shadow: 0 0 10px rgba(231, 76, 60, 0.8);
         }
 
         .match-time {
@@ -98,10 +115,13 @@
         }
         .match-time .date-sub {
             display: block;
+            font-family: 'Manrope', sans-serif;
             font-size: 9px;
             color: #5f6773;
-            margin-top: 2px;
-            letter-spacing: 0.05em;
+            margin-top: 3px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 600;
         }
         .match-teams {
             display: flex;
@@ -112,9 +132,9 @@
         }
         .match-teams .vs {
             color: #5f6773;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 400;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
         .match-teams .team-name { color: #eae6da; }
         .match-teams .winner { color: #c9a35a; }
@@ -128,20 +148,22 @@
             font-size: 14px;
             font-weight: 600;
             color: #c9a35a;
-            margin-left: 6px;
+            margin: 0 6px;
         }
         .match-tag {
             font-size: 9px;
-            padding: 3px 10px;
-            border-radius: 10px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
             background: #2f3844;
             color: #7a8494;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             white-space: nowrap;
         }
-        .match-tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
-        .match-tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
-        .match-tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
+        .match-tag.upper { background: rgba(201,163,90,0.15); color: #c9a35a; }
+        .match-tag.lower { background: rgba(179,105,95,0.15); color: #b3695f; }
+        .match-tag.grand { background: rgba(201,163,90,0.25); color: #e3c48a; }
 
         .empty-state {
             text-align: center;
@@ -167,6 +189,7 @@
             .match-time { font-size: 12px; }
             .match-teams { font-size: 13px; flex-wrap: wrap; }
             .match-tag { justify-self: start; }
+            .btn { padding: 6px 12px; font-size: 10px; }
         }
     </style>
 </head>
@@ -177,15 +200,15 @@
         <a href="/" class="wordmark">COMPASS <em>ARENA</em></a>
         <div class="header-actions">
             <a href="/" class="btn">← На главную</a>
-            <a href="/rules.html" class="btn">📋 Правила</a>
-            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">📺 Смотреть</a>
+            <a href="/rules.html" class="btn">Правила</a>
+            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live">Смотреть</a>
         </div>
     </div>
 </header>
 
 <main>
     <div class="container">
-        <h1>📅 Расписание матчей</h1>
+        <h1>Расписание матчей</h1>
         <p class="lede">Полное расписание турнира Compass Arena. Все матчи — Bo3, Double Elimination.</p>
 
         <div class="filters" id="filters">
