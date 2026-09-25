@@ -140,12 +140,10 @@
         .match { background: #151a22; border: 1px solid #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
         .match:hover { border-color: #c9a35a; background: #1a2029; }
 
-        /* Фаза 2: активный матч пульсирует */
         .match.is-live { border-color: #e74c3c; background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, #151a22 100%); animation: livePulse 1.8s ease-in-out infinite; }
         .match.is-live::before { content: 'LIVE'; position: absolute; top: -10px; left: 8px; padding: 2px 8px; background: #e74c3c; color: #fff; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 9px; letter-spacing: 0.14em; border-radius: 3px; animation: blink 1.2s infinite; }
         @keyframes livePulse { 0%, 100% { border-color: rgba(231, 76, 60, 0.9); } 50% { border-color: rgba(231, 76, 60, 0.4); } }
 
-        /* Фаза 2: ожидающий матч (обе команды известны) — мягкое золотое свечение */
         .match.is-waiting { border-color: rgba(201,163,90,0.4); box-shadow: 0 0 0 1px rgba(201,163,90,0.1); animation: waitingPulse 3s ease-in-out infinite; }
         @keyframes waitingPulse {
             0%,100% { box-shadow: 0 0 0 1px rgba(201,163,90,0.1); }
@@ -156,6 +154,11 @@
         .match .team .seed { font-size: 9px; color: #5f6773; width: 18px; font-weight: 600; }
         .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .match .team .score { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 600; color: #c9a35a; min-width: 16px; text-align: center; }
+
+        /* W/L плашки */
+        .match .team .status { font-size: 8px; padding: 1px 6px; border-radius: 10px; font-weight: 700; letter-spacing: 0.05em; }
+        .match .team .status.win { background: #4caf50; color: #fff; }
+        .match .team .status.loss { background: #e74c3c; color: #fff; }
 
         .match .team .info-icon {
             width: 14px; height: 14px;
@@ -191,7 +194,6 @@
 
         .bracket-hint { display: none; text-align: center; font-size: 11px; color: #5f6773; margin-top: 4px; letter-spacing: 0.05em; }
 
-        /* Фаза 3: сетка приглушена, не кликабельна, гранд-финал яркий */
         body.phase-3 .bracket-section { opacity: 0.35; pointer-events: none; }
         body.phase-3 .match { cursor: default; }
         body.phase-3 .match:hover { border-color: inherit; background: #151a22; }
@@ -877,13 +879,14 @@ function applyPhase(phase) {
         var championChip = document.getElementById('championChip');
         if (championChip) championChip.classList.add('visible');
         renderWinnerOverlay();
-        if (prev !== 3 && !sessionStorage.getItem('winnerShown')) {
+        if (!sessionStorage.getItem('winnerShown')) {
             setTimeout(openWinnerOverlay, 400);
             sessionStorage.setItem('winnerShown', '1');
         }
     } else {
         var chip = document.getElementById('championChip');
         if (chip) chip.classList.remove('visible');
+        sessionStorage.removeItem('winnerShown');
     }
 }
 
@@ -1027,6 +1030,9 @@ function renderMatch(m) {
         else if (m.winner === m.team2) { team2Classes += ' is-winner'; team1Classes += ' is-loser'; }
     }
 
+    var w1 = m.winner === m.team1 ? 'win' : (m.winner ? 'loss' : null);
+    var w2 = m.winner === m.team2 ? 'win' : (m.winner ? 'loss' : null);
+
     var classes = 'match';
     if (isLive) classes += ' is-live';
     if (isWaiting) classes += ' is-waiting';
@@ -1035,10 +1041,12 @@ function renderMatch(m) {
     var html = '<div class="' + classes + '" data-match="' + m.id + '">';
     html += '<div class="' + team1Classes + '" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
     if (hasScore) html += '<span class="score">' + m.score1 + '</span>';
+    if (w1) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'W' : 'L') + '</span>';
     if (id1) html += '<span class="info-icon" title="Состав команды">i</span>';
     html += '</div>';
     html += '<div class="' + team2Classes + '" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
     if (hasScore) html += '<span class="score">' + m.score2 + '</span>';
+    if (w2) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'W' : 'L') + '</span>';
     if (id2) html += '<span class="info-icon" title="Состав команды">i</span>';
     html += '</div>';
     html += '</div>';
@@ -1189,7 +1197,6 @@ function renderWinnerOverlay() {
     var loserId = getLoser(grand);
     var runnerUp = loserId ? getTeam(loserId) : null;
 
-    // 3-е место — проигравший в финале нижней (матч 9)
     var m9 = getMatch(9);
     var thirdId = m9 ? getLoser(m9) : null;
     var third = thirdId ? getTeam(thirdId) : null;
