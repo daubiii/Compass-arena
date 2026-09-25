@@ -1,7 +1,16 @@
-// Seed data used the very first time the site runs, before anyone has saved
-// anything through the admin panel yet.
+// ============================================================
+// DEFAULT_DATA — сид, который используется ТОЛЬКО при первом
+// запуске сайта, пока в KV ничего не сохранено через админку.
+// После первого сохранения живут данные из KV, а не отсюда.
+// ============================================================
 const DEFAULT_DATA = {
-  tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "уточняются" },
+  tournament: {
+    name: "Compass Arena",
+    game: "Dota 2",
+    format: "Double Elimination",
+    matches: "Bo3",
+    dates: "26 сентября 2026"
+  },
   teams: [
     { id: 1, name: "Слот 1", players: [] },
     { id: 2, name: "Слот 2", players: [] },
@@ -29,17 +38,19 @@ const DEFAULT_DATA = {
     { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
   ],
   schedule: {},
-  liveMatchId: null
+  liveMatchId: null,
+  // ISO-строка даты старта. null = использовать дефолт из index.html
+  tournamentStart: null,
+  // Показывать баннер «Турнирная сетка» всегда (true) или только после старта (false)
+  alwaysShowBracketBanner: true
 };
 
 export async function onRequestGet(context) {
   const { env } = context;
-  
-  // Получаем данные из KV Cloudflare
+
   let data = await env.COMPASS_KV.get('tournament', { type: 'json' });
 
   if (!data) {
-    // Ничего не сохранено — заполняем хранилище дефолтными данными
     data = DEFAULT_DATA;
     await env.COMPASS_KV.put('tournament', JSON.stringify(data));
   }
