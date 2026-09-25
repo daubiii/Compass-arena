@@ -1,6 +1,6 @@
 // ============================================================
-// DEFAULT_DATA — сид, который используется ТОЛЬКО при первом
-// запуске сайта, пока в KV ничего не сохранено через админку.
+// DEFAULT_DATA — сид для первого запуска. Сетка жёстко на 6 команд.
+// Команды 1 и 2 — топ-сеяные, получают bye в R1 верхней.
 // ============================================================
 const DEFAULT_DATA = {
   tournament: {
@@ -16,36 +16,32 @@ const DEFAULT_DATA = {
     { id: 3, name: "Слот 3", players: [], logo: "" },
     { id: 4, name: "Слот 4", players: [], logo: "" },
     { id: 5, name: "Слот 5", players: [], logo: "" },
-    { id: 6, name: "Слот 6", players: [], logo: "" },
-    { id: 7, name: "Слот 7", players: [], logo: "" },
-    { id: 8, name: "Слот 8", players: [], logo: "" }
+    { id: 6, name: "Слот 6", players: [], logo: "" }
   ],
   matches: [
-    { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
-    { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
-    { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
-    { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
-    { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-    { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-    { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-    { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-    { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-    { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-    { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-    { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
-    { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-    { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+    // Верхняя сетка
+    { id: 1, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
+    { id: 2, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
+    { id: 3, round: 2, team1: 1, team2: null, winner: null, bracket: 'upper' },
+    { id: 4, round: 2, team1: 2, team2: null, winner: null, bracket: 'upper' },
+    { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
+    // Нижняя сетка
+    { id: 6, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+    { id: 7, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+    { id: 8, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
+    { id: 9, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
+    // Гранд-финал
+    { id: 10, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
   ],
   schedule: {},
   liveMatchId: null,
-  tournamentStart: null,   // ISO-строка даты старта турнира, null = дефолт из index.html
-  projectStart: null,      // ISO-строка старта проекта (для прогресс-полоски)
+  tournamentStart: null,
+  projectStart: null,
   alwaysShowBracketBanner: true
 };
 
 export async function onRequestGet(context) {
   const { env } = context;
-
   let data = await env.COMPASS_KV.get('tournament', { type: 'json' });
 
   if (!data) {
