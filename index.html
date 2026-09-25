@@ -41,7 +41,7 @@
         .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
         .wordmark em { font-style: normal; color: #c9a35a; }
 
-        /* --- Burger menu --- */
+        /* Burger */
         .burger {
             width: 42px; height: 42px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -53,21 +53,12 @@
             transition: 0.2s;
         }
         .burger:hover { border-color: #c9a35a; background: rgba(201,163,90,0.08); }
-        .burger span {
-            display: block; width: 20px; height: 2px;
-            background: #e3c48a; border-radius: 1px;
-            transition: 0.25s;
-        }
+        .burger span { display: block; width: 20px; height: 2px; background: #e3c48a; border-radius: 1px; transition: 0.25s; }
         .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .burger.open span:nth-child(2) { opacity: 0; }
         .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        .menu-overlay {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 90;
-        }
+        .menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90; }
         .menu-overlay.active { display: block; }
         .menu-panel {
             position: fixed;
@@ -129,7 +120,7 @@
             z-index: 1; pointer-events: none;
         }
 
-        /* ===== ARENA / TIMER (вынесен наверх, увеличен) ===== */
+        /* ===== ARENA / TIMER ===== */
         .arena-stats {
             position: relative;
             padding: 60px 0 50px;
@@ -145,7 +136,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 28px;
+            gap: 24px;
             text-align: center;
         }
         .arena-logo { width: 90px; height: 90px; opacity: 0.85; }
@@ -153,7 +144,7 @@
         .compass-needle { transform-origin: 100px 100px; animation: rotateNeedle 12s linear infinite; }
         @keyframes rotateNeedle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .arena-timer { text-align: center; }
+        .arena-timer { text-align: center; width: 100%; max-width: 640px; }
         .timer-label {
             font-family: 'Manrope', sans-serif;
             font-size: 12px;
@@ -174,16 +165,62 @@
             font-variant-numeric: tabular-nums;
             text-shadow: 0 0 40px rgba(201,163,90,0.25);
             animation: timerGlow 3s ease-in-out infinite;
+            transition: color 0.6s ease;
         }
         @keyframes timerGlow {
             0%,100% { text-shadow: 0 0 40px rgba(201,163,90,0.25); }
             50%     { text-shadow: 0 0 60px rgba(201,163,90,0.50); }
         }
+        /* Финальные 24 часа — цифры теплеют */
+        .arena-timer.final-stretch .timer-block .num {
+            color: #e3c48a;
+        }
         .timer-block .unit { font-size: 11px; color: #5f6773; margin-top: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
         .timer-sep { font-family: 'Unbounded', sans-serif; font-size: 48px; color: #c9a35a; opacity: 0.35; margin-top: 6px; }
         .timer-date { margin-top: 22px; font-size: 13px; color: #97a0ac; letter-spacing: 0.12em; text-transform: uppercase; }
 
-        /* ===== БАННЕР «ТУРНИРНАЯ СЕТКА» — теперь всегда виден ===== */
+        /* Прогресс-полоска под таймером */
+        .timer-progress {
+            margin-top: 26px;
+            width: 100%;
+            height: 3px;
+            background: #1a2029;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .timer-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #8a6d3a 0%, #c9a35a 50%, #e3c48a 100%);
+            transition: width 1s linear;
+            box-shadow: 0 0 12px rgba(201,163,90,0.5);
+        }
+        .timer-progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #5f6773;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        /* Строка "Стартуем завтра/сегодня" */
+        .timer-announce {
+            margin-top: 16px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #e3c48a;
+            letter-spacing: 0.06em;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .timer-announce.visible { opacity: 1; }
+
+        /* ===== БАННЕР «ТУРНИРНАЯ СЕТКА» ===== */
         .bracket-banner {
             padding: 40px 0 24px;
             border-top: 1px solid #242b35;
@@ -219,7 +256,7 @@
             z-index: 0;
         }
 
-        /* ===== СВЁРНУТАЯ TWITCH-КАРТОЧКА (до старта) ===== */
+        /* ===== СВЁРНУТАЯ TWITCH-КАРТОЧКА ===== */
         .stream-collapsed {
             max-width: 960px;
             margin: 20px auto 40px;
@@ -258,7 +295,7 @@
             line-height: 1.7;
         }
         .stream-collapsed.open .stream-collapsed-body {
-            max-height: 220px;
+            max-height: 260px;
             padding: 0 24px 20px;
         }
         .stream-collapsed-sign {
@@ -267,8 +304,41 @@
             font-size: 13px;
             letter-spacing: 0.02em;
         }
+        .stream-collapsed-cta {
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid rgba(201,163,90,0.4);
+            color: #e3c48a;
+            border-radius: 4px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .stream-collapsed-cta:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+        /* Мини-таймер в карточке */
+        .stream-mini-timer {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #7a8494;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .stream-mini-timer b {
+            color: #e3c48a;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            font-variant-numeric: tabular-nums;
+        }
 
-        /* ===== TWITCH EMBED (после старта) ===== */
+        /* ===== TWITCH EMBED ===== */
         .twitch-wrap {
             margin: 20px auto 40px;
             border: 1px solid #2f3844;
@@ -280,12 +350,7 @@
             width: 100%;
             position: relative;
         }
-        .twitch-wrap iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            display: block;
-        }
+        .twitch-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
 
         /* ===== BRACKET ===== */
         .bracket-section { padding: 24px 0 40px; }
@@ -352,7 +417,7 @@
             50%      { border-color: rgba(231, 76, 60, 0.4); }
         }
 
-        .match .team { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; color: #eae6da; }
+        .match .team { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; color: #eae6da; transition: color 0.3s, opacity 0.3s; }
         .match .team .seed { font-size: 9px; color: #5f6773; width: 18px; font-weight: 600; }
         .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .match .team .score { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 600; color: #c9a35a; min-width: 16px; text-align: center; }
@@ -360,6 +425,20 @@
         .match .team .status.win { background: #4caf50; color: #fff; }
         .match .team .status.loss { background: #e74c3c; color: #fff; }
         .match .team .status.pending { background: #2f3844; color: #7a8494; }
+
+        /* Победитель — золотое имя. Проигравший — приглушён. */
+        .match .team.is-winner .name { color: #e3c48a; font-weight: 600; }
+        .match .team.is-loser { opacity: 0.55; }
+        .match .team.is-loser .name { color: #7a8494; }
+
+        /* Свежая победа — пульс один раз */
+        @keyframes winnerPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(201,163,90,0.7); }
+            70%  { box-shadow: 0 0 0 10px rgba(201,163,90,0); }
+            100% { box-shadow: 0 0 0 0 rgba(201,163,90,0); }
+        }
+        .match.fresh-result { animation: winnerPulse 1.6s ease-out; }
+
         .match .match-info { display: flex; justify-content: space-between; font-size: 9px; color: #7a8494; margin-top: 4px; border-top: 1px solid #2f3844; padding-top: 3px; }
         .match .match-info .time { color: #e3c48a; }
         .match-empty { background: #10141b; border: 1px dashed #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
@@ -394,7 +473,7 @@
         /* ===== MODAL ===== */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
-        .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 380px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 420px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
         .modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; color: #5f6773; font-size: 22px; cursor: pointer; }
         .modal-close:hover { color: #eae6da; }
         .modal h2 { font-family: 'Unbounded', sans-serif; font-size: 18px; margin-bottom: 2px; }
@@ -402,6 +481,30 @@
         .modal .player { padding: 5px 10px; border-bottom: 1px solid #242b35; font-size: 13px; display: flex; align-items: center; gap: 8px; }
         .modal .player:last-child { border-bottom: none; }
         .modal .player .role { font-size: 9px; color: #5f6773; background: #242b35; padding: 1px 8px; border-radius: 10px; }
+        .modal .team-stats {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #242b35;
+            display: flex;
+            justify-content: space-around;
+            gap: 12px;
+        }
+        .modal .team-stats .stat { text-align: center; }
+        .modal .team-stats .stat .value {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #e3c48a;
+            line-height: 1;
+        }
+        .modal .team-stats .stat .label {
+            font-size: 10px;
+            color: #5f6773;
+            margin-top: 6px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .modal .team-stats .stat.loss .value { color: #b3695f; }
 
         /* ===== FORMAT ===== */
         .format-section { padding: 24px 0; border-top: 1px solid #242b35; margin-top: 16px; }
@@ -417,6 +520,28 @@
         footer a { color: #97a0ac; text-decoration: none; transition: 0.2s; }
         footer a:hover { color: #c9a35a; }
 
+        /* ===== НАВЕРХ ===== */
+        .to-top {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: #10141b;
+            border: 1px solid rgba(201,163,90,0.4);
+            color: #e3c48a;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 80;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .to-top:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+
         /* ===== ANIMATIONS ===== */
         @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
 
@@ -426,7 +551,7 @@
             .bracket { gap: 24px; min-width: 700px; }
             .round { min-width: 130px; }
             .schedule-grid { grid-template-columns: 1fr; }
-            .timer-block .num { font-size: 44px; }
+            .timer-block .num { font-size: 44px; text-shadow: none; animation: none; }
             .timer-block { min-width: 64px; }
             .timer-sep { font-size: 30px; }
             .timer-label { font-size: 10px; letter-spacing: 0.24em; }
@@ -449,6 +574,7 @@
             .bracket-banner-title { font-size: 22px; }
             .bracket-banner-sub { font-size: 10px; letter-spacing: 0.18em; }
             .menu-panel { width: 280px; padding: 80px 24px 24px; }
+            .to-top { right: 14px; bottom: 14px; width: 40px; height: 40px; }
         }
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 18px; }
@@ -470,7 +596,7 @@
 <body>
 
 <!-- ============================================================
-     HEADER — теперь с бургер-меню справа
+     HEADER
      ============================================================ -->
 <header>
     <div class="container header-row">
@@ -483,7 +609,6 @@
     </div>
 </header>
 
-<!-- Затемнение + панель меню -->
 <div class="menu-overlay" id="menuOverlay"></div>
 <nav class="menu-panel" id="menuPanel">
     <a href="/">Главная</a>
@@ -494,7 +619,7 @@
 </nav>
 
 <!-- ============================================================
-     ARENA / TIMER — вынесен наверх, до hero
+     ARENA / TIMER — наверху, с прогресс-полоской
      ============================================================ -->
 <section class="arena-stats" id="arenaSection">
     <div class="container">
@@ -525,7 +650,18 @@
                     <div class="timer-sep">:</div>
                     <div class="timer-block"><span class="num" id="seconds">00</span><span class="unit">секунд</span></div>
                 </div>
+                <div class="timer-announce" id="timerAnnounce"></div>
                 <div class="timer-date" id="timerDateLabel">26 сентября 2026 · 12:00</div>
+
+                <!-- Прогресс-полоска от старта проекта до турнира -->
+                <div class="timer-progress">
+                    <div class="timer-progress-fill" id="timerProgressFill"></div>
+                </div>
+                <div class="timer-progress-label">
+                    <span>Старт проекта</span>
+                    <span id="timerProgressPercent">0%</span>
+                    <span>Турнир</span>
+                </div>
             </div>
         </div>
     </div>
@@ -547,10 +683,9 @@
 </section>
 
 <!-- ============================================================
-     TWITCH: свёрнутая карточка (до старта) / iframe (после старта)
+     TWITCH
      ============================================================ -->
 <section class="container">
-    <!-- Свёрнутая полоска — показывается, пока таймер не вышел в 0 -->
     <div id="streamCollapsed" class="stream-collapsed">
         <button class="stream-collapsed-toggle" onclick="toggleStreamCard()">
             <span class="stream-collapsed-title">Прямая трансляция</span>
@@ -559,10 +694,11 @@
         <div class="stream-collapsed-body" id="streamBody">
             <p>Друг, я понимаю, что ты ждёшь турнир больше всего на свете, но не мог бы ты ещё немного подождать.</p>
             <p class="stream-collapsed-sign">С уважением, организация — Compass Arena ❤️</p>
+            <div class="stream-mini-timer" id="streamMiniTimer">До эфира — <b>—</b></div>
+            <a class="stream-collapsed-cta" href="https://t.me/compassarenaa" target="_blank">Напомнить в Telegram</a>
         </div>
     </div>
 
-    <!-- Полноценный iframe — включается после старта -->
     <div id="streamFull" class="twitch-wrap" style="display:none;">
         <iframe
             src="https://player.twitch.tv/?channel=compassarena&parent=compass-arena.pages.dev&muted=true&autoplay=true"
@@ -574,7 +710,7 @@
 </section>
 
 <!-- ============================================================
-     БАННЕР «ТУРНИРНАЯ СЕТКА» — теперь виден ВСЕГДА
+     БАННЕР «ТУРНИРНАЯ СЕТКА»
      ============================================================ -->
 <section class="bracket-banner" id="bracketBanner">
     <div class="container">
@@ -630,6 +766,7 @@
     <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
         <span>Compass Arena — организатор турниров по Dota 2</span>
         <div class="f-links">
+            <a href="/">Главная</a>
             <a href="/schedule.html">Расписание</a>
             <a href="/rules.html">Правила</a>
             <a href="https://www.twitch.tv/compassarena" target="_blank">Twitch</a>
@@ -647,8 +784,27 @@
         <h2 id="modalTitle">Team</h2>
         <div class="sub" id="modalSub">Состав</div>
         <div id="modalPlayers"></div>
+        <div class="team-stats" id="modalStats" style="display:none;">
+            <div class="stat win">
+                <div class="value" id="modalWins">0</div>
+                <div class="label">Победы</div>
+            </div>
+            <div class="stat loss">
+                <div class="value" id="modalLosses">0</div>
+                <div class="label">Поражения</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="modalPlayed">0</div>
+                <div class="label">Матчей</div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- ============================================================
+     НАВЕРХ
+     ============================================================ -->
+<button class="to-top" id="toTop" aria-label="Наверх">↑</button>
 
 <!-- ============================================================
      ЧАСТИЦЫ
@@ -660,7 +816,7 @@
      ============================================================ -->
 <script>
 // ============================================================
-// ДАННЫЕ (дефолты совпадают с data.js)
+// ДАННЫЕ
 // ============================================================
 var DATA = {
     tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
@@ -692,15 +848,22 @@ var DATA = {
     ],
     schedule: {},
     liveMatchId: null,
-    tournamentStart: null,        // ISO-строка или null = дефолт
-    alwaysShowBracketBanner: true // баннер сетки показывать всегда
+    tournamentStart: null,
+    alwaysShowBracketBanner: true
 };
 
 // ============================================================
-// КОНСТАНТА СТАРТА (переопределяется из data.tournamentStart)
+// СТАРТ ТУРНИРА (переопределяется из данных)
 // ============================================================
 var TOURNAMENT_START_DEFAULT = new Date('2026-09-26T12:00:00+03:00').getTime();
 var TOURNAMENT_START = TOURNAMENT_START_DEFAULT;
+
+// Старт "проекта" — от него считаем прогресс-полоску.
+// Не переопределяется, это фиксированная точка отсчёта.
+var PROJECT_START = new Date('2026-01-01T00:00:00+03:00').getTime();
+
+// Слежение за свежими победами, чтобы пульсировать один раз
+var FRESH_WINNERS = {};
 
 // ============================================================
 // ЗАГРУЗКА ДАННЫХ
@@ -712,6 +875,12 @@ function loadSavedData() {
             return res.json();
         })
         .then(function(parsed) {
+            // Определяем новые результаты: сравниваем с предыдущими winner'ами
+            var prevWinners = {};
+            for (var i = 0; i < DATA.matches.length; i++) {
+                prevWinners[DATA.matches[i].id] = DATA.matches[i].winner;
+            }
+
             if (parsed.teams) DATA.teams = parsed.teams;
             if (parsed.matches) DATA.matches = parsed.matches;
             if (parsed.schedule) DATA.schedule = parsed.schedule;
@@ -720,23 +889,25 @@ function loadSavedData() {
             DATA.tournamentStart = parsed.tournamentStart || null;
             DATA.alwaysShowBracketBanner = parsed.alwaysShowBracketBanner !== false;
 
-            // Если в данных есть своя дата старта — используем её
+            // Находим свежие победы (матч только что получил winner)
+            FRESH_WINNERS = {};
+            for (var j = 0; j < DATA.matches.length; j++) {
+                var m = DATA.matches[j];
+                if (m.winner && prevWinners[m.id] !== m.winner) {
+                    FRESH_WINNERS[m.id] = true;
+                }
+            }
+
             if (DATA.tournamentStart) {
                 var t = new Date(DATA.tournamentStart).getTime();
                 if (!isNaN(t)) TOURNAMENT_START = t;
             }
 
-            // Баннер — либо всегда, либо только после старта
             var banner = document.getElementById('bracketBanner');
             if (banner) {
-                if (DATA.alwaysShowBracketBanner || Date.now() >= TOURNAMENT_START) {
-                    banner.style.display = 'block';
-                } else {
-                    banner.style.display = 'none';
-                }
+                banner.style.display = (DATA.alwaysShowBracketBanner || Date.now() >= TOURNAMENT_START) ? 'block' : 'none';
             }
 
-            // Метка даты под таймером
             var label = document.getElementById('timerDateLabel');
             if (label) {
                 try {
@@ -762,26 +933,22 @@ function getTeam(id) {
     }
     return null;
 }
-
 function getTeamName(id) {
     var t = getTeam(id);
     return t ? t.name : '—';
 }
-
 function getMatch(id) {
     for (var i = 0; i < DATA.matches.length; i++) {
         if (DATA.matches[i].id === id) return DATA.matches[i];
     }
     return null;
 }
-
 function getLoser(m) {
     if (!m.winner) return null;
     if (m.team1 === m.winner) return m.team2;
     if (m.team2 === m.winner) return m.team1;
     return null;
 }
-
 function updateMatchLinks() {
     var m1 = getMatch(1), m2 = getMatch(2), m3 = getMatch(3), m4 = getMatch(4);
     var m5 = getMatch(5), m6 = getMatch(6), m7 = getMatch(7);
@@ -864,12 +1031,22 @@ function renderMatch(m) {
     var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : '';
     var hasScore = m.score1 != null && m.score2 != null;
     var isLive = DATA.liveMatchId === m.id;
-    var html = '<div class="match' + (isLive ? ' is-live' : '') + '" data-match="' + m.id + '">';
-    html += '<div class="team" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
+    var isFresh = !!FRESH_WINNERS[m.id];
+
+    // Подсветка победителя/проигравшего
+    var team1Classes = 'team';
+    var team2Classes = 'team';
+    if (m.winner) {
+        if (m.winner === m.team1) { team1Classes += ' is-winner'; team2Classes += ' is-loser'; }
+        else if (m.winner === m.team2) { team2Classes += ' is-winner'; team1Classes += ' is-loser'; }
+    }
+
+    var html = '<div class="match' + (isLive ? ' is-live' : '') + (isFresh ? ' fresh-result' : '') + '" data-match="' + m.id + '">';
+    html += '<div class="' + team1Classes + '" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
     if (hasScore) html += '<span class="score">' + m.score1 + '</span>';
     if (m.winner) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'W' : 'L') + '</span>';
     html += '</div>';
-    html += '<div class="team" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
+    html += '<div class="' + team2Classes + '" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
     if (hasScore) html += '<span class="score">' + m.score2 + '</span>';
     if (m.winner) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'W' : 'L') + '</span>';
     html += '</div>';
@@ -935,6 +1112,19 @@ function renderSchedule() {
 // ============================================================
 // МОДАЛЬНОЕ ОКНО
 // ============================================================
+function countTeamRecord(teamId) {
+    var wins = 0, losses = 0;
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.winner) continue;
+        if (m.team1 === teamId || m.team2 === teamId) {
+            if (m.winner === teamId) wins++;
+            else losses++;
+        }
+    }
+    return { wins: wins, losses: losses };
+}
+
 function openModal(teamId) {
     var team = getTeam(teamId);
     if (!team) return;
@@ -943,12 +1133,29 @@ function openModal(teamId) {
     var container = document.getElementById('modalPlayers');
     container.innerHTML = '';
     var roles = ['Керри', 'Мидер', 'Офлейнер', 'Саппорт 4', 'Саппорт 5'];
-    for (var i = 0; i < team.players.length; i++) {
-        var div = document.createElement('div');
-        div.className = 'player';
-        div.innerHTML = '<span>' + team.players[i] + '</span><span class="role">' + (roles[i] || 'Игрок') + '</span>';
-        container.appendChild(div);
+    if (team.players.length === 0) {
+        container.innerHTML = '<div class="player" style="color:#5f6773;">Состав пока не указан</div>';
+    } else {
+        for (var i = 0; i < team.players.length; i++) {
+            var div = document.createElement('div');
+            div.className = 'player';
+            div.innerHTML = '<span>' + team.players[i] + '</span><span class="role">' + (roles[i] || 'Игрок') + '</span>';
+            container.appendChild(div);
+        }
     }
+
+    // Счёт команды — показываем только если есть сыгранные матчи
+    var rec = countTeamRecord(teamId);
+    var statsEl = document.getElementById('modalStats');
+    if (rec.wins + rec.losses > 0) {
+        document.getElementById('modalWins').textContent = rec.wins;
+        document.getElementById('modalLosses').textContent = rec.losses;
+        document.getElementById('modalPlayed').textContent = rec.wins + rec.losses;
+        statsEl.style.display = 'flex';
+    } else {
+        statsEl.style.display = 'none';
+    }
+
     document.getElementById('modalOverlay').classList.add('active');
 }
 
@@ -970,7 +1177,7 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// BURGER MENU
+// МЕНЮ
 // ============================================================
 function toggleMenu(force) {
     var burger = document.getElementById('burgerBtn');
@@ -989,13 +1196,19 @@ function toggleMenu(force) {
         document.body.style.overflow = '';
     }
 }
-
 document.getElementById('burgerBtn').addEventListener('click', function() { toggleMenu(); });
 document.getElementById('menuOverlay').addEventListener('click', function() { toggleMenu(false); });
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') toggleMenu(false); });
+
+// Escape — закрывает и меню, и модалку
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        toggleMenu(false);
+        closeModal();
+    }
+});
 
 // ============================================================
-// TWITCH: свёрнутая карточка
+// СВЁРНУТАЯ TWITCH-КАРТОЧКА
 // ============================================================
 function toggleStreamCard() {
     var card = document.getElementById('streamCollapsed');
@@ -1009,6 +1222,21 @@ function switchToLiveStream() {
 }
 
 // ============================================================
+// КНОПКА «НАВЕРХ»
+// ============================================================
+function initToTop() {
+    var btn = document.getElementById('toTop');
+    if (!btn) return;
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 600) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    }, { passive: true });
+    btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// ============================================================
 // РЕНДЕР
 // ============================================================
 function renderAll() {
@@ -1019,6 +1247,7 @@ function renderAll() {
 function init() {
     loadSavedData().then(renderAll);
     setInterval(function() { loadSavedData().then(renderAll); }, 60000);
+    initToTop();
     window.getTournamentData = function() { return DATA; };
     window.renderBracket = renderBracket;
     window.renderSchedule = renderSchedule;
@@ -1028,8 +1257,17 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // ============================================================
-// ТАЙМЕР + переключение стрима
+// ТАЙМЕР + прогресс + финальный отсчёт + переключение стрима
 // ============================================================
+function formatHHMMSS(ms) {
+    var total = Math.max(0, Math.floor(ms / 1000));
+    var h = Math.floor(total / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+    var pad = function(n) { return String(n).padStart(2, '0'); };
+    return pad(h) + ':' + pad(m) + ':' + pad(s);
+}
+
 function updateTimer() {
     var now = Date.now();
     var diff = TOURNAMENT_START - now;
@@ -1058,6 +1296,37 @@ function updateTimer() {
     hoursEl.textContent = String(hours).padStart(2, '0');
     minutesEl.textContent = String(minutes).padStart(2, '0');
     secondsEl.textContent = String(seconds).padStart(2, '0');
+
+    // Финальные 24 часа — особый режим
+    var timerEl = document.getElementById('arenaTimer');
+    var announceEl = document.getElementById('timerAnnounce');
+    if (diff <= 24 * 60 * 60 * 1000) {
+        if (timerEl) timerEl.classList.add('final-stretch');
+        if (announceEl) {
+            announceEl.textContent = (diff <= 12 * 60 * 60 * 1000 && days === 0 && hours < 12)
+                ? 'Стартуем сегодня'
+                : 'Стартуем завтра';
+            announceEl.classList.add('visible');
+        }
+    } else {
+        if (timerEl) timerEl.classList.remove('final-stretch');
+        if (announceEl) announceEl.classList.remove('visible');
+    }
+
+    // Прогресс-полоска
+    var total = TOURNAMENT_START - PROJECT_START;
+    var passed = now - PROJECT_START;
+    var percent = total > 0 ? Math.max(0, Math.min(100, (passed / total) * 100)) : 100;
+    var fill = document.getElementById('timerProgressFill');
+    var percentLabel = document.getElementById('timerProgressPercent');
+    if (fill) fill.style.width = percent.toFixed(2) + '%';
+    if (percentLabel) percentLabel.textContent = percent.toFixed(1) + '%';
+
+    // Мини-таймер в свёрнутой карточке
+    var mini = document.getElementById('streamMiniTimer');
+    if (mini) {
+        mini.innerHTML = 'До эфира — <b>' + formatHHMMSS(diff) + '</b>';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
