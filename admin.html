@@ -58,16 +58,13 @@
         .match-item .meta .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
         .match-item .meta .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
         .match-item .meta select { background: #0a0d12; border: 1px solid #242b35; color: #eae6da; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 460px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
-        .modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; color: #5f6773; font-size: 22px; cursor: pointer; }
-        .modal-close:hover { color: #eae6da; }
-        .modal h2 { font-family: 'Unbounded', sans-serif; font-size: 18px; margin-bottom: 12px; }
         .toast { position: fixed; bottom: 24px; right: 24px; background: #10141b; border: 1px solid #c9a35a; padding: 10px 20px; border-radius: 6px; color: #eae6da; font-size: 13px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateY(0); }
         .password-section { background: #10141b; border: 1px solid #c9a35a; border-radius: 6px; padding: 16px 20px; margin-bottom: 14px; }
         .password-section .info { color: #97a0ac; font-size: 13px; margin-bottom: 10px; }
+        .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .toggle-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: #c9a35a; cursor: pointer; }
+        .toggle-row label { font-size: 13px; color: #eae6da; cursor: pointer; }
         @media (max-width: 640px) {
             .form-row { grid-template-columns: 1fr; }
             .form-row.three { grid-template-columns: 1fr; }
@@ -82,10 +79,10 @@
 <body>
 
 <!-- ============================================================
-     Пароль больше не хранится и не проверяется в этом файле.
-     Он живёт только на сервере (переменная окружения ADMIN_PASSWORD
-     в настройках Netlify) и сверяется внутри функции /api/save —
-     просмотр исходного кода страницы его не раскрывает.
+     Пароль больше не хранится в этом файле.
+     Он живёт только на сервере — переменная окружения ADMIN_PASSWORD
+     в настройках Cloudflare Pages, сверяется внутри /api/save.
+     Просмотр исходника страницы его не раскрывает.
      ============================================================ -->
 <div class="container">
     <div class="admin-header">
@@ -94,12 +91,8 @@
     </div>
 
     <div class="password-section">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-            <div>
-                <strong style="color:#e3c48a;">🔐 Пароль администратора</strong>
-                <div class="info">Спросится один раз при первом изменении данных. Задаётся и меняется в настройках Netlify (переменная <code style="background:#242b35;padding:2px 6px;border-radius:3px;">ADMIN_PASSWORD</code>), не в этом файле.</div>
-            </div>
-        </div>
+        <strong style="color:#e3c48a;">🔐 Пароль администратора</strong>
+        <div class="info">Спросится один раз при первом изменении данных. Задаётся и меняется в настройках Cloudflare Pages (переменная <code style="background:#242b35;padding:2px 6px;border-radius:3px;">ADMIN_PASSWORD</code>), не в этом файле.</div>
     </div>
 
     <!-- TABS -->
@@ -141,14 +134,23 @@
 
     <div class="tab-content" id="tab-settings">
         <div class="card">
-            <div class="card-header"><h3>⚙️ Настройки</h3></div>
+            <div class="card-header"><h3>⚙️ Общие настройки</h3></div>
             <div class="form-row three">
                 <div class="form-group"><label>Название</label><input type="text" id="settingsName" value="Compass Arena"></div>
                 <div class="form-group"><label>Игра</label><input type="text" id="settingsGame" value="Dota 2"></div>
                 <div class="form-group"><label>Формат</label><input type="text" id="settingsFormat" value="Bo3"></div>
             </div>
-            <div class="form-group" style="margin-bottom:10px;"><label>Даты</label><input type="text" id="settingsDates" placeholder="01.06.2026 - 03.06.2026"></div>
-            <button class="btn btn-primary" onclick="saveSettings()">💾 Сохранить</button>
+            <div class="form-group" style="margin-bottom:10px;"><label>Даты (текстом)</label><input type="text" id="settingsDates" placeholder="26 сентября 2026"></div>
+            <div class="form-group" style="margin-bottom:10px;">
+                <label>Дата и время старта турнира (ISO)</label>
+                <input type="datetime-local" id="settingsStart">
+                <span style="font-size:11px;color:#5f6773;margin-top:3px;">По этому времени таймер на главной считает отсчёт, а после его истечения — открывается стрим.</span>
+            </div>
+            <div class="toggle-row">
+                <input type="checkbox" id="settingsAlwaysBanner">
+                <label for="settingsAlwaysBanner">Показывать баннер «Турнирная сетка» всегда</label>
+            </div>
+            <button class="btn btn-primary" style="margin-top:14px;" onclick="saveSettings()">💾 Сохранить</button>
         </div>
         <div class="card">
             <div class="card-header"><h3>💾 Управление данными</h3></div>
@@ -172,16 +174,16 @@ var DATA = getDefaultData();
 
 function getDefaultData() {
     return {
-        tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "уточняются" },
+        tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
         teams: [
-            { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
-            { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
-            { id: 3, name: "Team Liquid", players: ["m1CKe", "Nisha", "33", "Boxi", "Insania"] },
-            { id: 4, name: "OG", players: ["Yuragi", "bzm", "ATF", "Taiga", "Misha"] },
-            { id: 5, name: "Gaimin Gladiators", players: ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"] },
-            { id: 6, name: "BetBoom Team", players: ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"] },
-            { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
-            { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
+            { id: 1, name: "Слот 1", players: [] },
+            { id: 2, name: "Слот 2", players: [] },
+            { id: 3, name: "Слот 3", players: [] },
+            { id: 4, name: "Слот 4", players: [] },
+            { id: 5, name: "Слот 5", players: [] },
+            { id: 6, name: "Слот 6", players: [] },
+            { id: 7, name: "Слот 7", players: [] },
+            { id: 8, name: "Слот 8", players: [] }
         ],
         matches: [
             { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
@@ -200,12 +202,14 @@ function getDefaultData() {
             { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
         ],
         schedule: {},
-        liveMatchId: null
+        liveMatchId: null,
+        tournamentStart: null,
+        alwaysShowBracketBanner: true
     };
 }
 
 // ============================================================
-// ЗАГРУЗКА/СОХРАНЕНИЕ
+// ЗАГРУЗКА / СОХРАНЕНИЕ
 // ============================================================
 function loadData() {
     return fetch('/api/data', { cache: 'no-store' })
@@ -222,15 +226,14 @@ function loadData() {
             }
             if (!DATA.schedule) DATA.schedule = {};
             if (!DATA.tournament) DATA.tournament = getDefaultData().tournament;
+            if (DATA.alwaysShowBracketBanner === undefined) DATA.alwaysShowBracketBanner = true;
+            if (DATA.tournamentStart === undefined) DATA.tournamentStart = null;
         })
         .catch(function(err) {
             console.warn('Не удалось загрузить данные с сервера, используются значения по умолчанию', err);
         });
 }
 
-// Пароль спрашивается один раз за сессию, прямо перед первым сохранением —
-// не при открытии страницы. Сам пароль нигде не сравнивается в браузере,
-// он просто отправляется на сервер вместе с данными.
 var ADMIN_PW = null;
 
 function ensurePassword() {
@@ -249,6 +252,22 @@ function renderEverything() {
     if (fmtEl) fmtEl.value = DATA.tournament.matches || 'Bo3';
     var datesEl = document.getElementById('settingsDates');
     if (datesEl) datesEl.value = DATA.tournament.dates || '';
+
+    // Дата старта (ISO -> datetime-local)
+    var startEl = document.getElementById('settingsStart');
+    if (startEl && DATA.tournamentStart) {
+        try {
+            var d = new Date(DATA.tournamentStart);
+            // Приводим к локальному формату input
+            var pad = function(n){ return String(n).padStart(2, '0'); };
+            startEl.value = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) +
+                            'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+        } catch(e) {}
+    }
+
+    var bannerEl = document.getElementById('settingsAlwaysBanner');
+    if (bannerEl) bannerEl.checked = DATA.alwaysShowBracketBanner !== false;
+
     renderTeams();
     renderMatches();
     renderSchedule();
@@ -316,11 +335,8 @@ function updateMatchLinks() {
     var m8 = getMatch(8), m9 = getMatch(9), m10 = getMatch(10), m11 = getMatch(11);
     var m12 = getMatch(12), m13 = getMatch(13), m14 = getMatch(14);
 
-    // Раунд 1 верхней сетки собирается автоматически по порядку списка
-    // команд: 1-я и 2-я команда -> матч 1, 3-я и 4-я -> матч 2, и т.д.
-    // Это чинит ситуацию, когда команду удалили/добавили заново и матч
-    // остался без привязки — переприкрепление происходит само при
-    // каждом сохранении, вручную ничего чинить не нужно.
+    // Пары 1-го раунда верхней сетки собираются по порядку списка команд:
+    // 1-я и 2-я -> матч 1, 3-я и 4-я -> матч 2, и т.д.
     var t = DATA.teams;
     var r1 = [m1, m2, m3, m4];
     for (var r = 0; r < 4; r++) {
@@ -330,8 +346,6 @@ function updateMatchLinks() {
         var newTeam2 = t[r*2+1] ? t[r*2+1].id : null;
         match.team1 = newTeam1;
         match.team2 = newTeam2;
-        // Если победитель матча больше не входит в новую пару — сбрасываем,
-        // чтобы сетка не показывала результат от уже несуществующей пары.
         if (match.winner !== newTeam1 && match.winner !== newTeam2) {
             match.winner = null;
         }
@@ -363,7 +377,7 @@ function renderTeams() {
         div.className = 'team-item';
         var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше по посеву">↑</button>';
         var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже по посеву">↓</button>';
-        div.innerHTML = '<div class="info"><span class="name">Посев ' + (i+1) + ' · #' + t.id + ' ' + t.name + '</span><span class="players">' + t.players.join(' · ') + '</span></div><div class="actions">' + upBtn + downBtn + '<button class="btn btn-sm" onclick="editTeam(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
+        div.innerHTML = '<div class="info"><span class="name">Посев ' + (i+1) + ' · #' + t.id + ' ' + t.name + '</span><span class="players">' + (t.players.length ? t.players.join(' · ') : 'состав не указан') + '</span></div><div class="actions">' + upBtn + downBtn + '<button class="btn btn-sm" onclick="editTeam(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
         container.appendChild(div);
     }
     if (count) count.textContent = DATA.teams.length + ' команд';
@@ -375,8 +389,6 @@ function moveTeam(index, direction) {
     var tmp = DATA.teams[index];
     DATA.teams[index] = DATA.teams[newIndex];
     DATA.teams[newIndex] = tmp;
-    // Порядок в списке команд определяет пары 1-го раунда (посев 1-2 -> матч 1,
-    // 3-4 -> матч 2 и т.д.) — saveData() сам пересоберёт матчи под новый порядок.
     saveData();
     renderTeams();
     renderMatches();
@@ -443,7 +455,6 @@ function setScore(matchId) {
     match.score2 = s2 === '' ? null : parseInt(s2, 10);
     saveData();
     renderMatches();
-    if (window.renderBracket) window.renderBracket();
     showToast('🔢 Счёт матча #' + matchId + ' сохранён');
 }
 
@@ -541,7 +552,6 @@ function setWinner(matchId, teamId) {
     saveData();
     renderMatches();
     renderSchedule();
-    if (window.renderBracket) window.renderBracket();
     showToast('🏆 Победитель матча #' + matchId + ' выбран!');
 }
 
@@ -555,7 +565,6 @@ function resetMatch(matchId) {
     saveData();
     renderMatches();
     renderSchedule();
-    if (window.renderBracket) window.renderBracket();
     showToast('↩️ Результат матча #' + matchId + ' сброшен');
 }
 
@@ -571,10 +580,24 @@ function saveSettings() {
     var game = document.getElementById('settingsGame').value.trim();
     var format = document.getElementById('settingsFormat').value.trim();
     var dates = document.getElementById('settingsDates').value.trim();
+    var startVal = document.getElementById('settingsStart').value;
+    var banner = document.getElementById('settingsAlwaysBanner').checked;
+
     DATA.tournament.name = name || 'Compass Arena';
     DATA.tournament.game = game || 'Dota 2';
     DATA.tournament.matches = format || 'Bo3';
-    DATA.tournament.dates = dates || 'уточняются';
+    DATA.tournament.dates = dates || '26 сентября 2026';
+
+    // datetime-local -> ISO. Если пусто — null (значит, дефолт из index.html)
+    if (startVal) {
+        var d = new Date(startVal);
+        DATA.tournamentStart = d.toISOString();
+    } else {
+        DATA.tournamentStart = null;
+    }
+
+    DATA.alwaysShowBracketBanner = banner;
+
     saveData();
     showToast('💾 Настройки сохранены!');
 }
@@ -599,9 +622,7 @@ function importData(event) {
             var data = JSON.parse(e.target.result);
             DATA = data;
             saveData();
-            renderTeams();
-            renderMatches();
-            renderSchedule();
+            renderEverything();
             showToast('📥 Данные импортированы!');
         } catch(err) {
             showToast('❌ Ошибка импорта');
@@ -616,9 +637,7 @@ function resetData() {
     if (!confirm('Точно?')) return;
     DATA = getDefaultData();
     saveData();
-    renderTeams();
-    renderMatches();
-    renderSchedule();
+    renderEverything();
     showToast('🔄 Данные сброшены');
 }
 
@@ -653,12 +672,15 @@ for (var i = 0; i < tabs.length; i++) {
 // ============================================================
 loadData().then(renderEverything);
 
-// Экспортируем функции
+// Экспорт функций
 window.addTeam = addTeam;
 window.deleteTeam = deleteTeam;
 window.editTeam = editTeam;
+window.moveTeam = moveTeam;
 window.setWinner = setWinner;
 window.resetMatch = resetMatch;
+window.setScore = setScore;
+window.toggleLive = toggleLive;
 window.setSchedule = setSchedule;
 window.saveSettings = saveSettings;
 window.exportData = exportData;
@@ -666,7 +688,6 @@ window.importData = importData;
 window.resetData = resetData;
 window.showToast = showToast;
 window.getTournamentData = function() { return DATA; };
-window.renderBracket = function() {};
 
 console.log('✅ Admin panel loaded!');
 </script>
