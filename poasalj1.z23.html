@@ -50,9 +50,26 @@
         .team-item .logo-mini img { max-width: 90%; max-height: 90%; object-fit: contain; }
         .team-item .logo-mini .placeholder { font-family: 'Unbounded', sans-serif; font-size: 15px; color: #c9a35a; opacity: 0.6; }
         .team-item .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-        .team-item .info .name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .team-item .info .name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
         .team-item .info .players { font-size: 11px; color: #5f6773; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .team-item .actions { display: flex; gap: 4px; flex-shrink: 0; }
+        .seed-input {
+            width: 42px;
+            background: #0a0d12;
+            border: 1px solid #242b35;
+            color: #e3c48a;
+            padding: 3px 4px;
+            border-radius: 4px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+        }
+        .seed-input:focus { border-color: #c9a35a; background: #151a22; }
+        .seed-input::-webkit-outer-spin-button,
+        .seed-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .match-list { display: flex; flex-direction: column; gap: 6px; }
         .match-item { background: #151a22; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 13px; }
         .match-item .teams { display: flex; align-items: center; gap: 10px; }
@@ -145,9 +162,15 @@
             <button class="btn btn-primary" onclick="addTeam()">➕ Добавить</button>
         </div>
         <div class="card">
-            <div class="card-header"><h3>📋 Список команд</h3><span id="teamsCount" style="color:#5f6773;font-size:12px;">0 команд</span></div>
+            <div class="card-header">
+                <h3>📋 Список команд</h3>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                    <span id="teamsCount" style="color:#5f6773;font-size:12px;">0 команд</span>
+                    <button class="btn btn-sm" onclick="shuffleTeams()" title="Случайно перемешать посев">🔀 Перемешать</button>
+                </div>
+            </div>
             <div class="team-list" id="teamList"></div>
-            <p class="hint" style="margin-top:12px;">⚠️ Порядок команд = посев. Команды #1 и #2 получают bye в 1-м раунде верхней сетки (сразу проходят во 2-й раунд).</p>
+            <p class="hint" style="margin-top:12px;">⚠️ Порядок команд = посев. Команды #1 и #2 получают bye в 1-м раунде верхней сетки. Меняй номер в поле, чтобы переставить команду, или жми «Перемешать».</p>
         </div>
     </div>
 
@@ -635,13 +658,18 @@ function renderTeams() {
             playersText = 'состав не указан';
         }
 
-        var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше по посеву">↑</button>';
-        var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже по посеву">↓</button>';
+        var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше на одну позицию">↑</button>';
+        var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже на одну позицию">↓</button>';
+
+        var seedInput = '<input type="number" min="1" max="' + DATA.teams.length + '" value="' + (i+1) + '" ' +
+            'onchange="setSeed(' + t.id + ', this.value)" ' +
+            'class="seed-input" ' +
+            'title="Номер посева">';
 
         var byeLabel = (i < 2) ? ' <span style="color:#c9a35a;font-size:10px;">[BYE]</span>' : '';
         div.innerHTML =
             '<div class="logo-mini">' + logoHtml + '</div>' +
-            '<div class="info"><span class="name">Посев ' + (i+1) + ' · #' + t.id + ' ' + t.name + byeLabel + '</span><span class="players">' + playersText + '</span></div>' +
+            '<div class="info"><span class="name">Посев ' + seedInput + ' · #' + t.id + ' ' + t.name + byeLabel + '</span><span class="players">' + playersText + '</span></div>' +
             '<div class="actions">' + upBtn + downBtn + '<button class="btn btn-sm" onclick="openEditModal(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
         container.appendChild(div);
     }
@@ -658,6 +686,50 @@ function moveTeam(index, direction) {
     renderTeams();
     renderMatches();
     showToast('↕️ Посев обновлён');
+}
+
+// Перемешать посев случайно
+function shuffleTeams() {
+    if (!confirm('Перемешать посев? Текущий порядок команд будет сброшен.')) return;
+    var arr = DATA.teams.slice();
+    for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+    DATA.teams = arr;
+    saveData();
+    renderTeams();
+    renderMatches();
+    showToast('🔀 Посев перемешан');
+}
+
+// Переставить команду на конкретный номер посева
+function setSeed(teamId, newPos) {
+    newPos = parseInt(newPos, 10);
+    if (isNaN(newPos) || newPos < 1) newPos = 1;
+    if (newPos > DATA.teams.length) newPos = DATA.teams.length;
+
+    var currentIdx = -1;
+    for (var i = 0; i < DATA.teams.length; i++) {
+        if (DATA.teams[i].id === teamId) { currentIdx = i; break; }
+    }
+    if (currentIdx === -1) return;
+
+    var targetIdx = newPos - 1;
+    if (currentIdx === targetIdx) {
+        renderTeams();
+        return;
+    }
+
+    var team = DATA.teams.splice(currentIdx, 1)[0];
+    DATA.teams.splice(targetIdx, 0, team);
+
+    saveData();
+    renderTeams();
+    renderMatches();
+    showToast('📊 Посев обновлён: ' + team.name + ' → #' + newPos);
 }
 
 function renderMatches() {
@@ -967,6 +1039,8 @@ window.openEditModal = openEditModal;
 window.closeEditModal = closeEditModal;
 window.saveEditTeam = saveEditTeam;
 window.moveTeam = moveTeam;
+window.shuffleTeams = shuffleTeams;
+window.setSeed = setSeed;
 window.setWinner = setWinner;
 window.resetMatch = resetMatch;
 window.setScore = setScore;
@@ -982,7 +1056,7 @@ window.onEditLogo = onEditLogo;
 window.clearNewTeamLogo = clearNewTeamLogo;
 window.clearEditLogo = clearEditLogo;
 
-console.log('✅ Admin panel loaded (6 teams, 10 matches, logo autocompress 600×600)');
+console.log('✅ Admin panel loaded (6 teams, 10 matches, logo autocompress, shuffle + setSeed)');
 </script>
 
 </body>
