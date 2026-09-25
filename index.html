@@ -164,6 +164,23 @@
         .bracket-group-header.lower { color: #b3695f; border-bottom-color: rgba(179,105,95,0.35); }
         .bracket-group-header.grand { color: #e3c48a; border-bottom-color: rgba(201,163,90,0.5); }
 
+        .bracket-group-header.grand::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 14px;
+    background-color: #e3c48a;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    margin-right: 8px;
+    margin-bottom: 2px;
+}
         /* Колонки-раунды внутри группы */
         .bracket-group-inner {
             display: flex;
