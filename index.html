@@ -314,7 +314,6 @@
             from { transform: scale(0.85) translateY(20px); opacity: 0; }
             to   { transform: scale(1) translateY(0); opacity: 1; }
         }
-        /* Бегущая рамка по периметру */
         .winner-card::before {
             content: '';
             position: absolute; inset: -1px;
@@ -394,7 +393,6 @@
             letter-spacing: 0.06em;
         }
 
-        /* Призёры */
         .winner-podium {
             margin-top: 32px;
             padding-top: 24px;
@@ -451,7 +449,6 @@
         }
         .winner-close:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
 
-        /* Плашка чемпиона после закрытия оверлея */
         .champion-chip {
             position: fixed;
             top: 82px;
@@ -479,7 +476,6 @@
         .champion-chip .trophy { font-size: 14px; }
         .champion-chip .name { color: #eae6da; font-weight: 500; letter-spacing: 0.04em; }
 
-        /* Мобильный адаптив */
         @media (max-width: 640px) {
             .winner-card { padding: 32px 22px 28px; }
             .winner-logo { width: 130px; height: 130px; }
@@ -490,10 +486,8 @@
             .champion-chip { top: 72px; right: 12px; font-size: 10px; padding: 6px 12px 6px 10px; }
         }
 
-        /* ===== ANIMATIONS ===== */
         @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 860px) {
             .format-grid { grid-template-columns: 1fr; }
             .bracket { gap: 24px; min-width: 700px; }
@@ -570,9 +564,6 @@
     <a href="https://t.me/compassarenaa" target="_blank">Telegram</a>
 </nav>
 
-<!-- ============================================================
-     ФАЗА 1: ARENA / TIMER
-     ============================================================ -->
 <section class="arena-stats" id="arenaSection" data-phase="1">
     <div class="container">
         <div class="arena-inner">
@@ -618,9 +609,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     HERO
-     ============================================================ -->
 <section class="hero-bg">
     <div class="container">
         <div class="hero-bg-inner">
@@ -633,9 +621,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     TWITCH: свёрнутая карточка (фаза 1) / iframe (фаза 2+)
-     ============================================================ -->
 <section class="container">
     <div id="streamCollapsed" class="stream-collapsed" data-phase="1">
         <button class="stream-collapsed-toggle" onclick="toggleStreamCard()">
@@ -660,9 +645,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     БАННЕР «ТУРНИРНАЯ СЕТКА» (всегда)
-     ============================================================ -->
 <section class="bracket-banner" id="bracketBanner">
     <div class="container">
         <div class="bracket-banner-inner">
@@ -672,9 +654,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     СЕТКА (всегда, но в фазе 3 — приглушена)
-     ============================================================ -->
 <section class="bracket-section" id="bracketSection">
     <div class="container">
         <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
@@ -687,9 +666,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     SCHEDULE PREVIEW
-     ============================================================ -->
 <section class="schedule-section">
     <div class="container">
         <h2>Ближайшие матчи</h2>
@@ -697,9 +673,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     FORMAT
-     ============================================================ -->
 <section class="format-section">
     <div class="container">
         <div class="format-grid">
@@ -710,9 +683,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
 <footer>
     <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
         <span>Compass Arena — организатор турниров по Dota 2</span>
@@ -726,9 +696,6 @@
     </div>
 </footer>
 
-<!-- ============================================================
-     MODAL (состав команды)
-     ============================================================ -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
         <button class="modal-close" id="modalClose">&times;</button>
@@ -761,9 +728,6 @@
     </div>
 </div>
 
-<!-- ============================================================
-     ПОБЕДНЫЙ ЭКРАН (ФАЗА 3)
-     ============================================================ -->
 <div class="winner-overlay" id="winnerOverlay">
     <div class="winner-card">
         <div class="winner-label">Победитель Compass Arena</div>
@@ -782,7 +746,6 @@
     </div>
 </div>
 
-<!-- Плашка чемпиона после закрытия оверлея -->
 <div class="champion-chip" id="championChip" onclick="openWinnerOverlay()">
     <span class="trophy">🏆</span>
     <span>Победитель — <span class="name" id="chipName">—</span></span>
@@ -799,7 +762,7 @@
 var ROLE_NAMES = { 1: 'Керри', 2: 'Мидер', 3: 'Офлейн', 4: 'Саппорт 4', 5: 'Саппорт 5' };
 
 // ============================================================
-// ДАННЫЕ
+// ДАННЫЕ (6 команд, 10 матчей)
 // ============================================================
 var DATA = {
     tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
@@ -809,25 +772,22 @@ var DATA = {
         { id: 3, name: "Слот 3", players: [], logo: "" },
         { id: 4, name: "Слот 4", players: [], logo: "" },
         { id: 5, name: "Слот 5", players: [], logo: "" },
-        { id: 6, name: "Слот 6", players: [], logo: "" },
-        { id: 7, name: "Слот 7", players: [], logo: "" },
-        { id: 8, name: "Слот 8", players: [], logo: "" }
+        { id: 6, name: "Слот 6", players: [], logo: "" }
     ],
     matches: [
-        { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
-        { id: 2, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
-        { id: 3, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
-        { id: 4, round: 1, team1: 7, team2: 8, winner: null, bracket: 'upper' },
-        { id: 5, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-        { id: 6, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
-        { id: 7, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-        { id: 8, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 9, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 10, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 11, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 12, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 13, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+        // Верхняя сетка (5 матчей)
+        { id: 1, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
+        { id: 2, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
+        { id: 3, round: 2, team1: 1, team2: null, winner: null, bracket: 'upper' },
+        { id: 4, round: 2, team1: 2, team2: null, winner: null, bracket: 'upper' },
+        { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
+        // Нижняя сетка (4 матча)
+        { id: 6, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 7, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 8, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
+        { id: 9, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
+        // Гранд-финал (1 матч)
+        { id: 10, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
     ],
     schedule: {},
     liveMatchId: null,
@@ -890,7 +850,7 @@ function loadSavedData() {
 // ФАЗЫ
 // ============================================================
 function computePhase() {
-    var grand = getMatch(14);
+    var grand = getMatch(10);
     if (grand && grand.winner) return 3;
     if (Date.now() >= TOURNAMENT_START) return 2;
     return 1;
@@ -907,24 +867,16 @@ function applyPhase(phase) {
     var streamCollapsed = document.getElementById('streamCollapsed');
     var streamFull = document.getElementById('streamFull');
 
-    // Таймер: только фаза 1
     if (arena) arena.style.display = (phase === 1) ? 'block' : 'none';
-
-    // Свёрнутый стрим: только фаза 1
     if (streamCollapsed) streamCollapsed.style.display = (phase === 1) ? 'block' : 'none';
-
-    // iframe: фаза 2 и 3
     if (streamFull) streamFull.style.display = (phase >= 2) ? 'block' : 'none';
 
-    // Сетка рендерится заново с учётом фазы
     renderBracket();
 
-    // Фаза 3: показать победный экран (один раз за сессию)
     if (phase === 3) {
         var championChip = document.getElementById('championChip');
         if (championChip) championChip.classList.add('visible');
         renderWinnerOverlay();
-        // Автопоказ только если ещё не показывали в этой сессии
         if (prev !== 3 && !sessionStorage.getItem('winnerShown')) {
             setTimeout(openWinnerOverlay, 400);
             sessionStorage.setItem('winnerShown', '1');
@@ -955,26 +907,51 @@ function getMatch(id) {
     return null;
 }
 function getLoser(m) {
-    if (!m.winner) return null;
+    if (!m || !m.winner) return null;
     if (m.team1 === m.winner) return m.team2;
     if (m.team2 === m.winner) return m.team1;
     return null;
 }
+
+// ============================================================
+// СВЯЗИ СЕТКИ НА 6 КОМАНД (10 матчей)
+// ============================================================
 function updateMatchLinks() {
-    var m1 = getMatch(1), m2 = getMatch(2), m3 = getMatch(3), m4 = getMatch(4);
-    var m5 = getMatch(5), m6 = getMatch(6), m7 = getMatch(7);
-    var m8 = getMatch(8), m9 = getMatch(9), m10 = getMatch(10), m11 = getMatch(11);
-    var m12 = getMatch(12), m13 = getMatch(13), m14 = getMatch(14);
-    if (m5) { m5.team1 = m1 ? m1.winner : null; m5.team2 = m2 ? m2.winner : null; }
-    if (m6) { m6.team1 = m3 ? m3.winner : null; m6.team2 = m4 ? m4.winner : null; }
-    if (m7) { m7.team1 = m5 ? m5.winner : null; m7.team2 = m6 ? m6.winner : null; }
-    if (m8) { m8.team1 = getLoser(m1); m8.team2 = getLoser(m2); }
-    if (m9) { m9.team1 = getLoser(m3); m9.team2 = getLoser(m4); }
-    if (m10) { m10.team1 = m8 ? m8.winner : null; m10.team2 = getLoser(m5); }
-    if (m11) { m11.team1 = m9 ? m9.winner : null; m11.team2 = getLoser(m6); }
-    if (m12) { m12.team1 = m10 ? m10.winner : null; m12.team2 = m11 ? m11.winner : null; }
-    if (m13) { m13.team1 = m12 ? m12.winner : null; m13.team2 = getLoser(m7); }
-    if (m14) { m14.team1 = m7 ? m7.winner : null; m14.team2 = m13 ? m13.winner : null; }
+    var m = {};
+    for (var i = 0; i < DATA.matches.length; i++) {
+        m[DATA.matches[i].id] = DATA.matches[i];
+    }
+    var t = DATA.teams;
+
+    // R1 верхней: 3 vs 4, 5 vs 6. Команды 1 и 2 — bye, ждут в R2.
+    if (m[1]) { m[1].team1 = t[2] ? t[2].id : null; m[1].team2 = t[3] ? t[3].id : null; }
+    if (m[2]) { m[2].team1 = t[4] ? t[4].id : null; m[2].team2 = t[5] ? t[5].id : null; }
+    // R2 верхней: 1 vs W(M1), 2 vs W(M2)
+    if (m[3]) { m[3].team1 = t[0] ? t[0].id : null; m[3].team2 = m[1] ? m[1].winner : null; }
+    if (m[4]) { m[4].team1 = t[1] ? t[1].id : null; m[4].team2 = m[2] ? m[2].winner : null; }
+    // Финал верхней
+    if (m[5]) { m[5].team1 = m[3] ? m[3].winner : null; m[5].team2 = m[4] ? m[4].winner : null; }
+    // Нижняя R1: L(M1) vs L(M2)
+    if (m[6]) { m[6].team1 = getLoser(m[1]); m[6].team2 = getLoser(m[2]); }
+    // Нижняя R2: W(M6) vs L(M3)
+    if (m[7]) { m[7].team1 = m[6] ? m[6].winner : null; m[7].team2 = getLoser(m[3]); }
+    // Нижняя R3: W(M7) vs L(M4)
+    if (m[8]) { m[8].team1 = m[7] ? m[7].winner : null; m[8].team2 = getLoser(m[4]); }
+    // Финал нижней: W(M8) vs L(M5)
+    if (m[9]) { m[9].team1 = m[8] ? m[8].winner : null; m[9].team2 = getLoser(m[5]); }
+    // Гранд-финал: W(M5) vs W(M9)
+    if (m[10]) { m[10].team1 = m[5] ? m[5].winner : null; m[10].team2 = m[9] ? m[9].winner : null; }
+
+    // Сброс winner у матчей, где команда больше не в паре
+    for (var k = 1; k <= 10; k++) {
+        var mm = m[k];
+        if (!mm || !mm.winner) continue;
+        if (mm.winner !== mm.team1 && mm.winner !== mm.team2) {
+            mm.winner = null;
+            mm.score1 = null;
+            mm.score2 = null;
+        }
+    }
 }
 
 // ============================================================
@@ -1041,8 +1018,6 @@ function renderMatch(m) {
     var hasScore = m.score1 != null && m.score2 != null;
     var isLive = DATA.liveMatchId === m.id;
     var isWaiting = !m.winner && t1 && t2 && CURRENT_PHASE >= 2;
-
-    // В фазе 3 выделяем гранд-финал как матч чемпиона
     var isChampionMatch = (CURRENT_PHASE === 3) && (m.bracket === 'grand') && m.winner;
 
     var team1Classes = 'team';
@@ -1141,7 +1116,7 @@ function countTeamRecord(teamId) {
 }
 
 function openModal(teamId) {
-    if (CURRENT_PHASE === 3) return; // в фазе 3 сетка не кликабельна
+    if (CURRENT_PHASE === 3) return;
     var team = getTeam(teamId);
     if (!team) return;
 
@@ -1207,19 +1182,18 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 // ПОБЕДНЫЙ ЭКРАН
 // ============================================================
 function renderWinnerOverlay() {
-    var grand = getMatch(14);
+    var grand = getMatch(10);
     if (!grand || !grand.winner) return;
 
     var champion = getTeam(grand.winner);
     var loserId = getLoser(grand);
     var runnerUp = loserId ? getTeam(loserId) : null;
 
-    // 3-е место — проигравший в финале нижней (матч 13)
-    var m13 = getMatch(13);
-    var thirdId = m13 ? getLoser(m13) : null;
+    // 3-е место — проигравший в финале нижней (матч 9)
+    var m9 = getMatch(9);
+    var thirdId = m9 ? getLoser(m9) : null;
     var third = thirdId ? getTeam(thirdId) : null;
 
-    // Логотип
     var logoEl = document.getElementById('winnerLogo');
     if (champion && champion.logo) {
         logoEl.innerHTML = '<img src="' + champion.logo + '" alt="">';
@@ -1228,10 +1202,8 @@ function renderWinnerOverlay() {
         logoEl.innerHTML = '<span class="placeholder">' + ch + '</span>';
     }
 
-    // Название
     document.getElementById('winnerName').textContent = champion ? champion.name : '—';
 
-    // Счёт
     if (grand.score1 != null && grand.score2 != null) {
         document.getElementById('winnerScore').style.display = 'inline-flex';
         document.getElementById('winnerScore1').textContent = grand.score1;
@@ -1240,7 +1212,6 @@ function renderWinnerOverlay() {
         document.getElementById('winnerScore').style.display = 'none';
     }
 
-    // Призёры
     var podium = document.getElementById('winnerPodium');
     podium.innerHTML = '';
     var places = [
@@ -1257,7 +1228,6 @@ function renderWinnerOverlay() {
         podium.appendChild(div);
     }
 
-    // Плашка чемпиона
     var chipName = document.getElementById('chipName');
     if (chipName && champion) chipName.textContent = champion.name;
 }
@@ -1376,7 +1346,6 @@ function updateTimer() {
     var diff = TOURNAMENT_START - now;
 
     if (diff <= 0) {
-        // Фаза 2 (или 3) — переключение
         if (CURRENT_PHASE === 1) {
             applyPhase(computePhase());
         }
