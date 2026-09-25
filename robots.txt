@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /poasalj1.z23.html
+Disallow: /api/save
+
+Sitemap: https://compass-arena.pages.dev/sitemap.xml
