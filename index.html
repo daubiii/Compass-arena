@@ -130,7 +130,31 @@
         .bracket-wrapper::-webkit-scrollbar-thumb { background: #2f3844; border-radius: 4px; }
         .bracket-wrapper::-webkit-scrollbar-thumb:hover { background: #c9a35a; }
 
-        .bracket { display: flex; gap: 32px; min-width: 900px; padding: 6px 0; }
+        /* Сетка теперь двухуровневая: секция (upper/lower/grand) → колонки-раунды */
+        .bracket { display: flex; gap: 24px; min-width: 900px; padding: 6px 0; align-items: flex-start; }
+
+        .bracket-group { display: flex; gap: 32px; position: relative; }
+        .bracket-group-header {
+            grid-column: 1 / -1;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+        }
+        .bracket-group-header.upper { color: #c9a35a; border-bottom: 1px solid rgba(201,163,90,0.35); }
+        .bracket-group-header.lower { color: #b3695f; border-bottom: 1px solid rgba(179,105,95,0.35); }
+        .bracket-group-header.grand { color: #e3c48a; border-bottom: 1px solid rgba(201,163,90,0.5); }
+
+        /* Внутренняя обёртка группы колонок */
+        .bracket-group-inner { display: flex; gap: 32px; position: relative; padding-top: 8px; }
+
+        /* Вертикальный разделитель между секциями */
+        .bracket-group + .bracket-group { padding-left: 24px; border-left: 1px solid rgba(201,163,90,0.12); }
+        .bracket-group.lower + .bracket-group.grand { border-left-color: rgba(201,163,90,0.25); }
+
         .round { display: flex; flex-direction: column; gap: 16px; min-width: 160px; position: relative; }
         .round-label { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.16em; color: #5f6773; text-align: center; margin-bottom: 8px; text-transform: uppercase; }
         .round-label.gold { color: #7a8494; }
@@ -155,7 +179,6 @@
         .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .match .team .score { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 600; color: #c9a35a; min-width: 16px; text-align: center; }
 
-        /* W/L плашки */
         .match .team .status { font-size: 8px; padding: 1px 6px; border-radius: 10px; font-weight: 700; letter-spacing: 0.05em; margin-left: 2px; margin-right: 4px; }
         .match .team .status.win { background: #4caf50; color: #fff; }
         .match .team .status.loss { background: #e74c3c; color: #fff; }
@@ -492,7 +515,9 @@
 
         @media (max-width: 860px) {
             .format-grid { grid-template-columns: 1fr; }
-            .bracket { gap: 24px; min-width: 700px; }
+            .bracket { gap: 20px; min-width: 1000px; }
+            .bracket-group { gap: 24px; }
+            .bracket-group-inner { gap: 24px; }
             .round { min-width: 130px; }
             .schedule-grid { grid-template-columns: 1fr; }
             .timer-block .num { font-size: 44px; text-shadow: none; animation: none; }
@@ -504,6 +529,7 @@
             .modal { padding: 22px 22px; }
             .modal-logo { width: 110px; height: 110px; }
             .modal-head h2 { font-size: 18px; }
+            .bracket-group-header { font-size: 11px; letter-spacing: 0.18em; }
         }
         @media (max-width: 640px) {
             .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
@@ -534,13 +560,16 @@
             .timer-block .num { font-size: 32px; }
             .timer-block { min-width: 52px; }
             .timer-sep { font-size: 22px; }
-            .bracket { gap: 16px; min-width: 640px; }
+            .bracket { gap: 16px; min-width: 900px; }
+            .bracket-group { gap: 20px; }
+            .bracket-group-inner { gap: 20px; }
             .round { min-width: 120px; }
             .match { padding: 6px 10px; min-height: 50px; }
             .match .team { font-size: 11px; gap: 6px; }
             .match .team .score { font-size: 12px; }
             .bracket-banner-title { font-size: 18px; }
-            .stream-collapsed-toggle { padding: 14px 18px; font-size: 11px; }
+            .stream-collapsed-toggle { padding: 14px 18px; font-size: 12px; }
+            .bracket-group-header { font-size: 10px; letter-spacing: 0.14em; }
         }
     </style>
 </head>
@@ -659,10 +688,6 @@
 <section class="bracket-section" id="bracketSection">
     <div class="container">
         <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 20px;font-size:12px;color:#97a0ac;">
-            <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#c9a35a;display:inline-block;"></span> Верхняя сетка</span>
-            <span style="display:flex;align-items:center;gap:6px;"><span style="width:18px;height:2px;background:#b3695f;display:inline-block;"></span> Нижняя сетка</span>
-        </div>
         <div class="bracket-wrapper" id="bracketWrapper"></div>
         <div class="bracket-hint">← прокрутите, чтобы увидеть всю сетку →</div>
     </div>
@@ -777,18 +802,15 @@ var DATA = {
         { id: 6, name: "Слот 6", players: [], logo: "" }
     ],
     matches: [
-        // Верхняя сетка (5 матчей)
         { id: 1, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
         { id: 2, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
         { id: 3, round: 2, team1: 1, team2: null, winner: null, bracket: 'upper' },
         { id: 4, round: 2, team1: 2, team2: null, winner: null, bracket: 'upper' },
         { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-        // Нижняя сетка (4 матча)
         { id: 6, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
         { id: 7, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
         { id: 8, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
         { id: 9, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-        // Гранд-финал (1 матч)
         { id: 10, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
     ],
     schedule: {},
@@ -859,7 +881,6 @@ function computePhase() {
 }
 
 function applyPhase(phase) {
-    var prev = CURRENT_PHASE;
     CURRENT_PHASE = phase;
 
     document.body.classList.remove('phase-1', 'phase-2', 'phase-3');
@@ -917,7 +938,7 @@ function getLoser(m) {
 }
 
 // ============================================================
-// СВЯЗИ СЕТКИ НА 6 КОМАНД (10 матчей)
+// СВЯЗИ СЕТКИ (6 команд, 10 матчей)
 // ============================================================
 function updateMatchLinks() {
     var m = {};
@@ -926,26 +947,17 @@ function updateMatchLinks() {
     }
     var t = DATA.teams;
 
-    // R1 верхней: 3 vs 4, 5 vs 6. Команды 1 и 2 — bye, ждут в R2.
     if (m[1]) { m[1].team1 = t[2] ? t[2].id : null; m[1].team2 = t[3] ? t[3].id : null; }
     if (m[2]) { m[2].team1 = t[4] ? t[4].id : null; m[2].team2 = t[5] ? t[5].id : null; }
-    // R2 верхней: 1 vs W(M1), 2 vs W(M2)
     if (m[3]) { m[3].team1 = t[0] ? t[0].id : null; m[3].team2 = m[1] ? m[1].winner : null; }
     if (m[4]) { m[4].team1 = t[1] ? t[1].id : null; m[4].team2 = m[2] ? m[2].winner : null; }
-    // Финал верхней
     if (m[5]) { m[5].team1 = m[3] ? m[3].winner : null; m[5].team2 = m[4] ? m[4].winner : null; }
-    // Нижняя R1: L(M1) vs L(M2)
     if (m[6]) { m[6].team1 = getLoser(m[1]); m[6].team2 = getLoser(m[2]); }
-    // Нижняя R2: W(M6) vs L(M3)
     if (m[7]) { m[7].team1 = m[6] ? m[6].winner : null; m[7].team2 = getLoser(m[3]); }
-    // Нижняя R3: W(M7) vs L(M4)
     if (m[8]) { m[8].team1 = m[7] ? m[7].winner : null; m[8].team2 = getLoser(m[4]); }
-    // Финал нижней: W(M8) vs L(M5)
     if (m[9]) { m[9].team1 = m[8] ? m[8].winner : null; m[9].team2 = getLoser(m[5]); }
-    // Гранд-финал: W(M5) vs W(M9)
     if (m[10]) { m[10].team1 = m[5] ? m[5].winner : null; m[10].team2 = m[9] ? m[9].winner : null; }
 
-    // Сброс winner у матчей, где команда больше не в паре
     for (var k = 1; k <= 10; k++) {
         var mm = m[k];
         if (!mm || !mm.winner) continue;
@@ -953,6 +965,15 @@ function updateMatchLinks() {
             mm.winner = null;
             mm.score1 = null;
             mm.score2 = null;
+        }
+    }
+    for (var k2 = 1; k2 <= 10; k2++) {
+        var mm2 = m[k2];
+        if (!mm2) continue;
+        if ((mm2.team1 === null || mm2.team2 === null) && mm2.winner !== null) {
+            mm2.winner = null;
+            mm2.score1 = null;
+            mm2.score2 = null;
         }
     }
 }
@@ -964,6 +985,7 @@ function renderBracket() {
     var wrapper = document.getElementById('bracketWrapper');
     if (!wrapper) return;
     updateMatchLinks();
+
     var upperRounds = {}, lowerRounds = {}, grandMatches = [];
     for (var i = 0; i < DATA.matches.length; i++) {
         var m = DATA.matches[i];
@@ -977,18 +999,32 @@ function renderBracket() {
             grandMatches.push(m);
         }
     }
-    var labels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'ФИНАЛ ВЕРХНЕЙ' };
+
+    var upperLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'ФИНАЛ ВЕРХНЕЙ' };
     var lowerLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'РАУНД 3', 4: 'ФИНАЛ НИЖНЕЙ' };
+
     var html = '<div class="bracket">';
-    var keys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
-    for (var k = 0; k < keys.length; k++) {
-        var r = keys[k];
-        html += '<div class="round"><div class="round-label gold">' + (labels[r] || 'РАУНД ' + r) + '</div>';
+
+    // === ГРУППА: ВЕРХНЯЯ СЕТКА ===
+    html += '<div class="bracket-group upper">';
+    html += '<div class="bracket-group-header upper">ВЕРХНЯЯ СЕТКА</div>';
+    html += '<div class="bracket-group-inner">';
+    var upperKeys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
+    for (var k = 0; k < upperKeys.length; k++) {
+        var r = upperKeys[k];
+        html += '<div class="round"><div class="round-label gold">' + (upperLabels[r] || 'РАУНД ' + r) + '</div>';
         for (var j = 0; j < upperRounds[r].length; j++) {
             html += renderMatch(upperRounds[r][j]);
         }
         html += '</div>';
     }
+    html += '</div>'; // /inner
+    html += '</div>'; // /group
+
+    // === ГРУППА: НИЖНЯЯ СЕТКА ===
+    html += '<div class="bracket-group lower">';
+    html += '<div class="bracket-group-header lower">НИЖНЯЯ СЕТКА</div>';
+    html += '<div class="bracket-group-inner">';
     var lowerKeys = Object.keys(lowerRounds).sort(function(a,b){return a-b;});
     for (var lk = 0; lk < lowerKeys.length; lk++) {
         var lr = lowerKeys[lk];
@@ -998,14 +1034,24 @@ function renderBracket() {
         }
         html += '</div>';
     }
+    html += '</div>'; // /inner
+    html += '</div>'; // /group
+
+    // === ГРУППА: ГРАНД-ФИНАЛ ===
     if (grandMatches.length) {
-        html += '<div class="round"><div class="round-label grand">ГРАНД-ФИНАЛ</div>';
+        html += '<div class="bracket-group grand">';
+        html += '<div class="bracket-group-header grand">ГРАНД-ФИНАЛ</div>';
+        html += '<div class="bracket-group-inner">';
+        html += '<div class="round"><div class="round-label grand">ФИНАЛ</div>';
         for (var gj = 0; gj < grandMatches.length; gj++) {
             html += renderMatch(grandMatches[gj]);
         }
         html += '</div>';
+        html += '</div>';
+        html += '</div>';
     }
-    html += '</div>';
+
+    html += '</div>'; // /bracket
     wrapper.innerHTML = html;
 }
 
