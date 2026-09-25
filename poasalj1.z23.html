@@ -43,33 +43,68 @@
         .btn-danger:hover { background: #e74c3c; color: #fff; }
         .btn-sm { padding: 3px 10px; font-size: 9px; }
         .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-        .team-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
-        .team-item { background: #151a22; border: 1px solid #242b35; border-radius: 4px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; transition: 0.2s; }
+        .team-list { display: flex; flex-direction: column; gap: 8px; }
+        .team-item {
+            background: #151a22;
+            border: 1px solid #242b35;
+            border-radius: 4px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+            position: relative;
+        }
         .team-item:hover { border-color: #c9a35a; }
-        .team-item .logo-mini { width: 36px; height: 36px; background: #0a0d12; border: 1px solid #242b35; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+        .drag-handle {
+            cursor: grab;
+            color: #5f6773;
+            font-size: 16px;
+            line-height: 1;
+            user-select: none;
+            padding: 4px 2px;
+            transition: color 0.2s;
+            touch-action: none;
+        }
+        .drag-handle:hover { color: #c9a35a; }
+        .drag-handle:active { cursor: grabbing; }
+        .team-item.dragging {
+            opacity: 0.5;
+            background: #1a2029;
+            border-color: #c9a35a;
+        }
+        .team-item.drag-over {
+            border-color: #c9a35a;
+            background: rgba(201,163,90,0.08);
+        }
+        .team-item.drop-before::before,
+        .team-item.drop-after::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #c9a35a;
+            box-shadow: 0 0 8px rgba(201,163,90,0.6);
+            pointer-events: none;
+        }
+        .team-item.drop-before::before { top: -5px; }
+        .team-item.drop-after::after { bottom: -5px; }
+        .team-item .logo-mini {
+            width: 36px; height: 36px;
+            background: #0a0d12;
+            border: 1px solid #242b35;
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; overflow: hidden;
+        }
         .team-item .logo-mini img { max-width: 90%; max-height: 90%; object-fit: contain; }
         .team-item .logo-mini .placeholder { font-family: 'Unbounded', sans-serif; font-size: 15px; color: #c9a35a; opacity: 0.6; }
         .team-item .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-        .team-item .info .name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+        .team-item .info .name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .team-item .info .name .seed-label { color: #c9a35a; font-family: 'Unbounded', sans-serif; font-size: 11px; margin-right: 6px; }
         .team-item .info .players { font-size: 11px; color: #5f6773; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .team-item .actions { display: flex; gap: 4px; flex-shrink: 0; }
-        .seed-input {
-            width: 42px;
-            background: #0a0d12;
-            border: 1px solid #242b35;
-            color: #e3c48a;
-            padding: 3px 4px;
-            border-radius: 4px;
-            font-family: 'Unbounded', sans-serif;
-            font-size: 11px;
-            text-align: center;
-            cursor: pointer;
-            outline: none;
-            transition: 0.2s;
-        }
-        .seed-input:focus { border-color: #c9a35a; background: #151a22; }
-        .seed-input::-webkit-outer-spin-button,
-        .seed-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .match-list { display: flex; flex-direction: column; gap: 6px; }
         .match-item { background: #151a22; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 13px; }
         .match-item .teams { display: flex; align-items: center; gap: 10px; }
@@ -99,6 +134,33 @@
         .logo-meta.ok { color: #4caf50; }
         .logo-meta.warn { color: #e3c48a; }
         .logo-meta.err { color: #e74c3c; }
+
+        /* === Превью сетки в админке === */
+        .preview-wrap { display: flex; gap: 24px; overflow-x: auto; padding: 8px 0; }
+        .preview-group { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; min-width: 0; }
+        .preview-group + .preview-group { padding-left: 20px; border-left: 1px solid #242b35; }
+        .preview-group-title {
+            font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 600;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            padding-bottom: 6px; border-bottom: 1px solid; margin-bottom: 4px; white-space: nowrap;
+        }
+        .preview-group-title.upper { color: #c9a35a; border-bottom-color: rgba(201,163,90,0.35); }
+        .preview-group-title.lower { color: #b3695f; border-bottom-color: rgba(179,105,95,0.35); }
+        .preview-group-title.grand { color: #e3c48a; border-bottom-color: rgba(201,163,90,0.5); }
+        .preview-rounds { display: flex; gap: 16px; }
+        .preview-round { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
+        .preview-round-label { font-size: 9px; color: #5f6773; text-align: center; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 2px; }
+        .preview-match { background: #0a0d12; border: 1px solid #242b35; border-radius: 3px; padding: 5px 8px; font-size: 11px; display: flex; flex-direction: column; gap: 2px; }
+        .preview-match.empty { opacity: 0.4; color: #5f6773; font-style: italic; }
+        .preview-team { display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; padding: 1px 0; border-radius: 2px; transition: background 0.15s; }
+        .preview-team:hover { background: rgba(201,163,90,0.08); }
+        .preview-team.winner { color: #e3c48a; font-weight: 600; }
+        .preview-team.loser { color: #7a8494; opacity: 0.7; }
+        .preview-team .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+        .preview-team .badge { font-size: 8px; padding: 0px 5px; border-radius: 8px; font-weight: 700; }
+        .preview-team .badge.win { background: #4caf50; color: #fff; }
+        .preview-team .badge.loss { background: #e74c3c; color: #fff; }
+
         .toast { position: fixed; bottom: 24px; right: 24px; background: #10141b; border: 1px solid #c9a35a; padding: 10px 20px; border-radius: 6px; color: #eae6da; font-size: 13px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: 0.3s; pointer-events: none; max-width: 360px; }
         .toast.show { opacity: 1; transform: translateY(0); }
         .password-section { background: #10141b; border: 1px solid #c9a35a; border-radius: 6px; padding: 16px 20px; margin-bottom: 14px; }
@@ -110,7 +172,6 @@
             .form-row { grid-template-columns: 1fr; }
             .form-row.three { grid-template-columns: 1fr; }
             .admin-header h1 { font-size: 16px; }
-            .team-list { grid-template-columns: 1fr; }
             .match-item { flex-direction: column; align-items: stretch; }
             .match-item .teams { justify-content: center; }
             .match-item .meta { justify-content: center; }
@@ -170,7 +231,14 @@
                 </div>
             </div>
             <div class="team-list" id="teamList"></div>
-            <p class="hint" style="margin-top:12px;">⚠️ Порядок команд = посев. Команды #1 и #2 получают bye в 1-м раунде верхней сетки. Меняй номер в поле, чтобы переставить команду, или жми «Перемешать».</p>
+            <p class="hint" style="margin-top:12px;">⚠️ Порядок команд = посев. Команды #1 и #2 получают bye в 1-м раунде верхней сетки. Тащи за <b>⋮⋮</b> слева, чтобы переставить.</p>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3>👁 Превью сетки</h3>
+                <span style="color:#5f6773;font-size:12px;">Обновляется автоматически</span>
+            </div>
+            <div class="preview-wrap" id="previewWrap"></div>
         </div>
     </div>
 
@@ -536,6 +604,7 @@ function renderEverything() {
     renderTeams();
     renderMatches();
     renderSchedule();
+    renderPreview();
 }
 
 function saveData() {
@@ -630,7 +699,7 @@ function updateMatchLinks() {
 }
 
 // ============================================================
-// ОТРИСОВКА
+// ОТРИСОВКА СПИСКА КОМАНД
 // ============================================================
 function renderTeams() {
     var container = document.getElementById('teamList');
@@ -641,6 +710,8 @@ function renderTeams() {
         var t = DATA.teams[i];
         var div = document.createElement('div');
         div.className = 'team-item';
+        div.dataset.teamId = t.id;
+        div.dataset.index = i;
 
         var logoHtml = t.logo
             ? '<img src="' + t.logo + '" alt="">'
@@ -661,34 +732,223 @@ function renderTeams() {
         var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше на одну позицию">↑</button>';
         var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже на одну позицию">↓</button>';
 
-        var seedInput = '<input type="number" min="1" max="' + DATA.teams.length + '" value="' + (i+1) + '" ' +
-            'onchange="setSeed(' + t.id + ', this.value)" ' +
-            'class="seed-input" ' +
-            'title="Номер посева">';
-
         var byeLabel = (i < 2) ? ' <span style="color:#c9a35a;font-size:10px;">[BYE]</span>' : '';
         div.innerHTML =
+            '<div class="drag-handle" title="Перетащи, чтобы изменить посев">⋮⋮</div>' +
             '<div class="logo-mini">' + logoHtml + '</div>' +
-            '<div class="info"><span class="name">Посев ' + seedInput + ' · #' + t.id + ' ' + t.name + byeLabel + '</span><span class="players">' + playersText + '</span></div>' +
+            '<div class="info"><span class="name"><span class="seed-label">#' + (i+1) + '</span>' + t.name + byeLabel + '</span><span class="players">' + playersText + '</span></div>' +
             '<div class="actions">' + upBtn + downBtn + '<button class="btn btn-sm" onclick="openEditModal(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
         container.appendChild(div);
     }
     if (count) count.textContent = DATA.teams.length + ' команд';
+    initDragAndDrop();
+    renderPreview();
 }
 
-function moveTeam(index, direction) {
-    var newIndex = index + direction;
-    if (newIndex < 0 || newIndex >= DATA.teams.length) return;
-    var tmp = DATA.teams[index];
-    DATA.teams[index] = DATA.teams[newIndex];
-    DATA.teams[newIndex] = tmp;
+// ============================================================
+// DRAG & DROP
+// ============================================================
+function initDragAndDrop() {
+    var container = document.getElementById('teamList');
+    if (!container) return;
+    var items = container.querySelectorAll('.team-item');
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var handle = item.querySelector('.drag-handle');
+        if (!handle) continue;
+        item.setAttribute('draggable', 'false');
+        handle.setAttribute('draggable', 'true');
+        handle.addEventListener('dragstart', onDragStart);
+        handle.addEventListener('dragend', onDragEnd);
+        item.addEventListener('dragover', onDragOver);
+        item.addEventListener('dragleave', onDragLeave);
+        item.addEventListener('drop', onDrop);
+        handle.addEventListener('touchstart', onTouchStart, { passive: false });
+    }
+}
+
+var DRAG_SOURCE_INDEX = -1;
+function onDragStart(e) {
+    var item = e.target.closest('.team-item');
+    if (!item) return;
+    DRAG_SOURCE_INDEX = parseInt(item.dataset.index, 10);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(DRAG_SOURCE_INDEX));
+    setTimeout(function() { item.classList.add('dragging'); }, 0);
+}
+function onDragEnd(e) {
+    var item = e.target.closest('.team-item');
+    if (item) item.classList.remove('dragging');
+    clearDropMarkers();
+    DRAG_SOURCE_INDEX = -1;
+}
+function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    var item = e.target.closest('.team-item');
+    if (!item) return;
+    var targetIndex = parseInt(item.dataset.index, 10);
+    if (targetIndex === DRAG_SOURCE_INDEX) return;
+    clearDropMarkers();
+    var rect = item.getBoundingClientRect();
+    var midY = rect.top + rect.height / 2;
+    if (e.clientY < midY) item.classList.add('drop-before');
+    else item.classList.add('drop-after');
+}
+function onDragLeave(e) {
+    var item = e.target.closest('.team-item');
+    if (item) item.classList.remove('drop-before', 'drop-after');
+}
+function onDrop(e) {
+    e.preventDefault();
+    var item = e.target.closest('.team-item');
+    if (!item) return;
+    var targetIndex = parseInt(item.dataset.index, 10);
+    if (DRAG_SOURCE_INDEX === -1 || targetIndex === DRAG_SOURCE_INDEX) { clearDropMarkers(); return; }
+    var rect = item.getBoundingClientRect();
+    var midY = rect.top + rect.height / 2;
+    var insertAfter = e.clientY >= midY;
+    var finalIndex = targetIndex;
+    if (insertAfter && DRAG_SOURCE_INDEX < targetIndex) finalIndex = targetIndex;
+    else if (insertAfter) finalIndex = targetIndex + 1;
+    else if (DRAG_SOURCE_INDEX < targetIndex) finalIndex = targetIndex - 1;
+    else finalIndex = targetIndex;
+    reorderTeams(DRAG_SOURCE_INDEX, finalIndex);
+    clearDropMarkers();
+}
+function clearDropMarkers() {
+    var all = document.querySelectorAll('.team-item');
+    for (var i = 0; i < all.length; i++) {
+        all[i].classList.remove('drop-before', 'drop-after', 'drag-over');
+    }
+}
+
+var TOUCH_DRAG_INDEX = -1;
+var TOUCH_CLONE = null;
+var TOUCH_START_Y = 0;
+var TOUCH_OFFSET_Y = 0;
+var AUTO_SCROLL_INTERVAL = null;
+
+function onTouchStart(e) {
+    var handle = e.target.closest('.drag-handle');
+    if (!handle) return;
+    var item = handle.closest('.team-item');
+    if (!item) return;
+    e.preventDefault();
+    TOUCH_DRAG_INDEX = parseInt(item.dataset.index, 10);
+    var rect = item.getBoundingClientRect();
+    TOUCH_START_Y = e.touches[0].clientY;
+    TOUCH_OFFSET_Y = e.touches[0].clientY - rect.top;
+    TOUCH_CLONE = item.cloneNode(true);
+    TOUCH_CLONE.style.position = 'fixed';
+    TOUCH_CLONE.style.left = rect.left + 'px';
+    TOUCH_CLONE.style.top = rect.top + 'px';
+    TOUCH_CLONE.style.width = rect.width + 'px';
+    TOUCH_CLONE.style.zIndex = '9999';
+    TOUCH_CLONE.style.pointerEvents = 'none';
+    TOUCH_CLONE.style.opacity = '0.9';
+    TOUCH_CLONE.style.boxShadow = '0 8px 24px rgba(0,0,0,0.5)';
+    TOUCH_CLONE.style.borderColor = '#c9a35a';
+    document.body.appendChild(TOUCH_CLONE);
+    item.classList.add('dragging');
+    item.style.opacity = '0.3';
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('touchend', onTouchEnd);
+    document.addEventListener('touchcancel', onTouchEnd);
+    startAutoScroll();
+}
+function onTouchMove(e) {
+    if (TOUCH_DRAG_INDEX === -1 || !TOUCH_CLONE) return;
+    e.preventDefault();
+    var touchY = e.touches[0].clientY;
+    TOUCH_CLONE.style.top = (touchY - TOUCH_OFFSET_Y) + 'px';
+    var elementBelow = document.elementFromPoint(e.touches[0].clientX, touchY);
+    var targetItem = elementBelow ? elementBelow.closest('.team-item') : null;
+    clearDropMarkers();
+    if (targetItem && parseInt(targetItem.dataset.index, 10) !== TOUCH_DRAG_INDEX) {
+        var rect = targetItem.getBoundingClientRect();
+        var midY = rect.top + rect.height / 2;
+        if (touchY < midY) targetItem.classList.add('drop-before');
+        else targetItem.classList.add('drop-after');
+    }
+}
+function onTouchEnd(e) {
+    if (TOUCH_DRAG_INDEX === -1) return;
+    var touch = e.changedTouches ? e.changedTouches[0] : null;
+    var targetItem = null;
+    if (touch) {
+        var elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+        targetItem = elementBelow ? elementBelow.closest('.team-item') : null;
+    }
+    if (targetItem) {
+        var targetIndex = parseInt(targetItem.dataset.index, 10);
+        if (targetIndex !== TOUCH_DRAG_INDEX) {
+            var rect = targetItem.getBoundingClientRect();
+            var midY = rect.top + rect.height / 2;
+            var touchY = touch.clientY;
+            var insertAfter = touchY >= midY;
+            var finalIndex = targetIndex;
+            if (insertAfter && TOUCH_DRAG_INDEX < targetIndex) finalIndex = targetIndex;
+            else if (insertAfter) finalIndex = targetIndex + 1;
+            else if (TOUCH_DRAG_INDEX < targetIndex) finalIndex = targetIndex - 1;
+            else finalIndex = targetIndex;
+            reorderTeams(TOUCH_DRAG_INDEX, finalIndex);
+        }
+    }
+    if (TOUCH_CLONE && TOUCH_CLONE.parentNode) {
+        TOUCH_CLONE.parentNode.removeChild(TOUCH_CLONE);
+    }
+    TOUCH_CLONE = null;
+    TOUCH_DRAG_INDEX = -1;
+    clearDropMarkers();
+    var dragging = document.querySelectorAll('.team-item.dragging');
+    for (var i = 0; i < dragging.length; i++) {
+        dragging[i].classList.remove('dragging');
+        dragging[i].style.opacity = '';
+    }
+    document.removeEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchend', onTouchEnd);
+    document.removeEventListener('touchcancel', onTouchEnd);
+    stopAutoScroll();
+}
+function startAutoScroll() {
+    stopAutoScroll();
+    AUTO_SCROLL_INTERVAL = setInterval(function() {
+        if (TOUCH_DRAG_INDEX === -1 || !TOUCH_CLONE) return;
+        var top = parseFloat(TOUCH_CLONE.style.top) || 0;
+        var h = window.innerHeight;
+        var scrollSpeed = 8;
+        if (top < 100) window.scrollBy(0, -scrollSpeed);
+        else if (top > h - 150) window.scrollBy(0, scrollSpeed);
+    }, 20);
+}
+function stopAutoScroll() {
+    if (AUTO_SCROLL_INTERVAL) {
+        clearInterval(AUTO_SCROLL_INTERVAL);
+        AUTO_SCROLL_INTERVAL = null;
+    }
+}
+
+// ============================================================
+// REORDER
+// ============================================================
+function reorderTeams(fromIdx, toIdx) {
+    if (fromIdx === toIdx) return;
+    if (fromIdx < 0 || fromIdx >= DATA.teams.length) return;
+    if (toIdx < 0) toIdx = 0;
+    if (toIdx > DATA.teams.length) toIdx = DATA.teams.length;
+    var team = DATA.teams.splice(fromIdx, 1)[0];
+    if (toIdx > fromIdx) toIdx--;
+    DATA.teams.splice(toIdx, 0, team);
     saveData();
     renderTeams();
     renderMatches();
-    showToast('↕️ Посев обновлён');
+    showToast('📊 ' + team.name + ' → #' + (toIdx + 1));
 }
 
-// Перемешать посев случайно
+// ============================================================
+// ПЕРЕМЕШИВАНИЕ
+// ============================================================
 function shuffleTeams() {
     if (!confirm('Перемешать посев? Текущий порядок команд будет сброшен.')) return;
     var arr = DATA.teams.slice();
@@ -705,33 +965,118 @@ function shuffleTeams() {
     showToast('🔀 Посев перемешан');
 }
 
-// Переставить команду на конкретный номер посева
-function setSeed(teamId, newPos) {
-    newPos = parseInt(newPos, 10);
-    if (isNaN(newPos) || newPos < 1) newPos = 1;
-    if (newPos > DATA.teams.length) newPos = DATA.teams.length;
-
-    var currentIdx = -1;
-    for (var i = 0; i < DATA.teams.length; i++) {
-        if (DATA.teams[i].id === teamId) { currentIdx = i; break; }
-    }
-    if (currentIdx === -1) return;
-
-    var targetIdx = newPos - 1;
-    if (currentIdx === targetIdx) {
-        renderTeams();
-        return;
-    }
-
-    var team = DATA.teams.splice(currentIdx, 1)[0];
-    DATA.teams.splice(targetIdx, 0, team);
-
+function moveTeam(index, direction) {
+    var newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= DATA.teams.length) return;
+    var tmp = DATA.teams[index];
+    DATA.teams[index] = DATA.teams[newIndex];
+    DATA.teams[newIndex] = tmp;
     saveData();
     renderTeams();
     renderMatches();
-    showToast('📊 Посев обновлён: ' + team.name + ' → #' + newPos);
+    showToast('↕️ Посев обновлён');
 }
 
+// ============================================================
+// ПРЕВЬЮ СЕТКИ В АДМИНКЕ
+// ============================================================
+function renderPreview() {
+    var wrap = document.getElementById('previewWrap');
+    if (!wrap) return;
+    updateMatchLinks();
+
+    var upperRounds = {}, lowerRounds = {}, grandMatches = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (m.bracket === 'upper') {
+            if (!upperRounds[m.round]) upperRounds[m.round] = [];
+            upperRounds[m.round].push(m);
+        } else if (m.bracket === 'lower') {
+            if (!lowerRounds[m.round]) lowerRounds[m.round] = [];
+            lowerRounds[m.round].push(m);
+        } else if (m.bracket === 'grand') {
+            grandMatches.push(m);
+        }
+    }
+
+    var upperLabels = { 1: 'R1', 2: 'R2', 3: 'Финал В' };
+    var lowerLabels = { 1: 'R1', 2: 'R2', 3: 'R3', 4: 'Финал Н' };
+
+    function renderMiniMatch(m) {
+        var t1 = getTeam(m.team1);
+        var t2 = getTeam(m.team2);
+        if (!t1 && !t2) return '<div class="preview-match empty">ожидание</div>';
+
+        var name1 = t1 ? t1.name : '—';
+        var name2 = t2 ? t2.name : '—';
+        var w1 = (m.winner && m.winner === m.team1) ? 'win' : (m.winner ? 'loss' : null);
+        var w2 = (m.winner && m.winner === m.team2) ? 'win' : (m.winner ? 'loss' : null);
+        var cls1 = m.winner === m.team1 ? 'winner' : (m.winner ? 'loser' : '');
+        var cls2 = m.winner === m.team2 ? 'winner' : (m.winner ? 'loser' : '');
+
+        var html = '<div class="preview-match">';
+        html += '<div class="preview-team ' + cls1 + '" onclick="' + (t1 ? 'openEditModal(' + t1.id + ')' : '') + '">';
+        html += '<span class="name">' + name1 + '</span>';
+        if (w1) html += '<span class="badge ' + w1 + '">' + (w1 === 'win' ? 'W' : 'L') + '</span>';
+        html += '</div>';
+        html += '<div class="preview-team ' + cls2 + '" onclick="' + (t2 ? 'openEditModal(' + t2.id + ')' : '') + '">';
+        html += '<span class="name">' + name2 + '</span>';
+        if (w2) html += '<span class="badge ' + w2 + '">' + (w2 === 'win' ? 'W' : 'L') + '</span>';
+        html += '</div>';
+        html += '</div>';
+        return html;
+    }
+
+    var html = '';
+
+    html += '<div class="preview-group">';
+    html += '<div class="preview-group-title upper">Верхняя</div>';
+    html += '<div class="preview-rounds">';
+    var uKeys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
+    for (var uk = 0; uk < uKeys.length; uk++) {
+        var ur = uKeys[uk];
+        html += '<div class="preview-round">';
+        html += '<div class="preview-round-label">' + (upperLabels[ur] || ur) + '</div>';
+        for (var uj = 0; uj < upperRounds[ur].length; uj++) {
+            html += renderMiniMatch(upperRounds[ur][uj]);
+        }
+        html += '</div>';
+    }
+    html += '</div></div>';
+
+    html += '<div class="preview-group">';
+    html += '<div class="preview-group-title lower">Нижняя</div>';
+    html += '<div class="preview-rounds">';
+    var lKeys = Object.keys(lowerRounds).sort(function(a,b){return a-b;});
+    for (var lk = 0; lk < lKeys.length; lk++) {
+        var lr = lKeys[lk];
+        html += '<div class="preview-round">';
+        html += '<div class="preview-round-label">' + (lowerLabels[lr] || lr) + '</div>';
+        for (var lj = 0; lj < lowerRounds[lr].length; lj++) {
+            html += renderMiniMatch(lowerRounds[lr][lj]);
+        }
+        html += '</div>';
+    }
+    html += '</div></div>';
+
+    if (grandMatches.length) {
+        html += '<div class="preview-group">';
+        html += '<div class="preview-group-title grand">Гранд-финал</div>';
+        html += '<div class="preview-rounds">';
+        html += '<div class="preview-round">';
+        html += '<div class="preview-round-label">Финал</div>';
+        for (var gj = 0; gj < grandMatches.length; gj++) {
+            html += renderMiniMatch(grandMatches[gj]);
+        }
+        html += '</div></div></div>';
+    }
+
+    wrap.innerHTML = html;
+}
+
+// ============================================================
+// МАТЧИ
+// ============================================================
 function renderMatches() {
     var container = document.getElementById('matchList');
     if (!container) return;
@@ -781,6 +1126,7 @@ function renderMatches() {
             '<div class="meta"><span class="tag ' + cls + '">' + label + '</span>' + liveTag + '<span>Раунд ' + m.round + '</span>' + scoreHtml + liveHtml + selectHtml + '</div>';
         container.appendChild(div);
     }
+    renderPreview();
 }
 
 function setScore(matchId) {
@@ -1040,7 +1386,6 @@ window.closeEditModal = closeEditModal;
 window.saveEditTeam = saveEditTeam;
 window.moveTeam = moveTeam;
 window.shuffleTeams = shuffleTeams;
-window.setSeed = setSeed;
 window.setWinner = setWinner;
 window.resetMatch = resetMatch;
 window.setScore = setScore;
@@ -1056,7 +1401,7 @@ window.onEditLogo = onEditLogo;
 window.clearNewTeamLogo = clearNewTeamLogo;
 window.clearEditLogo = clearEditLogo;
 
-console.log('✅ Admin panel loaded (6 teams, 10 matches, logo autocompress, shuffle + setSeed)');
+console.log('✅ Admin panel loaded (6 teams, 10 matches, drag & drop, preview)');
 </script>
 
 </body>
