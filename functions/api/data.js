@@ -1,7 +1,6 @@
 // ============================================================
 // DEFAULT_DATA — сид, который используется ТОЛЬКО при первом
 // запуске сайта, пока в KV ничего не сохранено через админку.
-// После первого сохранения живут данные из KV, а не отсюда.
 // ============================================================
 const DEFAULT_DATA = {
   tournament: {
@@ -12,14 +11,14 @@ const DEFAULT_DATA = {
     dates: "26 сентября 2026"
   },
   teams: [
-    { id: 1, name: "Слот 1", players: [] },
-    { id: 2, name: "Слот 2", players: [] },
-    { id: 3, name: "Слот 3", players: [] },
-    { id: 4, name: "Слот 4", players: [] },
-    { id: 5, name: "Слот 5", players: [] },
-    { id: 6, name: "Слот 6", players: [] },
-    { id: 7, name: "Слот 7", players: [] },
-    { id: 8, name: "Слот 8", players: [] }
+    { id: 1, name: "Слот 1", players: [], logo: "" },
+    { id: 2, name: "Слот 2", players: [], logo: "" },
+    { id: 3, name: "Слот 3", players: [], logo: "" },
+    { id: 4, name: "Слот 4", players: [], logo: "" },
+    { id: 5, name: "Слот 5", players: [], logo: "" },
+    { id: 6, name: "Слот 6", players: [], logo: "" },
+    { id: 7, name: "Слот 7", players: [], logo: "" },
+    { id: 8, name: "Слот 8", players: [], logo: "" }
   ],
   matches: [
     { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
@@ -39,9 +38,8 @@ const DEFAULT_DATA = {
   ],
   schedule: {},
   liveMatchId: null,
-  // ISO-строка даты старта. null = использовать дефолт из index.html
-  tournamentStart: null,
-  // Показывать баннер «Турнирная сетка» всегда (true) или только после старта (false)
+  tournamentStart: null,   // ISO-строка даты старта турнира, null = дефолт из index.html
+  projectStart: null,      // ISO-строка старта проекта (для прогресс-полоски)
   alwaysShowBracketBanner: true
 };
 
