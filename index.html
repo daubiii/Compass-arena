@@ -35,35 +35,67 @@
         header, section, footer, .modal-overlay { position: relative; z-index: 1; }
 
         /* ===== HEADER ===== */
-        header { padding: 14px 0; border-bottom: 1px solid #242b35; }
-        .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        header { padding: 14px 0; border-bottom: 1px solid #242b35; position: sticky; top: 0; background: rgba(10,13,18,0.92); backdrop-filter: blur(8px); z-index: 100; }
+        .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 12px; }
         .header-left { display: flex; align-items: center; gap: 12px; }
         .wordmark { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 16px; color: #eae6da; text-decoration: none; }
         .wordmark em { font-style: normal; color: #c9a35a; }
-        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .btn {
-            padding: 8px 16px;
-            border: 1px solid rgba(201, 163, 90, 0.3);
+
+        /* --- Burger menu --- */
+        .burger {
+            width: 42px; height: 42px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 5px;
             background: transparent;
-            color: #e3c48a;
+            border: 1px solid rgba(201,163,90,0.3);
             border-radius: 4px;
-            font-family: 'Manrope', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
             cursor: pointer;
             transition: 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            text-transform: uppercase;
         }
-        .btn:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
-        .btn-live { border-color: rgba(231, 76, 60, 0.4); color: #ff8a7a; }
-        .btn-live:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
-        .btn-live .pulse { width: 6px; height: 6px; border-radius: 50%; background: #e74c3c; animation: blink 1.2s infinite; }
+        .burger:hover { border-color: #c9a35a; background: rgba(201,163,90,0.08); }
+        .burger span {
+            display: block; width: 20px; height: 2px;
+            background: #e3c48a; border-radius: 1px;
+            transition: 0.25s;
+        }
+        .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .burger.open span:nth-child(2) { opacity: 0; }
+        .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .menu-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 90;
+        }
+        .menu-overlay.active { display: block; }
+        .menu-panel {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: 320px; max-width: 85vw;
+            background: #10141b;
+            border-left: 1px solid #242b35;
+            padding: 90px 32px 32px;
+            z-index: 95;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .menu-panel.active { transform: translateX(0); }
+        .menu-panel a {
+            display: block;
+            padding: 16px 0;
+            color: #eae6da;
+            text-decoration: none;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid #1a2029;
+            transition: 0.2s;
+        }
+        .menu-panel a:hover { color: #c9a35a; padding-left: 8px; }
+        .menu-panel a:last-child { border-bottom: none; }
 
         /* ===== HERO ===== */
         .hero-bg { padding: 16px 0 0; }
@@ -97,104 +129,61 @@
             z-index: 1; pointer-events: none;
         }
 
-        /* ===== TWITCH EMBED ===== */
-        .twitch-wrap {
-            margin: 20px 0 40px;
-            border: 1px solid #2f3844;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #000;
-            aspect-ratio: 16 / 9;
-            max-height: 520px;
-            position: relative;
-        }
-        .twitch-wrap iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            display: block;
-        }
-        .twitch-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .twitch-header .title {
-            font-family: 'Manrope', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            color: #7a8494;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-        }
-        .twitch-header .live-dot {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
-            color: #7a8494;
-            font-family: 'Manrope', sans-serif;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-        .twitch-header .live-dot span {
-            width: 8px; height: 8px; border-radius: 50%; background: #e74c3c;
-            animation: blink 1.2s infinite;
-        }
-
-        /* ===== ARENA (COUNTDOWN ONLY) ===== */
+        /* ===== ARENA / TIMER (вынесен наверх, увеличен) ===== */
         .arena-stats {
             position: relative;
-            padding: 32px 0 26px;
-            border-top: 1px solid #242b35;
+            padding: 60px 0 50px;
             border-bottom: 1px solid #242b35;
             overflow: hidden;
-            background: linear-gradient(180deg, rgba(10,13,18,0.85) 0%, rgba(13,17,24,0.85) 100%);
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(201,163,90,0.10) 0%, transparent 60%),
+                linear-gradient(180deg, #0d1118 0%, #0a0d12 100%);
         }
         .arena-inner {
             position: relative;
             z-index: 1;
-            display: grid;
-            grid-template-columns: 150px 1fr;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 40px;
-            max-width: 820px;
-            margin: 0 auto;
+            gap: 28px;
+            text-align: center;
         }
-        .arena-logo { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; }
+        .arena-logo { width: 90px; height: 90px; opacity: 0.85; }
         .arena-logo svg { width: 100%; height: 100%; }
         .compass-needle { transform-origin: 100px 100px; animation: rotateNeedle 12s linear infinite; }
         @keyframes rotateNeedle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .arena-timer { text-align: left; }
+        .arena-timer { text-align: center; }
         .timer-label {
             font-family: 'Manrope', sans-serif;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.32em;
             color: #7a8494;
             text-transform: uppercase;
-            margin-bottom: 14px;
+            margin-bottom: 22px;
         }
-        .timer-blocks { display: flex; align-items: center; gap: 10px; }
-        .timer-block { display: flex; flex-direction: column; align-items: center; min-width: 64px; }
+        .timer-blocks { display: flex; align-items: flex-start; justify-content: center; gap: 14px; }
+        .timer-block { display: flex; flex-direction: column; align-items: center; min-width: 96px; }
         .timer-block .num {
             font-family: 'Unbounded', sans-serif;
-            font-size: 32px;
+            font-size: 68px;
             font-weight: 600;
             color: #eae6da;
             line-height: 1;
             font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 40px rgba(201,163,90,0.25);
+            animation: timerGlow 3s ease-in-out infinite;
         }
-        .timer-block .unit { font-size: 10px; color: #5f6773; margin-top: 6px; letter-spacing: 0.05em; }
-        .timer-sep { font-family: 'Unbounded', sans-serif; font-size: 26px; color: #c9a35a; opacity: 0.5; margin-bottom: 16px; }
-        .timer-date { margin-top: 14px; font-size: 12px; color: #97a0ac; letter-spacing: 0.05em; }
+        @keyframes timerGlow {
+            0%,100% { text-shadow: 0 0 40px rgba(201,163,90,0.25); }
+            50%     { text-shadow: 0 0 60px rgba(201,163,90,0.50); }
+        }
+        .timer-block .unit { font-size: 11px; color: #5f6773; margin-top: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+        .timer-sep { font-family: 'Unbounded', sans-serif; font-size: 48px; color: #c9a35a; opacity: 0.35; margin-top: 6px; }
+        .timer-date { margin-top: 22px; font-size: 13px; color: #97a0ac; letter-spacing: 0.12em; text-transform: uppercase; }
 
-        /* ===== БАННЕР «ТУРНИРНАЯ СЕТКА» ===== */
+        /* ===== БАННЕР «ТУРНИРНАЯ СЕТКА» — теперь всегда виден ===== */
         .bracket-banner {
             padding: 40px 0 24px;
             border-top: 1px solid #242b35;
@@ -221,13 +210,81 @@
             color: #7a8494;
         }
 
-        /* ===== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ===== */
+        /* ===== ЧАСТИЦЫ ===== */
         #particles-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* ===== СВЁРНУТАЯ TWITCH-КАРТОЧКА (до старта) ===== */
+        .stream-collapsed {
+            max-width: 960px;
+            margin: 20px auto 40px;
+            background: #10141b;
+            border: 1px solid #242b35;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .stream-collapsed:hover { border-color: #c9a35a; }
+        .stream-collapsed-toggle {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            color: #eae6da;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .stream-collapsed-title { color: #e3c48a; }
+        .stream-collapsed-arrow { color: #c9a35a; transition: transform 0.25s; font-size: 11px; }
+        .stream-collapsed.open .stream-collapsed-arrow { transform: rotate(180deg); }
+        .stream-collapsed-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 24px;
+            color: #b0b8c4;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .stream-collapsed.open .stream-collapsed-body {
+            max-height: 220px;
+            padding: 0 24px 20px;
+        }
+        .stream-collapsed-sign {
+            margin-top: 8px;
+            color: #e3c48a;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ===== TWITCH EMBED (после старта) ===== */
+        .twitch-wrap {
+            margin: 20px auto 40px;
+            border: 1px solid #2f3844;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 16 / 9;
+            max-width: 960px;
+            width: 100%;
+            position: relative;
+        }
+        .twitch-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
         }
 
         /* ===== BRACKET ===== */
@@ -270,7 +327,6 @@
         }
         .match:hover { border-color: #c9a35a; background: #1a2029; }
 
-        /* LIVE MATCH — усиленный индикатор */
         .match.is-live {
             border-color: #e74c3c;
             background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, #151a22 100%);
@@ -334,8 +390,6 @@
         .schedule-item .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
         .schedule-item .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
         .schedule-empty { color: #5f6773; text-align: center; padding: 20px; font-size: 13px; }
-        .schedule-more { display: block; text-align: center; margin-top: 14px; }
-        .schedule-more .btn { padding: 10px 24px; font-size: 11px; }
 
         /* ===== MODAL ===== */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
@@ -372,13 +426,10 @@
             .bracket { gap: 24px; min-width: 700px; }
             .round { min-width: 130px; }
             .schedule-grid { grid-template-columns: 1fr; }
-            .arena-inner { grid-template-columns: 1fr; gap: 20px; text-align: center; max-width: 100%; }
-            .arena-logo { margin: 0 auto; width: 120px; height: 120px; }
-            .arena-timer { text-align: center; }
-            .timer-blocks { justify-content: center; }
-            .timer-block .num { font-size: 24px; }
-            .timer-block { min-width: 54px; }
-            .timer-sep { font-size: 20px; }
+            .timer-block .num { font-size: 44px; }
+            .timer-block { min-width: 64px; }
+            .timer-sep { font-size: 30px; }
+            .timer-label { font-size: 10px; letter-spacing: 0.24em; }
             .bracket-hint { display: block; }
             .bracket-banner-title { font-size: 26px; }
         }
@@ -392,83 +443,58 @@
             .container { padding: 0 12px; }
             .modal { padding: 16px; }
             .wordmark { font-size: 14px; }
-            .btn { padding: 6px 12px; font-size: 10px; letter-spacing: 0.06em; }
-            .twitch-wrap { margin: 14px 0 24px; }
+            .twitch-wrap { margin: 14px auto 24px; }
+            .stream-collapsed { margin: 14px auto 24px; }
             .bracket-banner { padding: 28px 0 18px; }
             .bracket-banner-title { font-size: 22px; }
             .bracket-banner-sub { font-size: 10px; letter-spacing: 0.18em; }
+            .menu-panel { width: 280px; padding: 80px 24px 24px; }
         }
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 18px; }
             .hero-content { padding: 20px 16px 30px; }
-            .arena-stats { padding: 24px 0 20px; }
-            .timer-block .num { font-size: 20px; }
-            .timer-block { min-width: 46px; }
-            .timer-sep { font-size: 16px; margin-bottom: 12px; }
+            .arena-stats { padding: 40px 0 30px; }
+            .timer-block .num { font-size: 32px; }
+            .timer-block { min-width: 52px; }
+            .timer-sep { font-size: 22px; }
             .bracket { gap: 16px; min-width: 640px; }
             .round { min-width: 120px; }
             .match { padding: 6px 10px; min-height: 50px; }
             .match .team { font-size: 11px; gap: 6px; }
             .match .team .score { font-size: 12px; }
             .bracket-banner-title { font-size: 18px; }
+            .stream-collapsed-toggle { padding: 14px 18px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
 <!-- ============================================================
-     HEADER
+     HEADER — теперь с бургер-меню справа
      ============================================================ -->
 <header>
     <div class="container header-row">
         <div class="header-left">
             <a href="/" class="wordmark">COMPASS <em>ARENA</em></a>
         </div>
-        <div class="header-actions">
-            <a href="/schedule.html" class="btn">Расписание</a>
-            <a href="/rules.html" class="btn">Правила</a>
-            <a href="https://www.twitch.tv/compassarena" target="_blank" class="btn btn-live"><span class="pulse"></span>Смотреть</a>
-        </div>
+        <button class="burger" id="burgerBtn" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </header>
 
-<!-- ============================================================
-     HERO
-     ============================================================ -->
-<section class="hero-bg">
-    <div class="container">
-        <div class="hero-bg-inner">
-            <div class="hero-content">
-                <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
-                <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
-            </div>
-            <div class="hero-fade"></div>
-        </div>
-    </div>
-</section>
+<!-- Затемнение + панель меню -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="menu-panel" id="menuPanel">
+    <a href="/">Главная</a>
+    <a href="/schedule.html">Расписание</a>
+    <a href="/rules.html">Правила</a>
+    <a href="https://www.twitch.tv/compassarena" target="_blank">Twitch</a>
+    <a href="https://t.me/compassarenaa" target="_blank">Telegram</a>
+</nav>
 
 <!-- ============================================================
-     TWITCH EMBED
-     ============================================================ -->
-<section class="container">
-    <div style="padding: 14px 0 0;">
-        <div class="twitch-header">
-            <div class="title">Прямая трансляция</div>
-            <div class="live-dot"><span></span>Twitch · Compassarena</div>
-        </div>
-        <div class="twitch-wrap">
-            <iframe
-                src="https://player.twitch.tv/?channel=compassarena&parent=compass-arena.pages.dev&muted=true&autoplay=true"
-                allowfullscreen="true"
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                title="Compass Arena — прямая трансляция">
-            </iframe>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================================
-     ARENA — ТОЛЬКО ТАЙМЕР (до старта турнира)
+     ARENA / TIMER — вынесен наверх, до hero
      ============================================================ -->
 <section class="arena-stats" id="arenaSection">
     <div class="container">
@@ -486,10 +512,6 @@
                     <polygon points="100,30 104,45 96,45" fill="#e3c48a"/>
                     <rect x="88" y="155" width="24" height="4" fill="#c9a35a"/>
                     <rect x="92" y="159" width="16" height="6" fill="#c9a35a"/>
-                    <circle cx="100" cy="15" r="2" fill="#c9a35a" opacity="0.6"/>
-                    <circle cx="185" cy="100" r="2" fill="#c9a35a" opacity="0.6"/>
-                    <circle cx="100" cy="185" r="2" fill="#c9a35a" opacity="0.6"/>
-                    <circle cx="15" cy="100" r="2" fill="#c9a35a" opacity="0.6"/>
                 </svg>
             </div>
             <div class="arena-timer" id="arenaTimer">
@@ -503,16 +525,58 @@
                     <div class="timer-sep">:</div>
                     <div class="timer-block"><span class="num" id="seconds">00</span><span class="unit">секунд</span></div>
                 </div>
-                <div class="timer-date">26 сентября 2026 · 12:00</div>
+                <div class="timer-date" id="timerDateLabel">26 сентября 2026 · 12:00</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ============================================================
-     БАННЕР «ТУРНИРНАЯ СЕТКА» — показывается после старта
+     HERO
      ============================================================ -->
-<section class="bracket-banner" id="bracketBanner" style="display:none;">
+<section class="hero-bg">
+    <div class="container">
+        <div class="hero-bg-inner">
+            <div class="hero-content">
+                <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
+                <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
+            </div>
+            <div class="hero-fade"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     TWITCH: свёрнутая карточка (до старта) / iframe (после старта)
+     ============================================================ -->
+<section class="container">
+    <!-- Свёрнутая полоска — показывается, пока таймер не вышел в 0 -->
+    <div id="streamCollapsed" class="stream-collapsed">
+        <button class="stream-collapsed-toggle" onclick="toggleStreamCard()">
+            <span class="stream-collapsed-title">Прямая трансляция</span>
+            <span class="stream-collapsed-arrow" id="streamArrow">▼</span>
+        </button>
+        <div class="stream-collapsed-body" id="streamBody">
+            <p>Друг, я понимаю, что ты ждёшь турнир больше всего на свете, но не мог бы ты ещё немного подождать.</p>
+            <p class="stream-collapsed-sign">С уважением, организация — Compass Arena ❤️</p>
+        </div>
+    </div>
+
+    <!-- Полноценный iframe — включается после старта -->
+    <div id="streamFull" class="twitch-wrap" style="display:none;">
+        <iframe
+            src="https://player.twitch.tv/?channel=compassarena&parent=compass-arena.pages.dev&muted=true&autoplay=true"
+            allowfullscreen="true"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            title="Compass Arena — прямая трансляция">
+        </iframe>
+    </div>
+</section>
+
+<!-- ============================================================
+     БАННЕР «ТУРНИРНАЯ СЕТКА» — теперь виден ВСЕГДА
+     ============================================================ -->
+<section class="bracket-banner" id="bracketBanner">
     <div class="container">
         <div class="bracket-banner-inner">
             <h1 class="bracket-banner-title">Турнирная сетка</h1>
@@ -543,9 +607,6 @@
     <div class="container">
         <h2>Ближайшие матчи</h2>
         <div id="scheduleContainer"><div class="schedule-empty">Загрузка...</div></div>
-        <div class="schedule-more" id="scheduleMore" style="display:none;">
-            <a href="/schedule.html" class="btn">Все матчи →</a>
-        </div>
     </div>
 </section>
 
@@ -590,7 +651,7 @@
 </div>
 
 <!-- ============================================================
-     ГЛОБАЛЬНЫЕ ЧАСТИЦЫ
+     ЧАСТИЦЫ
      ============================================================ -->
 <canvas id="particles-canvas"></canvas>
 
@@ -599,25 +660,19 @@
      ============================================================ -->
 <script>
 // ============================================================
-// ДАННЫЕ
+// ДАННЫЕ (дефолты совпадают с data.js)
 // ============================================================
-var BROADCAST_LINKS = {
-    twitch: "https://www.twitch.tv/compassarena",
-    vk: "#",
-    tg: "https://t.me/compassarenaa"
-};
-
 var DATA = {
     tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
     teams: [
-        { id: 1, name: "Team Spirit", players: ["Yatoro", "Collapse", "Larl", "Mira", "Miposhka"] },
-        { id: 2, name: "Virtus.pro", players: ["Nightfall", "gpk", "Noticed", "Save", "Fng"] },
-        { id: 3, name: "Team Liquid", players: ["m1CKe", "Nisha", "33", "Boxi", "Insania"] },
-        { id: 4, name: "OG", players: ["Yuragi", "bzm", "ATF", "Taiga", "Misha"] },
-        { id: 5, name: "Gaimin Gladiators", players: ["dyrachyo", "Quinn", "Ace", "tOfu", "Seleri"] },
-        { id: 6, name: "BetBoom Team", players: ["Pure", "gpk", "Nightfall", "Save", "TORONTOTOKYO"] },
-        { id: 7, name: "9Pandas", players: ["RAMZES666", "kiyotaka", "MieRo", "Antares", "Solo"] },
-        { id: 8, name: "Natus Vincere", players: ["shigetsu", "nefrit", "swedenstrong", "Malady", "Zayac"] }
+        { id: 1, name: "Слот 1", players: [] },
+        { id: 2, name: "Слот 2", players: [] },
+        { id: 3, name: "Слот 3", players: [] },
+        { id: 4, name: "Слот 4", players: [] },
+        { id: 5, name: "Слот 5", players: [] },
+        { id: 6, name: "Слот 6", players: [] },
+        { id: 7, name: "Слот 7", players: [] },
+        { id: 8, name: "Слот 8", players: [] }
     ],
     matches: [
         { id: 1, round: 1, team1: 1, team2: 2, winner: null, bracket: 'upper' },
@@ -636,8 +691,16 @@ var DATA = {
         { id: 14, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
     ],
     schedule: {},
-    liveMatchId: null
+    liveMatchId: null,
+    tournamentStart: null,        // ISO-строка или null = дефолт
+    alwaysShowBracketBanner: true // баннер сетки показывать всегда
 };
+
+// ============================================================
+// КОНСТАНТА СТАРТА (переопределяется из data.tournamentStart)
+// ============================================================
+var TOURNAMENT_START_DEFAULT = new Date('2026-09-26T12:00:00+03:00').getTime();
+var TOURNAMENT_START = TOURNAMENT_START_DEFAULT;
 
 // ============================================================
 // ЗАГРУЗКА ДАННЫХ
@@ -654,6 +717,36 @@ function loadSavedData() {
             if (parsed.schedule) DATA.schedule = parsed.schedule;
             if (parsed.tournament) DATA.tournament = parsed.tournament;
             DATA.liveMatchId = parsed.liveMatchId != null ? parsed.liveMatchId : null;
+            DATA.tournamentStart = parsed.tournamentStart || null;
+            DATA.alwaysShowBracketBanner = parsed.alwaysShowBracketBanner !== false;
+
+            // Если в данных есть своя дата старта — используем её
+            if (DATA.tournamentStart) {
+                var t = new Date(DATA.tournamentStart).getTime();
+                if (!isNaN(t)) TOURNAMENT_START = t;
+            }
+
+            // Баннер — либо всегда, либо только после старта
+            var banner = document.getElementById('bracketBanner');
+            if (banner) {
+                if (DATA.alwaysShowBracketBanner || Date.now() >= TOURNAMENT_START) {
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
+            }
+
+            // Метка даты под таймером
+            var label = document.getElementById('timerDateLabel');
+            if (label) {
+                try {
+                    var d = new Date(TOURNAMENT_START);
+                    label.textContent = d.toLocaleString('ru-RU', {
+                        day: '2-digit', month: 'long', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    }).replace(',', ' ·');
+                } catch(e) {}
+            }
         })
         .catch(function(err) {
             console.warn('Не удалось загрузить данные с сервера', err);
@@ -798,7 +891,6 @@ function formatTime(dt) {
 // ============================================================
 function renderSchedule() {
     var container = document.getElementById('scheduleContainer');
-    var moreBtn = document.getElementById('scheduleMore');
     if (!container) return;
     var now = Date.now();
     var upcoming = [];
@@ -822,7 +914,6 @@ function renderSchedule() {
 
     if (preview.length === 0 && completed.length === 0) {
         container.innerHTML = '<div class="schedule-empty">Расписание пока не заполнено</div>';
-        if (moreBtn) moreBtn.style.display = 'none';
         return;
     }
 
@@ -839,7 +930,6 @@ function renderSchedule() {
     }
     html += '</div>';
     container.innerHTML = html;
-    if (moreBtn) moreBtn.style.display = 'block';
 }
 
 // ============================================================
@@ -880,7 +970,46 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// ИНИЦИАЛИЗАЦИЯ
+// BURGER MENU
+// ============================================================
+function toggleMenu(force) {
+    var burger = document.getElementById('burgerBtn');
+    var panel = document.getElementById('menuPanel');
+    var overlay = document.getElementById('menuOverlay');
+    var willOpen = (typeof force === 'boolean') ? force : !panel.classList.contains('active');
+    if (willOpen) {
+        burger.classList.add('open');
+        panel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } else {
+        burger.classList.remove('open');
+        panel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+document.getElementById('burgerBtn').addEventListener('click', function() { toggleMenu(); });
+document.getElementById('menuOverlay').addEventListener('click', function() { toggleMenu(false); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') toggleMenu(false); });
+
+// ============================================================
+// TWITCH: свёрнутая карточка
+// ============================================================
+function toggleStreamCard() {
+    var card = document.getElementById('streamCollapsed');
+    if (card) card.classList.toggle('open');
+}
+function switchToLiveStream() {
+    var collapsed = document.getElementById('streamCollapsed');
+    var full = document.getElementById('streamFull');
+    if (collapsed) collapsed.style.display = 'none';
+    if (full) full.style.display = 'block';
+}
+
+// ============================================================
+// РЕНДЕР
 // ============================================================
 function renderAll() {
     renderBracket();
@@ -893,33 +1022,28 @@ function init() {
     window.getTournamentData = function() { return DATA; };
     window.renderBracket = renderBracket;
     window.renderSchedule = renderSchedule;
+    window.toggleStreamCard = toggleStreamCard;
 }
 
 document.addEventListener('DOMContentLoaded', init);
 
 // ============================================================
-// ARENA STATE: COUNTDOWN → скрыть арену, показать баннер сетки
+// ТАЙМЕР + переключение стрима
 // ============================================================
-var TOURNAMENT_START = new Date('2026-09-26T12:00:00+03:00').getTime();
-
-function switchToBracketMode() {
-    var arena = document.getElementById('arenaSection');
-    var banner = document.getElementById('bracketBanner');
-    if (arena) arena.style.display = 'none';
-    if (banner) banner.style.display = 'block';
-}
-
 function updateTimer() {
     var now = Date.now();
     var diff = TOURNAMENT_START - now;
 
-    // Турнир начался — скрываем арену, показываем баннер сетки
+    // Турнир начался — прячем таймер, включаем стрим
     if (diff <= 0) {
-        switchToBracketMode();
+        var arena = document.getElementById('arenaSection');
+        if (arena && arena.style.display !== 'none') {
+            arena.style.display = 'none';
+            switchToLiveStream();
+        }
         return;
     }
 
-    // Иначе — показываем таймер
     var daysEl = document.getElementById('days');
     var hoursEl = document.getElementById('hours');
     var minutesEl = document.getElementById('minutes');
