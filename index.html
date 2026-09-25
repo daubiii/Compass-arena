@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compass Arena — турнирная сетка</title>
-    <meta name="description" content="Compass Arena — турнир по Dota 2. 8 команд, Double Elimination, Bo3. Следи за сеткой и расписанием матчей.">
+    <meta name="description" content="Compass Arena — турнир по Dota 2. Double Elimination, Bo3. Следи за сеткой и расписанием матчей.">
     <meta name="theme-color" content="#0a0d12">
 
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
@@ -15,13 +15,13 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Compass Arena">
     <meta property="og:title" content="Compass Arena — турнир по Dota 2">
-    <meta property="og:description" content="8 команд, Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
+    <meta property="og:description" content="Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
     <meta property="og:image" content="https://compass-arena.pages.dev/favicon-180.png">
     <meta property="og:url" content="https://compass-arena.pages.dev/">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Compass Arena — турнир по Dota 2">
-    <meta name="twitter:description" content="8 команд, Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
+    <meta name="twitter:description" content="Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
     <meta name="twitter:image" content="https://compass-arena.pages.dev/favicon-180.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +30,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #0a0d12; color: #eae6da; font-family: 'Manrope', sans-serif; position: relative; }
+        body.phase-3 { overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         header, section, footer, .modal-overlay { position: relative; z-index: 1; }
@@ -121,7 +122,7 @@
         .twitch-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
 
         /* ===== BRACKET ===== */
-        .bracket-section { padding: 24px 0 40px; }
+        .bracket-section { padding: 24px 0 40px; transition: opacity 0.8s ease; }
         .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 12px; }
         .bracket-wrapper { overflow-x: auto; padding-bottom: 16px; }
         .bracket-wrapper::-webkit-scrollbar { height: 8px; }
@@ -139,9 +140,17 @@
         .match { background: #151a22; border: 1px solid #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
         .match:hover { border-color: #c9a35a; background: #1a2029; }
 
+        /* Фаза 2: активный матч пульсирует */
         .match.is-live { border-color: #e74c3c; background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, #151a22 100%); animation: livePulse 1.8s ease-in-out infinite; }
         .match.is-live::before { content: 'LIVE'; position: absolute; top: -10px; left: 8px; padding: 2px 8px; background: #e74c3c; color: #fff; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 9px; letter-spacing: 0.14em; border-radius: 3px; animation: blink 1.2s infinite; }
         @keyframes livePulse { 0%, 100% { border-color: rgba(231, 76, 60, 0.9); } 50% { border-color: rgba(231, 76, 60, 0.4); } }
+
+        /* Фаза 2: ожидающий матч (обе команды известны) — мягкое золотое свечение */
+        .match.is-waiting { border-color: rgba(201,163,90,0.4); box-shadow: 0 0 0 1px rgba(201,163,90,0.1); animation: waitingPulse 3s ease-in-out infinite; }
+        @keyframes waitingPulse {
+            0%,100% { box-shadow: 0 0 0 1px rgba(201,163,90,0.1); }
+            50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.18); }
+        }
 
         .match .team { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; color: #eae6da; transition: color 0.3s, opacity 0.3s; }
         .match .team .seed { font-size: 9px; color: #5f6773; width: 18px; font-weight: 600; }
@@ -176,24 +185,36 @@
         .match .team.is-loser { opacity: 0.55; }
         .match .team.is-loser .name { color: #7a8494; }
 
-        @keyframes winnerPulse {
-            0%   { box-shadow: 0 0 0 0 rgba(201,163,90,0.7); }
-            70%  { box-shadow: 0 0 0 10px rgba(201,163,90,0); }
-            100% { box-shadow: 0 0 0 0 rgba(201,163,90,0); }
-        }
-        .match.fresh-result { animation: winnerPulse 1.6s ease-out; }
-
-        @keyframes receiverPulse {
-            0%   { border-color: rgba(201,163,90,0.9); box-shadow: 0 0 0 0 rgba(201,163,90,0.4); }
-            100% { border-color: #2f3844; box-shadow: 0 0 0 14px rgba(201,163,90,0); }
-        }
-        .match.fresh-receiver { animation: receiverPulse 1.8s ease-out; }
-
         .match-empty { background: #10141b; border: 1px dashed #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
 
         .round:not(:last-child)::after { content: ''; position: absolute; top: 30px; right: -20px; width: 8px; height: calc(100% - 60px); border-left: 1px solid rgba(201, 163, 90, 0.15); pointer-events: none; }
 
         .bracket-hint { display: none; text-align: center; font-size: 11px; color: #5f6773; margin-top: 4px; letter-spacing: 0.05em; }
+
+        /* Фаза 3: сетка приглушена, не кликабельна, гранд-финал яркий */
+        body.phase-3 .bracket-section { opacity: 0.35; pointer-events: none; }
+        body.phase-3 .match { cursor: default; }
+        body.phase-3 .match:hover { border-color: inherit; background: #151a22; }
+        body.phase-3 .match:not(.is-grand-champion) .team .info-icon { opacity: 0.15; }
+        .match.is-grand-champion {
+            opacity: 1;
+            border-color: #c9a35a;
+            box-shadow: 0 0 0 2px rgba(201,163,90,0.3), 0 0 30px rgba(201,163,90,0.2);
+            animation: championGlow 3s ease-in-out infinite;
+        }
+        .match.is-grand-champion::before {
+            content: 'ПОБЕДА';
+            position: absolute; top: -11px; left: 8px;
+            padding: 2px 10px;
+            background: #c9a35a; color: #0a0d12;
+            font-family: 'Unbounded', sans-serif; font-weight: 600;
+            font-size: 9px; letter-spacing: 0.14em;
+            border-radius: 3px;
+        }
+        @keyframes championGlow {
+            0%,100% { box-shadow: 0 0 0 2px rgba(201,163,90,0.3), 0 0 30px rgba(201,163,90,0.2); }
+            50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.5), 0 0 50px rgba(201,163,90,0.35); }
+        }
 
         /* ===== SCHEDULE PREVIEW ===== */
         .schedule-section { padding: 20px 0 14px; border-top: 1px solid #242b35; }
@@ -239,23 +260,235 @@
         .team-stats .stat.loss .value { color: #b3695f; }
 
         /* ===== FORMAT ===== */
-        .format-section { padding: 24px 0; border-top: 1px solid #242b35; margin-top: 16px; }
+        .format-section { padding: 24px 0; border-top: 1px solid #242b35; margin-top: 16px; transition: opacity 0.8s ease; }
         .format-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #242b35; }
         .format-item { background: #0a0d12; padding: 14px 18px; border-left: 2px solid #c9a35a; }
         .format-item.ox { border-left-color: #b3695f; }
         .format-item h3 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 13px; margin-bottom: 4px; }
         .format-item p { font-size: 12px; color: #97a0ac; line-height: 1.6; }
+        body.phase-3 .format-section { opacity: 0.35; }
 
         /* ===== FOOTER ===== */
-        footer { border-top: 1px solid #242b35; padding: 20px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+        footer { border-top: 1px solid #242b35; padding: 20px 0; font-size: 11px; color: #5f6773; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; transition: opacity 0.8s ease; }
         footer .f-links { display: flex; gap: 14px; flex-wrap: wrap; }
         footer a { color: #97a0ac; text-decoration: none; transition: 0.2s; }
         footer a:hover { color: #c9a35a; }
+        body.phase-3 footer { opacity: 0.4; }
 
         /* ===== НАВЕРХ ===== */
         .to-top { position: fixed; right: 24px; bottom: 24px; width: 44px; height: 44px; border-radius: 50%; background: #10141b; border: 1px solid rgba(201,163,90,0.4); color: #e3c48a; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 80; opacity: 0; transform: translateY(20px); pointer-events: none; transition: 0.3s; }
         .to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
         .to-top:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+
+        /* ============================================================
+           ПОБЕДНЫЙ ЭКРАН (ФАЗА 3)
+           ============================================================ */
+        .winner-overlay {
+            position: fixed; inset: 0;
+            background: rgba(6, 8, 12, 0.88);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .winner-overlay.active { display: flex; }
+        .winner-overlay.visible { opacity: 1; }
+
+        .winner-card {
+            position: relative;
+            background: linear-gradient(180deg, #131822 0%, #0d1118 100%);
+            border: 1px solid #c9a35a;
+            border-radius: 12px;
+            padding: 48px 56px 40px;
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(201,163,90,0.25), 0 0 120px rgba(201,163,90,0.1);
+            animation: winnerCardIn 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes winnerCardIn {
+            from { transform: scale(0.85) translateY(20px); opacity: 0; }
+            to   { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        /* Бегущая рамка по периметру */
+        .winner-card::before {
+            content: '';
+            position: absolute; inset: -1px;
+            border-radius: 12px;
+            padding: 1px;
+            background: linear-gradient(90deg, transparent, #e3c48a, transparent, #c9a35a, transparent);
+            background-size: 300% 100%;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderRun 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes borderRun {
+            0%   { background-position: 0% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        .winner-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.34em;
+            color: #7a8494;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+        .winner-logo {
+            width: 180px; height: 180px;
+            margin: 0 auto 22px;
+            background: #0a0d12;
+            border: 1px solid #242b35;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .winner-logo img { max-width: 88%; max-height: 88%; object-fit: contain; }
+        .winner-logo .placeholder {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 64px;
+            font-weight: 600;
+            color: #c9a35a;
+            opacity: 0.7;
+        }
+        .winner-name {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 38px;
+            font-weight: 600;
+            color: #eae6da;
+            line-height: 1.15;
+            margin-bottom: 12px;
+            word-break: break-word;
+        }
+        .winner-sub {
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            color: #97a0ac;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+        .winner-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            background: rgba(201,163,90,0.1);
+            border: 1px solid rgba(201,163,90,0.35);
+            border-radius: 6px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #e3c48a;
+            letter-spacing: 0.06em;
+        }
+
+        /* Призёры */
+        .winner-podium {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #242b35;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .podium-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            background: #0a0d12;
+            border: 1px solid #242b35;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .podium-item.place-1 { border-color: rgba(201,163,90,0.5); background: rgba(201,163,90,0.06); }
+        .podium-item.place-2 { border-color: rgba(176,184,196,0.25); }
+        .podium-item.place-3 { border-color: rgba(179,105,95,0.25); }
+        .podium-rank {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: #5f6773;
+        }
+        .podium-item.place-1 .podium-rank { color: #e3c48a; }
+        .podium-name {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #eae6da;
+            text-align: center;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .winner-close {
+            margin-top: 26px;
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid rgba(201,163,90,0.4);
+            color: #e3c48a;
+            border-radius: 4px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .winner-close:hover { background: #c9a35a; color: #0a0d12; border-color: #c9a35a; }
+
+        /* Плашка чемпиона после закрытия оверлея */
+        .champion-chip {
+            position: fixed;
+            top: 82px;
+            right: 24px;
+            z-index: 90;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px 8px 12px;
+            background: linear-gradient(90deg, rgba(201,163,90,0.15) 0%, rgba(201,163,90,0.05) 100%);
+            border: 1px solid rgba(201,163,90,0.5);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            color: #e3c48a;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .champion-chip.visible { display: flex; }
+        .champion-chip:hover { background: rgba(201,163,90,0.25); border-color: #c9a35a; }
+        .champion-chip .trophy { font-size: 14px; }
+        .champion-chip .name { color: #eae6da; font-weight: 500; letter-spacing: 0.04em; }
+
+        /* Мобильный адаптив */
+        @media (max-width: 640px) {
+            .winner-card { padding: 32px 22px 28px; }
+            .winner-logo { width: 130px; height: 130px; }
+            .winner-name { font-size: 24px; }
+            .winner-score { font-size: 14px; padding: 6px 14px; }
+            .winner-podium { grid-template-columns: 1fr; gap: 8px; margin-top: 22px; padding-top: 18px; }
+            .podium-item { flex-direction: row; justify-content: space-between; padding: 10px 14px; }
+            .champion-chip { top: 72px; right: 12px; font-size: 10px; padding: 6px 12px 6px 10px; }
+        }
 
         /* ===== ANIMATIONS ===== */
         @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
@@ -337,7 +570,10 @@
     <a href="https://t.me/compassarenaa" target="_blank">Telegram</a>
 </nav>
 
-<section class="arena-stats" id="arenaSection">
+<!-- ============================================================
+     ФАЗА 1: ARENA / TIMER
+     ============================================================ -->
+<section class="arena-stats" id="arenaSection" data-phase="1">
     <div class="container">
         <div class="arena-inner">
             <div class="arena-logo">
@@ -382,6 +618,9 @@
     </div>
 </section>
 
+<!-- ============================================================
+     HERO
+     ============================================================ -->
 <section class="hero-bg">
     <div class="container">
         <div class="hero-bg-inner">
@@ -394,8 +633,11 @@
     </div>
 </section>
 
+<!-- ============================================================
+     TWITCH: свёрнутая карточка (фаза 1) / iframe (фаза 2+)
+     ============================================================ -->
 <section class="container">
-    <div id="streamCollapsed" class="stream-collapsed">
+    <div id="streamCollapsed" class="stream-collapsed" data-phase="1">
         <button class="stream-collapsed-toggle" onclick="toggleStreamCard()">
             <span class="stream-collapsed-title">Прямая трансляция</span>
             <span class="stream-collapsed-arrow" id="streamArrow">▼</span>
@@ -408,7 +650,7 @@
         </div>
     </div>
 
-    <div id="streamFull" class="twitch-wrap" style="display:none;">
+    <div id="streamFull" class="twitch-wrap" style="display:none;" data-phase="2">
         <iframe
             src="https://player.twitch.tv/?channel=compassarena&parent=compass-arena.pages.dev&muted=true&autoplay=true"
             allowfullscreen="true"
@@ -418,16 +660,22 @@
     </div>
 </section>
 
+<!-- ============================================================
+     БАННЕР «ТУРНИРНАЯ СЕТКА» (всегда)
+     ============================================================ -->
 <section class="bracket-banner" id="bracketBanner">
     <div class="container">
         <div class="bracket-banner-inner">
             <h1 class="bracket-banner-title">Турнирная сетка</h1>
-            <div class="bracket-banner-sub">Double Elimination · Bo3 · 8 команд</div>
+            <div class="bracket-banner-sub">Double Elimination · Bo3 · 6 команд</div>
         </div>
     </div>
 </section>
 
-<section class="bracket-section">
+<!-- ============================================================
+     СЕТКА (всегда, но в фазе 3 — приглушена)
+     ============================================================ -->
+<section class="bracket-section" id="bracketSection">
     <div class="container">
         <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 20px;font-size:12px;color:#97a0ac;">
@@ -439,6 +687,9 @@
     </div>
 </section>
 
+<!-- ============================================================
+     SCHEDULE PREVIEW
+     ============================================================ -->
 <section class="schedule-section">
     <div class="container">
         <h2>Ближайшие матчи</h2>
@@ -446,6 +697,9 @@
     </div>
 </section>
 
+<!-- ============================================================
+     FORMAT
+     ============================================================ -->
 <section class="format-section">
     <div class="container">
         <div class="format-grid">
@@ -456,6 +710,9 @@
     </div>
 </section>
 
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
 <footer>
     <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
         <span>Compass Arena — организатор турниров по Dota 2</span>
@@ -469,6 +726,9 @@
     </div>
 </footer>
 
+<!-- ============================================================
+     MODAL (состав команды)
+     ============================================================ -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
         <button class="modal-close" id="modalClose">&times;</button>
@@ -501,13 +761,40 @@
     </div>
 </div>
 
+<!-- ============================================================
+     ПОБЕДНЫЙ ЭКРАН (ФАЗА 3)
+     ============================================================ -->
+<div class="winner-overlay" id="winnerOverlay">
+    <div class="winner-card">
+        <div class="winner-label">Победитель Compass Arena</div>
+        <div class="winner-logo" id="winnerLogo">
+            <span class="placeholder">?</span>
+        </div>
+        <div class="winner-name" id="winnerName">Команда</div>
+        <div class="winner-sub">Grand Final</div>
+        <div class="winner-score" id="winnerScore" style="display:none;">
+            <span id="winnerScore1">0</span><span>:</span><span id="winnerScore2">0</span>
+        </div>
+
+        <div class="winner-podium" id="winnerPodium"></div>
+
+        <button class="winner-close" onclick="closeWinnerOverlay()">Посмотреть сетку</button>
+    </div>
+</div>
+
+<!-- Плашка чемпиона после закрытия оверлея -->
+<div class="champion-chip" id="championChip" onclick="openWinnerOverlay()">
+    <span class="trophy">🏆</span>
+    <span>Победитель — <span class="name" id="chipName">—</span></span>
+</div>
+
 <button class="to-top" id="toTop" aria-label="Наверх">↑</button>
 
 <canvas id="particles-canvas"></canvas>
 
 <script>
 // ============================================================
-// НАЗВАНИЯ РОЛЕЙ (русские)
+// НАЗВАНИЯ РОЛЕЙ
 // ============================================================
 var ROLE_NAMES = { 1: 'Керри', 2: 'Мидер', 3: 'Офлейн', 4: 'Саппорт 4', 5: 'Саппорт 5' };
 
@@ -553,8 +840,7 @@ var TOURNAMENT_START_DEFAULT = new Date('2026-09-26T12:00:00+03:00').getTime();
 var TOURNAMENT_START = TOURNAMENT_START_DEFAULT;
 var PROJECT_START_DEFAULT = new Date('2026-01-01T00:00:00+03:00').getTime();
 var PROJECT_START = PROJECT_START_DEFAULT;
-var FRESH_WINNERS = {};
-var FRESH_RECEIVERS = {};
+var CURRENT_PHASE = 1;
 
 // ============================================================
 // ЗАГРУЗКА
@@ -566,11 +852,6 @@ function loadSavedData() {
             return res.json();
         })
         .then(function(parsed) {
-            var prevWinners = {};
-            for (var i = 0; i < DATA.matches.length; i++) {
-                prevWinners[DATA.matches[i].id] = DATA.matches[i].winner;
-            }
-
             if (parsed.teams) DATA.teams = parsed.teams;
             if (parsed.matches) DATA.matches = parsed.matches;
             if (parsed.schedule) DATA.schedule = parsed.schedule;
@@ -580,15 +861,6 @@ function loadSavedData() {
             DATA.projectStart = parsed.projectStart || null;
             DATA.alwaysShowBracketBanner = parsed.alwaysShowBracketBanner !== false;
 
-            FRESH_WINNERS = {};
-            FRESH_RECEIVERS = {};
-            for (var j = 0; j < DATA.matches.length; j++) {
-                var m = DATA.matches[j];
-                if (m.winner && prevWinners[m.id] !== m.winner) {
-                    FRESH_WINNERS[m.id] = true;
-                }
-            }
-
             if (DATA.tournamentStart) {
                 var t = new Date(DATA.tournamentStart).getTime();
                 if (!isNaN(t)) TOURNAMENT_START = t;
@@ -596,11 +868,6 @@ function loadSavedData() {
             if (DATA.projectStart) {
                 var p = new Date(DATA.projectStart).getTime();
                 if (!isNaN(p)) PROJECT_START = p;
-            }
-
-            var banner = document.getElementById('bracketBanner');
-            if (banner) {
-                banner.style.display = (DATA.alwaysShowBracketBanner || Date.now() >= TOURNAMENT_START) ? 'block' : 'none';
             }
 
             var label = document.getElementById('timerDateLabel');
@@ -617,6 +884,55 @@ function loadSavedData() {
         .catch(function(err) {
             console.warn('Не удалось загрузить данные с сервера', err);
         });
+}
+
+// ============================================================
+// ФАЗЫ
+// ============================================================
+function computePhase() {
+    var grand = getMatch(14);
+    if (grand && grand.winner) return 3;
+    if (Date.now() >= TOURNAMENT_START) return 2;
+    return 1;
+}
+
+function applyPhase(phase) {
+    var prev = CURRENT_PHASE;
+    CURRENT_PHASE = phase;
+
+    document.body.classList.remove('phase-1', 'phase-2', 'phase-3');
+    document.body.classList.add('phase-' + phase);
+
+    var arena = document.getElementById('arenaSection');
+    var streamCollapsed = document.getElementById('streamCollapsed');
+    var streamFull = document.getElementById('streamFull');
+
+    // Таймер: только фаза 1
+    if (arena) arena.style.display = (phase === 1) ? 'block' : 'none';
+
+    // Свёрнутый стрим: только фаза 1
+    if (streamCollapsed) streamCollapsed.style.display = (phase === 1) ? 'block' : 'none';
+
+    // iframe: фаза 2 и 3
+    if (streamFull) streamFull.style.display = (phase >= 2) ? 'block' : 'none';
+
+    // Сетка рендерится заново с учётом фазы
+    renderBracket();
+
+    // Фаза 3: показать победный экран (один раз за сессию)
+    if (phase === 3) {
+        var championChip = document.getElementById('championChip');
+        if (championChip) championChip.classList.add('visible');
+        renderWinnerOverlay();
+        // Автопоказ только если ещё не показывали в этой сессии
+        if (prev !== 3 && !sessionStorage.getItem('winnerShown')) {
+            setTimeout(openWinnerOverlay, 400);
+            sessionStorage.setItem('winnerShown', '1');
+        }
+    } else {
+        var chip = document.getElementById('championChip');
+        if (chip) chip.classList.remove('visible');
+    }
 }
 
 // ============================================================
@@ -724,8 +1040,10 @@ function renderMatch(m) {
     var id2 = t2 ? t2.id : null;
     var hasScore = m.score1 != null && m.score2 != null;
     var isLive = DATA.liveMatchId === m.id;
-    var isFresh = !!FRESH_WINNERS[m.id];
-    var isReceiver = !!FRESH_RECEIVERS[m.id];
+    var isWaiting = !m.winner && t1 && t2 && CURRENT_PHASE >= 2;
+
+    // В фазе 3 выделяем гранд-финал как матч чемпиона
+    var isChampionMatch = (CURRENT_PHASE === 3) && (m.bracket === 'grand') && m.winner;
 
     var team1Classes = 'team';
     var team2Classes = 'team';
@@ -734,7 +1052,12 @@ function renderMatch(m) {
         else if (m.winner === m.team2) { team2Classes += ' is-winner'; team1Classes += ' is-loser'; }
     }
 
-    var html = '<div class="match' + (isLive ? ' is-live' : '') + (isFresh ? ' fresh-result' : '') + (isReceiver ? ' fresh-receiver' : '') + '" data-match="' + m.id + '">';
+    var classes = 'match';
+    if (isLive) classes += ' is-live';
+    if (isWaiting) classes += ' is-waiting';
+    if (isChampionMatch) classes += ' is-grand-champion';
+
+    var html = '<div class="' + classes + '" data-match="' + m.id + '">';
     html += '<div class="' + team1Classes + '" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
     if (hasScore) html += '<span class="score">' + m.score1 + '</span>';
     if (id1) html += '<span class="info-icon" title="Состав команды">i</span>';
@@ -818,13 +1141,13 @@ function countTeamRecord(teamId) {
 }
 
 function openModal(teamId) {
+    if (CURRENT_PHASE === 3) return; // в фазе 3 сетка не кликабельна
     var team = getTeam(teamId);
     if (!team) return;
 
     document.getElementById('modalTitle').textContent = team.name;
     document.getElementById('modalSub').textContent = 'Состав команды';
 
-    // Логотип
     var logoEl = document.getElementById('modalLogo');
     if (team.logo) {
         logoEl.innerHTML = '<img src="' + team.logo + '" alt="' + team.name + '">';
@@ -832,7 +1155,6 @@ function openModal(teamId) {
         logoEl.innerHTML = '<span class="placeholder">' + (team.name ? team.name.charAt(0).toUpperCase() : '?') + '</span>';
     }
 
-    // Игроки
     var container = document.getElementById('modalPlayers');
     container.innerHTML = '';
     if (!team.players || team.players.length === 0) {
@@ -850,7 +1172,6 @@ function openModal(teamId) {
         }
     }
 
-    // Счёт
     var rec = countTeamRecord(teamId);
     var statsEl = document.getElementById('modalStats');
     if (rec.wins + rec.losses > 0) {
@@ -883,6 +1204,80 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 // ============================================================
+// ПОБЕДНЫЙ ЭКРАН
+// ============================================================
+function renderWinnerOverlay() {
+    var grand = getMatch(14);
+    if (!grand || !grand.winner) return;
+
+    var champion = getTeam(grand.winner);
+    var loserId = getLoser(grand);
+    var runnerUp = loserId ? getTeam(loserId) : null;
+
+    // 3-е место — проигравший в финале нижней (матч 13)
+    var m13 = getMatch(13);
+    var thirdId = m13 ? getLoser(m13) : null;
+    var third = thirdId ? getTeam(thirdId) : null;
+
+    // Логотип
+    var logoEl = document.getElementById('winnerLogo');
+    if (champion && champion.logo) {
+        logoEl.innerHTML = '<img src="' + champion.logo + '" alt="">';
+    } else {
+        var ch = champion && champion.name ? champion.name.charAt(0).toUpperCase() : '?';
+        logoEl.innerHTML = '<span class="placeholder">' + ch + '</span>';
+    }
+
+    // Название
+    document.getElementById('winnerName').textContent = champion ? champion.name : '—';
+
+    // Счёт
+    if (grand.score1 != null && grand.score2 != null) {
+        document.getElementById('winnerScore').style.display = 'inline-flex';
+        document.getElementById('winnerScore1').textContent = grand.score1;
+        document.getElementById('winnerScore2').textContent = grand.score2;
+    } else {
+        document.getElementById('winnerScore').style.display = 'none';
+    }
+
+    // Призёры
+    var podium = document.getElementById('winnerPodium');
+    podium.innerHTML = '';
+    var places = [
+        { rank: '1 МЕСТО', team: champion, cls: 'place-1' },
+        { rank: '2 МЕСТО', team: runnerUp, cls: 'place-2' },
+        { rank: '3 МЕСТО', team: third, cls: 'place-3' }
+    ];
+    for (var i = 0; i < places.length; i++) {
+        var pl = places[i];
+        if (!pl.team) continue;
+        var div = document.createElement('div');
+        div.className = 'podium-item ' + pl.cls;
+        div.innerHTML = '<div class="podium-rank">' + pl.rank + '</div><div class="podium-name">' + pl.team.name + '</div>';
+        podium.appendChild(div);
+    }
+
+    // Плашка чемпиона
+    var chipName = document.getElementById('chipName');
+    if (chipName && champion) chipName.textContent = champion.name;
+}
+
+function openWinnerOverlay() {
+    var ov = document.getElementById('winnerOverlay');
+    if (!ov) return;
+    ov.classList.add('active');
+    setTimeout(function() { ov.classList.add('visible'); }, 20);
+}
+function closeWinnerOverlay() {
+    var ov = document.getElementById('winnerOverlay');
+    if (!ov) return;
+    ov.classList.remove('visible');
+    setTimeout(function() { ov.classList.remove('active'); }, 600);
+}
+window.openWinnerOverlay = openWinnerOverlay;
+window.closeWinnerOverlay = closeWinnerOverlay;
+
+// ============================================================
 // МЕНЮ
 // ============================================================
 function toggleMenu(force) {
@@ -909,21 +1304,16 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         toggleMenu(false);
         closeModal();
+        closeWinnerOverlay();
     }
 });
 
 // ============================================================
-// СВЁРНУТАЯ TWITCH-КАРТОЧКА
+// TWITCH-КАРТОЧКА
 // ============================================================
 function toggleStreamCard() {
     var card = document.getElementById('streamCollapsed');
     if (card) card.classList.toggle('open');
-}
-function switchToLiveStream() {
-    var collapsed = document.getElementById('streamCollapsed');
-    var full = document.getElementById('streamFull');
-    if (collapsed) collapsed.style.display = 'none';
-    if (full) full.style.display = 'block';
 }
 
 // ============================================================
@@ -942,16 +1332,24 @@ function initToTop() {
 }
 
 // ============================================================
-// РЕНДЕР
+// РЕНДЕР + ИНИЦИАЛИЗАЦИЯ
 // ============================================================
 function renderAll() {
     renderBracket();
     renderSchedule();
 }
 
+function refresh() {
+    return loadSavedData().then(function() {
+        var phase = computePhase();
+        applyPhase(phase);
+        renderAll();
+    });
+}
+
 function init() {
-    loadSavedData().then(renderAll);
-    setInterval(function() { loadSavedData().then(renderAll); }, 60000);
+    refresh();
+    setInterval(refresh, 60000);
     initToTop();
     window.getTournamentData = function() { return DATA; };
     window.renderBracket = renderBracket;
@@ -978,10 +1376,9 @@ function updateTimer() {
     var diff = TOURNAMENT_START - now;
 
     if (diff <= 0) {
-        var arena = document.getElementById('arenaSection');
-        if (arena && arena.style.display !== 'none') {
-            arena.style.display = 'none';
-            switchToLiveStream();
+        // Фаза 2 (или 3) — переключение
+        if (CURRENT_PHASE === 1) {
+            applyPhase(computePhase());
         }
         return;
     }
