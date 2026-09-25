@@ -1030,8 +1030,8 @@ function renderMatch(m) {
         else if (m.winner === m.team2) { team2Classes += ' is-winner'; team1Classes += ' is-loser'; }
     }
 
-    var w1 = m.winner === m.team1 ? 'win' : (m.winner ? 'loss' : null);
-    var w2 = m.winner === m.team2 ? 'win' : (m.winner ? 'loss' : null);
+    var w1 = (m.winner && m.winner === m.team1) ? 'win' : (m.winner ? 'loss' : null);
+    var w2 = (m.winner && m.winner === m.team2) ? 'win' : (m.winner ? 'loss' : null);
 
     var classes = 'match';
     if (isLive) classes += ' is-live';
