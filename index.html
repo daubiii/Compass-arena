@@ -605,19 +605,19 @@
 // 5 SVG-иконок в стиле Dota: меч (керри), звезда (мидер), щит (офлейн),
 // крыло (сап 4), глаз (сап 5). Все монохромные, наследуют currentColor.
 var ROLE_ICONS = {
-    // 1 — Safe Lane / Carry / меч
-    1: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L13.2 4.5L12 7L10.8 4.5L12 2Z" fill="currentColor"/><rect x="11.2" y="6.5" width="1.6" height="1.6" fill="currentColor"/><path d="M11.2 8.1H12.8L12.8 9.5H11.2Z" fill="currentColor"/><path d="M12 9.5L12.8 11V17.5H11.2V11L12 9.5Z" fill="currentColor"/><rect x="10" y="17.5" width="4" height="1.5" rx="0.4" fill="currentColor"/><rect x="11.2" y="19" width="1.6" height="3" rx="0.3" fill="currentColor"/></svg>',
+    // 1 — Safe Lane / Carry / диагональный меч (клинок вниз-влево, рукоять вверх-вправо)
+    1: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4L21 5L10 16L8 14L19 3L20 4Z" fill="currentColor"/><path d="M8 14L9 13L11 15L10 16L8 14Z" fill="currentColor"/><path d="M6 16L4 18L3 21L6 20L8 18L6 16Z" fill="currentColor"/><path d="M9 11L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11.5 9L13 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
 
-    // 2 — Mid Lane / лук
-    2: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12C5 7.5 8 4.5 12 4.5C16 4.5 19 7.5 19 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 4.5V10.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9.5 10.5L12 13L14.5 10.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="1.3" fill="currentColor"/><path d="M12 14.3V19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+    // 2 — Mid Lane / лук со стрелой (дуга + стрела по диагонали)
+    2: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4C8 3 12 4 15 8C18 12 19 16 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 4L20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 4L8 4M4 4L4 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 15L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 9L11 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
 
-    // 3 — Off Lane / щит с молнией (финальный, из последнего сообщения)
+    // 3 — Off Lane / щит с молнией (оставляю как было)
     3: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L19 5.5V12C19 16.5 12 21 12 21C12 21 5 16.5 5 12V5.5L12 3Z" fill="currentColor"/><path d="M13.2 7.5L9 12.5H11.8L10.8 16.5L15 11.5H12.2L13.2 7.5Z" fill="#0a0d12"/></svg>',
 
-    // 4 — Soft Support / рука с огнём
-    4: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 15.5C7 12.5 9 10.5 11 10.5C13 10.5 15 12.5 15 15.5V18C15 20 13.5 21 11 21C8.5 21 7 20 7 18V15.5Z" fill="currentColor"/><path d="M4.5 16H6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4.5 18.5H6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 4C12 5.5 13 6.5 13 8C13 9.2 12.2 10 11 10C9.8 10 9 9.2 9 8C9 6.5 10 5.5 11 4Z" fill="currentColor"/><path d="M11 6.5C11.3 6.9 11.6 7.2 11.6 7.6C11.6 8 11.3 8.3 11 8.3C10.7 8.3 10.4 8 10.4 7.6C10.4 7.2 10.7 6.9 11 6.5Z" fill="#0a0d12"/></svg>',
+    // 4 — Soft Support / рука с искрами (ладонь + 3 звезды разного размера)
+    4: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 17C3 15 4 14 5 14H7L9 12.5L11 13.5L13 12.5L15 13.5L17 12.5L19 14C20 14.5 21 15.5 21 17V19C21 20.5 20 21 19 21H5C4 21 3 20.5 3 19V17Z" fill="currentColor"/><path d="M6 8.5L6.8 7L8.5 7.8L6.8 8.5L6 10.2L5.2 8.5L3.5 7.8L5.2 7L6 8.5Z" fill="currentColor"/><path d="M17 5L17.5 4L18 5L19 5.5L18 6L17.5 7L17 6L16 5.5L17 5Z" fill="currentColor"/><path d="M11 3L11.5 2L12 3L13 3.5L12 4L11.5 5L11 4L10 3.5L11 3Z" fill="currentColor"/></svg>',
 
-    // 5 — Hard Support / рука с крестом
+    // 5 — Hard Support / рука с крестом (оставляю как было)
     5: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 15.5C7 12.5 9 10.5 11 10.5C13 10.5 15 12.5 15 15.5V18C15 20 13.5 21 11 21C8.5 21 7 20 7 18V15.5Z" fill="currentColor"/><path d="M4.5 16H6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4.5 18.5H6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 3V5M11 7V9M8 6H10M12 6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9.5 4.5L12.5 7.5M12.5 4.5L9.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
 };
 
