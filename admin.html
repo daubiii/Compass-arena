@@ -76,7 +76,11 @@
         .logo-preview { width: 80px; height: 80px; background: #0a0d12; border: 1px solid #242b35; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
         .logo-preview img { max-width: 90%; max-height: 90%; object-fit: contain; }
         .logo-preview .placeholder { color: #5f6773; font-size: 11px; text-align: center; padding: 4px; }
-        .logo-uploader-actions { display: flex; flex-direction: column; gap: 6px; }
+        .logo-uploader-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+        .logo-meta { font-size: 11px; color: #5f6773; margin-top: 6px; line-height: 1.4; }
+        .logo-meta.ok { color: #4caf50; }
+        .logo-meta.warn { color: #e3c48a; }
+        .logo-meta.err { color: #e74c3c; }
         .toast { position: fixed; bottom: 24px; right: 24px; background: #10141b; border: 1px solid #c9a35a; padding: 10px 20px; border-radius: 6px; color: #eae6da; font-size: 13px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: 0.3s; pointer-events: none; max-width: 360px; }
         .toast.show { opacity: 1; transform: translateY(0); }
         .password-section { background: #10141b; border: 1px solid #c9a35a; border-radius: 6px; padding: 16px 20px; margin-bottom: 14px; }
@@ -126,13 +130,14 @@
                 </div>
             </div>
             <div class="form-group" style="margin-bottom:10px;">
-                <label>Логотип команды (PNG/JPG, до 50 КБ)</label>
+                <label>Логотип команды (PNG/JPG, до 5 МБ — автосжатие до 600×600)</label>
                 <div class="logo-uploader">
                     <div class="logo-preview" id="newTeamLogoPreview"><span class="placeholder">нет<br>логотипа</span></div>
                     <div class="logo-uploader-actions">
                         <button class="btn" onclick="document.getElementById('newTeamLogoInput').click()">📁 Загрузить</button>
                         <button class="btn btn-danger" onclick="clearNewTeamLogo()">✕ Удалить</button>
                         <input type="file" id="newTeamLogoInput" accept="image/*" style="display:none" onchange="onNewTeamLogo(event)">
+                        <div class="logo-meta" id="newTeamLogoMeta"></div>
                     </div>
                 </div>
             </div>
@@ -208,13 +213,14 @@
         <div class="hint" style="margin-bottom:10px;">Формат: <code>Ник:Роль</code> через запятую. Роль — число 1–5.</div>
 
         <div class="form-group" style="margin-bottom:10px;">
-            <label>Логотип</label>
+            <label>Логотип (PNG/JPG, до 5 МБ — автосжатие до 600×600)</label>
             <div class="logo-uploader">
                 <div class="logo-preview" id="editLogoPreview"><span class="placeholder">нет<br>логотипа</span></div>
                 <div class="logo-uploader-actions">
                     <button class="btn" onclick="document.getElementById('editLogoInput').click()">📁 Загрузить</button>
                     <button class="btn btn-danger" onclick="clearEditLogo()">✕ Удалить</button>
                     <input type="file" id="editLogoInput" accept="image/*" style="display:none" onchange="onEditLogo(event)">
+                    <div class="logo-meta" id="editLogoMeta"></div>
                 </div>
             </div>
         </div>
@@ -298,49 +304,160 @@ function playersToInput(players) {
 }
 
 // ============================================================
-// ЛОГОТИП
+// ЛОГОТИП + АВТОСЖАТИЕ
 // ============================================================
 var NEW_TEAM_LOGO = '';
 var EDIT_TEAM_LOGO = '';
 var EDIT_TEAM_ID = null;
 
-function readLogoFile(file, callback) {
+var LOGO_MAX_SOURCE_BYTES = 5 * 1024 * 1024; // 5 МБ
+var LOGO_MAX_DIMENSION = 600;                // максимум 600×600
+var LOGO_OUTPUT_QUALITY = 0.92;              // для PNG не используется, оставим на будущее
+
+function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' Б';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' КБ';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' МБ';
+}
+
+// Оценка размера base64-строки в байтах (грубо, +33% от сырого размера)
+function base64Size(str) {
+    if (!str) return 0;
+    var comma = str.indexOf(',');
+    var b64 = comma >= 0 ? str.slice(comma + 1) : str;
+    return Math.floor(b64.length * 3 / 4);
+}
+
+function setLogoMeta(id, text, cls) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text || '';
+    el.className = 'logo-meta' + (cls ? ' ' + cls : '');
+}
+
+function readLogoFile(file, callback, metaId) {
     if (!file) return;
-    if (file.size > 50 * 1024) {
-        showToast('⚠️ Логотип больше 50 КБ. Сожми сильнее.');
+
+    // 1. Проверка размера исходника
+    if (file.size > LOGO_MAX_SOURCE_BYTES) {
+        setLogoMeta(metaId, '❌ Файл ' + formatBytes(file.size) + ' — превышает 5 МБ', 'err');
+        showToast('⚠️ Файл больше 5 МБ');
         return;
     }
+
+    setLogoMeta(metaId, '⏳ Обработка...', 'warn');
+
+    // 2. Читаем как data URL
     var reader = new FileReader();
-    reader.onload = function(e) { callback(e.target.result); };
+    reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+            // 3. Считаем новые размеры (не растягиваем вверх)
+            var w = img.naturalWidth;
+            var h = img.naturalHeight;
+            var ratio = 1;
+            if (w > LOGO_MAX_DIMENSION || h > LOGO_MAX_DIMENSION) {
+                ratio = Math.min(LOGO_MAX_DIMENSION / w, LOGO_MAX_DIMENSION / h);
+            }
+            var newW = Math.round(w * ratio);
+            var newH = Math.round(h * ratio);
+
+            // 4. Рисуем на canvas
+            var canvas = document.createElement('canvas');
+            canvas.width = newW;
+            canvas.height = newH;
+            var ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, newW, newH);
+
+            // 5. Преобразуем в PNG (сохраняет прозрачность)
+            var dataUrl;
+            try {
+                dataUrl = canvas.toDataURL('image/png');
+            } catch(err) {
+                setLogoMeta(metaId, '❌ Ошибка конвертации', 'err');
+                showToast('⚠️ Не удалось обработать картинку');
+                return;
+            }
+
+            // 6. Проверка размера результата
+            var outSize = base64Size(dataUrl);
+            if (outSize > 900 * 1024) {
+                // PNG всё равно большой — попробуем JPEG как fallback (без прозрачности)
+                try {
+                    // Заливаем тёмным фоном (как у сайта), чтобы не было чёрных областей
+                    var canvas2 = document.createElement('canvas');
+                    canvas2.width = newW;
+                    canvas2.height = newH;
+                    var ctx2 = canvas2.getContext('2d');
+                    ctx2.fillStyle = '#0a0d12';
+                    ctx2.fillRect(0, 0, newW, newH);
+                    ctx2.drawImage(img, 0, 0, newW, newH);
+                    var jpegUrl = canvas2.toDataURL('image/jpeg', LOGO_OUTPUT_QUALITY);
+                    var jpegSize = base64Size(jpegUrl);
+                    if (jpegSize < outSize) {
+                        dataUrl = jpegUrl;
+                        outSize = jpegSize;
+                    }
+                } catch(e) {}
+            }
+
+            // 7. Финальная проверка — не больше 900 КБ
+            if (outSize > 900 * 1024) {
+                setLogoMeta(metaId, '❌ Даже после сжатия ' + formatBytes(outSize) + ' — слишком много', 'err');
+                showToast('⚠️ Не удалось сжать логотип до разумного размера');
+                return;
+            }
+
+            // 8. Успех
+            var info = newW + '×' + newH + ' · ' + formatBytes(outSize);
+            if (ratio < 1) info += ' (было ' + w + '×' + h + ')';
+            setLogoMeta(metaId, '✅ ' + info, 'ok');
+            callback(dataUrl);
+        };
+        img.onerror = function() {
+            setLogoMeta(metaId, '❌ Не удалось прочитать картинку', 'err');
+            showToast('⚠️ Файл не является изображением');
+        };
+        img.src = e.target.result;
+    };
+    reader.onerror = function() {
+        setLogoMeta(metaId, '❌ Ошибка чтения файла', 'err');
+    };
     reader.readAsDataURL(file);
 }
+
 function renderLogoPreview(containerId, logo, placeholderText) {
     var el = document.getElementById(containerId);
     if (!el) return;
     if (logo) el.innerHTML = '<img src="' + logo + '" alt="logo">';
     else el.innerHTML = '<span class="placeholder">' + (placeholderText || 'нет<br>логотипа') + '</span>';
 }
+
 function onNewTeamLogo(e) {
     readLogoFile(e.target.files[0], function(dataUrl) {
         NEW_TEAM_LOGO = dataUrl;
         renderLogoPreview('newTeamLogoPreview', NEW_TEAM_LOGO, 'нет<br>логотипа');
-    });
+    }, 'newTeamLogoMeta');
     e.target.value = '';
 }
 function clearNewTeamLogo() {
     NEW_TEAM_LOGO = '';
     renderLogoPreview('newTeamLogoPreview', '', 'нет<br>логотипа');
+    setLogoMeta('newTeamLogoMeta', '', '');
 }
 function onEditLogo(e) {
     readLogoFile(e.target.files[0], function(dataUrl) {
         EDIT_TEAM_LOGO = dataUrl;
         renderLogoPreview('editLogoPreview', EDIT_TEAM_LOGO, 'нет<br>логотипа');
-    });
+    }, 'editLogoMeta');
     e.target.value = '';
 }
 function clearEditLogo() {
     EDIT_TEAM_LOGO = '';
     renderLogoPreview('editLogoPreview', '', 'нет<br>логотипа');
+    setLogoMeta('editLogoMeta', '', '');
 }
 
 // ============================================================
@@ -354,7 +471,6 @@ function loadData() {
         })
         .then(function(parsed) {
             DATA = parsed;
-            // Гарантируем наличие полей
             if (!DATA.schedule) DATA.schedule = {};
             if (!DATA.tournament) DATA.tournament = getDefaultData().tournament;
             if (DATA.alwaysShowBracketBanner === undefined) DATA.alwaysShowBracketBanner = true;
@@ -364,7 +480,6 @@ function loadData() {
             for (var j = 0; j < DATA.teams.length; j++) {
                 if (DATA.teams[j].logo === undefined) DATA.teams[j].logo = '';
             }
-            // Если сетка в KV старая (14 матчей) — не трогаем, ты сам сбросишь через кнопку
         })
         .catch(function(err) {
             console.warn('Не удалось загрузить данные', err);
@@ -467,9 +582,6 @@ function getLoser(m) {
     return null;
 }
 
-// ============================================================
-// СВЯЗИ СЕТКИ НА 6 КОМАНД (10 матчей)
-// ============================================================
 function updateMatchLinks() {
     var m = {};
     for (var i = 0; i < DATA.matches.length; i++) {
@@ -477,27 +589,17 @@ function updateMatchLinks() {
     }
     var t = DATA.teams;
 
-    // Пары 1-го раунда верхней — команды 3,4 и 5,6 (посев).
-    // Команды 1 и 2 — bye в R1, ждут в R2.
     if (m[1]) { m[1].team1 = t[2] ? t[2].id : null; m[1].team2 = t[3] ? t[3].id : null; }
     if (m[2]) { m[2].team1 = t[4] ? t[4].id : null; m[2].team2 = t[5] ? t[5].id : null; }
-    // R2 верхней: 1 vs W(M1), 2 vs W(M2)
     if (m[3]) { m[3].team1 = t[0] ? t[0].id : null; m[3].team2 = m[1] ? m[1].winner : null; }
     if (m[4]) { m[4].team1 = t[1] ? t[1].id : null; m[4].team2 = m[2] ? m[2].winner : null; }
-    // Финал верхней
     if (m[5]) { m[5].team1 = m[3] ? m[3].winner : null; m[5].team2 = m[4] ? m[4].winner : null; }
-    // Нижняя R1: L(M1) vs L(M2)
     if (m[6]) { m[6].team1 = getLoser(m[1]); m[6].team2 = getLoser(m[2]); }
-    // Нижняя R2: W(M6) vs L(M3)
     if (m[7]) { m[7].team1 = m[6] ? m[6].winner : null; m[7].team2 = getLoser(m[3]); }
-    // Нижняя R3: W(M7) vs L(M4)
     if (m[8]) { m[8].team1 = m[7] ? m[7].winner : null; m[8].team2 = getLoser(m[4]); }
-    // Финал нижней: W(M8) vs L(M5)
     if (m[9]) { m[9].team1 = m[8] ? m[8].winner : null; m[9].team2 = getLoser(m[5]); }
-    // Гранд-финал: W(M5) vs W(M9)
     if (m[10]) { m[10].team1 = m[5] ? m[5].winner : null; m[10].team2 = m[9] ? m[9].winner : null; }
 
-    // Сброс winner у матчей, где команда больше не в паре
     for (var k = 1; k <= 10; k++) {
         var mm = m[k];
         if (!mm || !mm.winner) continue;
@@ -707,6 +809,7 @@ function openEditModal(id) {
     document.getElementById('editTeamName').value = team.name;
     document.getElementById('editTeamPlayers').value = playersToInput(team.players);
     renderLogoPreview('editLogoPreview', EDIT_TEAM_LOGO, 'нет<br>логотипа');
+    setLogoMeta('editLogoMeta', '', '');
     document.getElementById('editModal').classList.add('active');
 }
 
@@ -884,7 +987,7 @@ window.onEditLogo = onEditLogo;
 window.clearNewTeamLogo = clearNewTeamLogo;
 window.clearEditLogo = clearEditLogo;
 
-console.log('✅ Admin panel loaded (6 teams, 10 matches)');
+console.log('✅ Admin panel loaded (6 teams, 10 matches, logo autocompress 600×600)');
 </script>
 
 </body>
