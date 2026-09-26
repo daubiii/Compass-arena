@@ -159,7 +159,6 @@
         .bracket-wrapper::-webkit-scrollbar-thumb { background: #2f3844; border-radius: 4px; }
         .bracket-wrapper::-webkit-scrollbar-thumb:hover { background: #c9a35a; }
 
-        /* Сетка — 3 группы + отдельный финальный блок */
         .bracket { display: flex; align-items: flex-start; gap: 0; padding: 8px 4px; min-width: max-content; }
 
         .bracket-group { display: flex; flex-direction: column; gap: 12px; position: relative; flex-shrink: 0; padding: 0 32px; }
@@ -298,12 +297,44 @@
             50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.6), 0 0 60px rgba(201,163,90,0.4); }
         }
 
-        /* Соединительные линии между раундами */
+        /* АНИМАЦИЯ «КОМАНДА ПРОШЛА ДАЛЬШЕ» */
+        @keyframes receiverFlash {
+            0%   { box-shadow: 0 0 0 0 rgba(201,163,90,0.8), 0 0 0 0 rgba(201,163,90,0.4); border-color: #e3c48a; }
+            40%  { box-shadow: 0 0 0 8px rgba(201,163,90,0.3), 0 0 0 16px rgba(201,163,90,0.1); border-color: #e3c48a; }
+            100% { box-shadow: 0 0 0 0 rgba(201,163,90,0), 0 0 0 0 rgba(201,163,90,0); border-color: inherit; }
+        }
+        .match.is-receiving {
+            animation: receiverFlash 5s ease-out;
+            border-color: #e3c48a !important;
+            background: linear-gradient(180deg, rgba(201,163,90,0.12) 0%, #151a22 100%) !important;
+            z-index: 10;
+        }
+        .match.is-receiving .team .name {
+            color: #e3c48a !important;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .match.is-receiving::after {
+            content: 'ПРОШЛА ДАЛЬШЕ';
+            position: absolute;
+            top: -12px;
+            right: 10px;
+            padding: 3px 10px;
+            background: #c9a35a;
+            color: #0a0d12;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 600;
+            font-size: 9px;
+            letter-spacing: 0.14em;
+            border-radius: 3px;
+            animation: blink 1.4s infinite;
+        }
+
         .round:not(:last-child)::after { content: ''; position: absolute; top: 50%; right: -28px; width: 28px; height: 1px; background: linear-gradient(90deg, rgba(201,163,90,0.35) 0%, rgba(201,163,90,0) 100%); pointer-events: none; }
 
         .bracket-hint { display: none; text-align: center; font-size: 11px; color: #5f6773; margin-top: 8px; letter-spacing: 0.05em; }
 
-        /* ===== КОЛОНКА ВЫБЫВШИХ (снизу) ===== */
+        /* ===== ВЫБЫВШИЕ ===== */
         .eliminated-section { padding: 24px 0 48px; border-top: 1px solid #242b35; transition: opacity 0.8s ease; }
         .eliminated-inner { max-width: 1200px; margin: 0 auto; }
         .eliminated-header {
@@ -354,7 +385,7 @@
         body.phase-3 .match:hover { border-color: inherit; background: #151a22; }
         body.phase-3 .match:not(.is-grand-champion) .team .info-icon { opacity: 0.15; }
 
-        /* ===== SCHEDULE PREVIEW ===== */
+        /* ===== SCHEDULE ===== */
         .schedule-section { padding: 20px 0 14px; border-top: 1px solid #242b35; }
         .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 12px; }
         .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
@@ -787,9 +818,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     ОБЪЯСНЕНИЕ ФОРМАТА
-     ============================================================ -->
 <section class="explain-section">
     <div class="container">
         <div class="explain-card">
@@ -822,9 +850,6 @@
     </div>
 </section>
 
-<!-- ============================================================
-     КОЛОНКА ВЫБЫВШИХ — СНИЗУ
-     ============================================================ -->
 <section class="eliminated-section" id="eliminatedSection">
     <div class="container eliminated-inner">
         <div class="eliminated-header" id="eliminatedHeader">
@@ -959,6 +984,32 @@ var TOURNAMENT_START = TOURNAMENT_START_DEFAULT;
 var PROJECT_START_DEFAULT = new Date('2026-01-01T00:00:00+03:00').getTime();
 var PROJECT_START = PROJECT_START_DEFAULT;
 var CURRENT_PHASE = 1;
+
+// Очередь анимаций "команда прошла дальше"
+var ANIMATION_QUEUE = [];
+var ANIMATION_RUNNING = false;
+
+// Карта: матч-источник → матч-приёмник
+var MATCH_RECEIVERS = {
+    1: 4,  // W(M1) → M4
+    2: 4,  // W(M2) → M4
+    3: 5,  // W(M3) → M5
+    4: 5   // W(M4) → M5
+};
+
+function hasSeenAnimation(matchId) {
+    try {
+        return localStorage.getItem('cmp_anim_seen_' + matchId) === '1';
+    } catch (e) {
+        return false;
+    }
+}
+
+function markAnimationSeen(matchId) {
+    try {
+        localStorage.setItem('cmp_anim_seen_' + matchId, '1');
+    } catch (e) {}
+}
 
 // ============================================================
 // ЗАГРУЗКА
@@ -1121,7 +1172,6 @@ function renderBracket() {
 
     var html = '<div class="bracket">';
 
-    // РАУНД 1
     html += '<div class="bracket-group upper">';
     html += '<div class="bracket-group-header upper">Раунд 1</div>';
     html += '<div class="bracket-group-inner">';
@@ -1132,7 +1182,6 @@ function renderBracket() {
     html += '</div>';
     html += '</div></div>';
 
-    // РАУНД 2
     html += '<div class="bracket-group upper">';
     html += '<div class="bracket-group-header upper">Раунд 2</div>';
     html += '<div class="bracket-group-inner">';
@@ -1141,7 +1190,6 @@ function renderBracket() {
     html += '</div>';
     html += '</div></div>';
 
-    // ФИНАЛ
     html += '<div class="bracket-group grand">';
     html += '<div class="bracket-group-header grand">Финал</div>';
     html += '<div class="bracket-group-inner">';
@@ -1198,7 +1246,7 @@ function renderMatch(m, isGrand) {
 }
 
 // ============================================================
-// ВЫБЫВШИЕ (снизу)
+// ВЫБЫВШИЕ
 // ============================================================
 function renderEliminated() {
     var list = document.getElementById('eliminatedList');
@@ -1493,7 +1541,62 @@ function refresh() {
         var phase = computePhase();
         applyPhase(phase);
         renderAll();
+        checkForNewWinners();
     });
+}
+
+function checkForNewWinners() {
+    if (CURRENT_PHASE === 3) return;
+    updateMatchLinks();
+    var newOnes = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.winner) continue;
+        if (m.id === 5) continue;
+        if (MATCH_RECEIVERS[m.id] === undefined) continue;
+        if (hasSeenAnimation(m.id)) continue;
+        newOnes.push(m.id);
+        markAnimationSeen(m.id);
+    }
+    if (newOnes.length === 0) return;
+    for (var j = 0; j < newOnes.length; j++) {
+        var receiverId = MATCH_RECEIVERS[newOnes[j]];
+        ANIMATION_QUEUE.push({ sourceId: newOnes[j], receiverId: receiverId });
+    }
+    runAnimationQueue();
+}
+
+function runAnimationQueue() {
+    if (ANIMATION_RUNNING) return;
+    if (ANIMATION_QUEUE.length === 0) return;
+    ANIMATION_RUNNING = true;
+    var item = ANIMATION_QUEUE.shift();
+    playReceiverAnimation(item.receiverId, function() {
+        ANIMATION_RUNNING = false;
+        if (ANIMATION_QUEUE.length > 0) {
+            setTimeout(runAnimationQueue, 1000);
+        }
+    });
+}
+
+function playReceiverAnimation(receiverId, callback) {
+    var receiverEl = document.querySelector('.match[data-match="' + receiverId + '"]');
+    if (!receiverEl) {
+        if (callback) callback();
+        return;
+    }
+
+    setTimeout(function() {
+        receiverEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+
+    setTimeout(function() {
+        receiverEl.classList.add('is-receiving');
+        setTimeout(function() {
+            receiverEl.classList.remove('is-receiving');
+            if (callback) callback();
+        }, 5000);
+    }, 800);
 }
 
 function init() {
