@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compass Arena — турнирная сетка</title>
-    <meta name="description" content="Compass Arena — турнир по Dota 2. Double Elimination, Bo3. Следи за сеткой и расписанием матчей.">
+    <meta name="description" content="Compass Arena — турнир по Dota 2. Bo3. Следи за сеткой и расписанием матчей.">
     <meta name="theme-color" content="#0a0d12">
 
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
@@ -15,13 +15,13 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Compass Arena">
     <meta property="og:title" content="Compass Arena — турнир по Dota 2">
-    <meta property="og:description" content="Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
+    <meta property="og:description" content="Bo3. Смотри сетку, расписание и трансляцию.">
     <meta property="og:image" content="https://compassarena.ru/favicon-180.png">
     <meta property="og:url" content="https://compassarena.ru/">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Compass Arena — турнир по Dota 2">
-    <meta name="twitter:description" content="Double Elimination, Bo3. Смотри сетку, расписание и трансляцию.">
+    <meta name="twitter:description" content="Bo3. Смотри сетку, расписание и трансляцию.">
     <meta name="twitter:image" content="https://compassarena.ru/favicon-180.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -130,73 +130,33 @@
         .bracket-wrapper::-webkit-scrollbar-thumb { background: #2f3844; border-radius: 4px; }
         .bracket-wrapper::-webkit-scrollbar-thumb:hover { background: #c9a35a; }
 
-        /* Главная линейка: 3 группы в один ряд */
-        .bracket {
-            display: flex;
-            align-items: flex-start;
-            gap: 28px;
-            padding: 8px 4px;
-            min-width: max-content;
-        }
+        .bracket { display: flex; align-items: flex-start; gap: 28px; padding: 8px 4px; min-width: max-content; }
 
-        /* Группа: vertical — заголовок сверху, колонки под ним */
-        .bracket-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        /* Заголовок группы — по центру над колонками */
+        .bracket-group { display: flex; flex-direction: column; gap: 8px; position: relative; flex-shrink: 0; }
         .bracket-group-header {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            padding-bottom: 8px;
-            border-bottom: 1px solid;
-            text-align: center;
-            margin-bottom: 4px;
+            font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            padding-bottom: 8px; border-bottom: 1px solid; text-align: center; margin-bottom: 4px;
         }
         .bracket-group-header.upper { color: #c9a35a; border-bottom-color: rgba(201,163,90,0.35); }
-        .bracket-group-header.lower { color: #b3695f; border-bottom-color: rgba(179,105,95,0.35); }
-        .bracket-group-header.grand { color: #e3c48a; border-bottom-color: rgba(201,163,90,0.5); }
-
+        .bracket-group-header.grand { color: #e3c48a; border-bottom-color: rgba(201,163,90,0.5); display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
         .bracket-group-header.grand::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 14px;
-    background-color: #e3c48a;
-    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: contain;
-    -webkit-mask-position: center;
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    margin-right: 8px;
-    margin-bottom: 2px;
-}
-        /* Колонки-раунды внутри группы */
-        .bracket-group-inner {
-            display: flex;
-            gap: 32px;
-            position: relative;
+            content: ''; display: inline-block; width: 18px; height: 14px;
+            background-color: #e3c48a;
+            -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
+            -webkit-mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: center;
+            mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
+            mask-repeat: no-repeat; mask-size: contain; mask-position: center;
+            margin-right: 8px; margin-bottom: 2px;
         }
 
-        /* Вертикальный разделитель между группами */
+        .bracket-group-inner { display: flex; gap: 32px; position: relative; }
+
         .bracket-group.lower { padding-left: 28px; border-left: 1px solid rgba(179,105,95,0.18); }
         .bracket-group.grand { padding-left: 28px; border-left: 1px solid rgba(201,163,90,0.25); }
 
         .round { display: flex; flex-direction: column; gap: 16px; min-width: 160px; position: relative; }
         .round-label { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.16em; color: #5f6773; text-align: center; margin-bottom: 8px; text-transform: uppercase; }
-        .round-label.gold { color: #7a8494; }
-        .round-label.ox { color: #7a8494; }
-        .round-label.grand { color: #c9a35a; font-size: 10px; }
 
         .match { background: #151a22; border: 1px solid #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
         .match:hover { border-color: #c9a35a; background: #1a2029; }
@@ -278,6 +238,35 @@
             50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.5), 0 0 50px rgba(201,163,90,0.35); }
         }
 
+        /* ===== КОЛОНКА ВЫБЫВШИХ ===== */
+        .eliminated-group { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .eliminated-group + .eliminated-group { padding-left: 20px; border-left: 1px solid rgba(179,105,95,0.2); }
+        .eliminated-group-title {
+            font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            padding-bottom: 8px; border-bottom: 1px solid rgba(179,105,95,0.35);
+            color: #b3695f; text-align: center; margin-bottom: 4px;
+        }
+        .eliminated-list { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+        .eliminated-item {
+            background: #0d1118;
+            border: 1px solid #1a2029;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #7a8494;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0.65;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .eliminated-item:hover { opacity: 0.9; border-color: #b3695f; }
+        .eliminated-item .name { color: #97a0ac; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .eliminated-item .meta { font-size: 10px; color: #5f6773; }
+        .eliminated-empty { color: #5f6773; font-size: 12px; font-style: italic; padding: 8px 12px; }
+
         /* ===== SCHEDULE PREVIEW ===== */
         .schedule-section { padding: 20px 0 14px; border-top: 1px solid #242b35; }
         .schedule-section h2 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 20px; margin-bottom: 12px; }
@@ -289,7 +278,6 @@
         .schedule-item .time { color: #e3c48a; font-size: 11px; font-weight: 500; }
         .schedule-item .tag { font-size: 8px; padding: 2px 8px; border-radius: 10px; background: #2f3844; color: #7a8494; }
         .schedule-item .tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
-        .schedule-item .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
         .schedule-item .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
         .schedule-empty { color: #5f6773; text-align: center; padding: 20px; font-size: 13px; }
 
@@ -325,7 +313,6 @@
         .format-section { padding: 24px 0; border-top: 1px solid #242b35; margin-top: 16px; transition: opacity 0.8s ease; }
         .format-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #242b35; }
         .format-item { background: #0a0d12; padding: 14px 18px; border-left: 2px solid #c9a35a; }
-        .format-item.ox { border-left-color: #b3695f; }
         .format-item h3 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: 13px; margin-bottom: 4px; }
         .format-item p { font-size: 12px; color: #97a0ac; line-height: 1.6; }
         body.phase-3 .format-section { opacity: 0.35; }
@@ -440,27 +427,13 @@
             text-transform: uppercase;
             margin-bottom: 18px;
         }
-        .winner-score {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 20px;
-            background: rgba(201,163,90,0.1);
-            border: 1px solid rgba(201,163,90,0.35);
-            border-radius: 6px;
-            font-family: 'Unbounded', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: #e3c48a;
-            letter-spacing: 0.06em;
-        }
 
         .winner-podium {
             margin-top: 32px;
             padding-top: 24px;
             border-top: 1px solid #242b35;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
         .podium-item {
@@ -476,7 +449,6 @@
         }
         .podium-item.place-1 { border-color: rgba(201,163,90,0.5); background: rgba(201,163,90,0.06); }
         .podium-item.place-2 { border-color: rgba(176,184,196,0.25); }
-        .podium-item.place-3 { border-color: rgba(179,105,95,0.25); }
         .podium-rank {
             font-family: 'Unbounded', sans-serif;
             font-size: 11px;
@@ -542,7 +514,6 @@
             .winner-card { padding: 32px 22px 28px; }
             .winner-logo { width: 130px; height: 130px; }
             .winner-name { font-size: 24px; }
-            .winner-score { font-size: 14px; padding: 6px 14px; }
             .winner-podium { grid-template-columns: 1fr; gap: 8px; margin-top: 22px; padding-top: 18px; }
             .podium-item { flex-direction: row; justify-content: space-between; padding: 10px 14px; }
             .champion-chip { top: 72px; right: 12px; font-size: 10px; padding: 6px 12px 6px 10px; }
@@ -719,14 +690,14 @@
     <div class="container">
         <div class="bracket-banner-inner">
             <h1 class="bracket-banner-title">Турнирная сетка</h1>
-            <div class="bracket-banner-sub">Double Elimination · Bo3 · 6 команд</div>
+            <div class="bracket-banner-sub">Custom Bracket · Bo3 · 6 команд</div>
         </div>
     </div>
 </section>
 
 <section class="bracket-section" id="bracketSection">
     <div class="container">
-        <p class="sub">Проигравшие в верхней сетке переходят в нижнюю.</p>
+        <p class="sub">Победитель M3 ждёт в финале. Победитель M4 встречается с ним.</p>
         <div class="bracket-wrapper" id="bracketWrapper"></div>
         <div class="bracket-hint">← прокрутите, чтобы увидеть всю сетку →</div>
     </div>
@@ -742,9 +713,9 @@
 <section class="format-section">
     <div class="container">
         <div class="format-grid">
-            <div class="format-item"><h3>Верхняя сетка</h3><p>Поражение не выбивает — команда спускается в нижнюю сетку.</p></div>
-            <div class="format-item ox"><h3>Нижняя сетка</h3><p>Второй шанс для проигравших. Поражение здесь — выбывание.</p></div>
-            <div class="format-item"><h3>Гранд-финал</h3><p>Победитель верхней vs победитель нижней. Bo3 решает всё.</p></div>
+            <div class="format-item"><h3>Раунд 1</h3><p>Три матча — 6 команд. Победители M1 и M2 идут в полуфинал, победитель M3 — сразу в финал.</p></div>
+            <div class="format-item"><h3>Раунд 2</h3><p>Победители M1 и M2 играют между собой. Победитель идёт в гранд-финал.</p></div>
+            <div class="format-item"><h3>Гранд-финал</h3><p>Победитель M4 vs победитель M3. Bo3 решает всё.</p></div>
         </div>
     </div>
 </section>
@@ -802,9 +773,6 @@
         </div>
         <div class="winner-name" id="winnerName">Команда</div>
         <div class="winner-sub">Grand Final</div>
-        <div class="winner-score" id="winnerScore" style="display:none;">
-            <span id="winnerScore1">0</span><span>:</span><span id="winnerScore2">0</span>
-        </div>
 
         <div class="winner-podium" id="winnerPodium"></div>
 
@@ -828,10 +796,10 @@
 var ROLE_NAMES = { 1: 'Керри', 2: 'Мидер', 3: 'Офлейн', 4: 'Саппорт 4', 5: 'Саппорт 5' };
 
 // ============================================================
-// ДАННЫЕ (6 команд, 10 матчей)
+// ДАННЫЕ (6 команд, 5 матчей, кастомный формат)
 // ============================================================
 var DATA = {
-    tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
+    tournament: { name: "Compass Arena", game: "Dota 2", format: "Custom Bracket", matches: "Bo3", dates: "26 сентября 2026" },
     teams: [
         { id: 1, name: "Слот 1", players: [], logo: "" },
         { id: 2, name: "Слот 2", players: [], logo: "" },
@@ -841,16 +809,11 @@ var DATA = {
         { id: 6, name: "Слот 6", players: [], logo: "" }
     ],
     matches: [
-        { id: 1, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
-        { id: 2, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
-        { id: 3, round: 2, team1: 1, team2: null, winner: null, bracket: 'upper' },
-        { id: 4, round: 2, team1: 2, team2: null, winner: null, bracket: 'upper' },
-        { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-        { id: 6, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 7, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 8, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 9, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-        { id: 10, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+        { id: 1, round: 1, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 2, round: 1, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 3, round: 1, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 4, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+        { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'grand' }
     ],
     schedule: {},
     liveMatchId: null,
@@ -913,7 +876,7 @@ function loadSavedData() {
 // ФАЗЫ
 // ============================================================
 function computePhase() {
-    var grand = getMatch(10);
+    var grand = getMatch(5);
     if (grand && grand.winner) return 3;
     if (Date.now() >= TOURNAMENT_START) return 2;
     return 1;
@@ -921,7 +884,6 @@ function computePhase() {
 
 function applyPhase(phase) {
     CURRENT_PHASE = phase;
-
     document.body.classList.remove('phase-1', 'phase-2', 'phase-3');
     document.body.classList.add('phase-' + phase);
 
@@ -977,27 +939,30 @@ function getLoser(m) {
 }
 
 // ============================================================
-// СВЯЗИ СЕТКИ
+// СВЯЗИ СЕТКИ (5 матчей)
+// M4: W(M1) vs W(M2)
+// M5: W(M4) vs W(M3)   ← финал
 // ============================================================
 function updateMatchLinks() {
     var m = {};
     for (var i = 0; i < DATA.matches.length; i++) {
         m[DATA.matches[i].id] = DATA.matches[i];
     }
-    var t = DATA.teams;
 
-    if (m[1]) { m[1].team1 = t[2] ? t[2].id : null; m[1].team2 = t[3] ? t[3].id : null; }
-    if (m[2]) { m[2].team1 = t[4] ? t[4].id : null; m[2].team2 = t[5] ? t[5].id : null; }
-    if (m[3]) { m[3].team1 = t[0] ? t[0].id : null; m[3].team2 = m[1] ? m[1].winner : null; }
-    if (m[4]) { m[4].team1 = t[1] ? t[1].id : null; m[4].team2 = m[2] ? m[2].winner : null; }
-    if (m[5]) { m[5].team1 = m[3] ? m[3].winner : null; m[5].team2 = m[4] ? m[4].winner : null; }
-    if (m[6]) { m[6].team1 = getLoser(m[1]); m[6].team2 = getLoser(m[2]); }
-    if (m[7]) { m[7].team1 = m[6] ? m[6].winner : null; m[7].team2 = getLoser(m[3]); }
-    if (m[8]) { m[8].team1 = m[7] ? m[7].winner : null; m[8].team2 = getLoser(m[4]); }
-    if (m[9]) { m[9].team1 = m[8] ? m[8].winner : null; m[9].team2 = getLoser(m[5]); }
-    if (m[10]) { m[10].team1 = m[5] ? m[5].winner : null; m[10].team2 = m[9] ? m[9].winner : null; }
+    // M1, M2, M3 — команды назначаются вручную, не трогаем
+    // M4: W(M1) vs W(M2)
+    if (m[4]) {
+        m[4].team1 = m[1] ? m[1].winner : null;
+        m[4].team2 = m[2] ? m[2].winner : null;
+    }
+    // M5: W(M4) vs W(M3)
+    if (m[5]) {
+        m[5].team1 = m[4] ? m[4].winner : null;
+        m[5].team2 = m[3] ? m[3].winner : null;
+    }
 
-    for (var k = 1; k <= 10; k++) {
+    // Сброс winner, если команда больше не в паре
+    for (var k = 1; k <= 5; k++) {
         var mm = m[k];
         if (!mm || !mm.winner) continue;
         if (mm.winner !== mm.team1 && mm.winner !== mm.team2) {
@@ -1006,7 +971,8 @@ function updateMatchLinks() {
             mm.score2 = null;
         }
     }
-    for (var k2 = 1; k2 <= 10; k2++) {
+    // Сброс winner у матча, где нет одной из команд
+    for (var k2 = 1; k2 <= 5; k2++) {
         var mm2 = m[k2];
         if (!mm2) continue;
         if ((mm2.team1 === null || mm2.team2 === null) && mm2.winner !== null) {
@@ -1018,6 +984,26 @@ function updateMatchLinks() {
 }
 
 // ============================================================
+// СПИСОК ВЫБЫВШИХ
+// ============================================================
+function getEliminated() {
+    var eliminated = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.winner) continue;
+        var loserId = getLoser(m);
+        if (!loserId) continue;
+        var team = getTeam(loserId);
+        if (!team) continue;
+        eliminated.push({
+            team: team,
+            matchId: m.id
+        });
+    }
+    return eliminated;
+}
+
+// ============================================================
 // СЕТКА
 // ============================================================
 function renderBracket() {
@@ -1025,73 +1011,63 @@ function renderBracket() {
     if (!wrapper) return;
     updateMatchLinks();
 
-    var upperRounds = {}, lowerRounds = {}, grandMatches = [];
-    for (var i = 0; i < DATA.matches.length; i++) {
-        var m = DATA.matches[i];
-        if (m.bracket === 'upper') {
-            if (!upperRounds[m.round]) upperRounds[m.round] = [];
-            upperRounds[m.round].push(m);
-        } else if (m.bracket === 'lower') {
-            if (!lowerRounds[m.round]) lowerRounds[m.round] = [];
-            lowerRounds[m.round].push(m);
-        } else if (m.bracket === 'grand') {
-            grandMatches.push(m);
-        }
-    }
-
-    var upperLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'ФИНАЛ ВЕРХНЕЙ' };
-    var lowerLabels = { 1: 'РАУНД 1', 2: 'РАУНД 2', 3: 'РАУНД 3', 4: 'ФИНАЛ НИЖНЕЙ' };
+    var m1 = getMatch(1), m2 = getMatch(2), m3 = getMatch(3), m4 = getMatch(4), m5 = getMatch(5);
 
     var html = '<div class="bracket">';
 
-    // ВЕРХНЯЯ
+    // === ГРУППА 1: РАУНД 1 ===
     html += '<div class="bracket-group upper">';
-    html += '<div class="bracket-group-header upper">Верхняя сетка</div>';
+    html += '<div class="bracket-group-header upper">Раунд 1</div>';
     html += '<div class="bracket-group-inner">';
-    var upperKeys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
-    for (var k = 0; k < upperKeys.length; k++) {
-        var r = upperKeys[k];
-        html += '<div class="round"><div class="round-label gold">' + (upperLabels[r] || 'РАУНД ' + r) + '</div>';
-        for (var j = 0; j < upperRounds[r].length; j++) {
-            html += renderMatch(upperRounds[r][j]);
-        }
-        html += '</div>';
-    }
+    html += '<div class="round">';
+    html += '<div class="round-label">Матч 1</div>' + renderMatch(m1);
+    html += '<div class="round-label">Матч 2</div>' + renderMatch(m2);
+    html += '<div class="round-label">Матч 3</div>' + renderMatch(m3);
+    html += '</div>';
     html += '</div></div>';
 
-    // НИЖНЯЯ
-    html += '<div class="bracket-group lower">';
-    html += '<div class="bracket-group-header lower">Нижняя сетка</div>';
+    // === ГРУППА 2: РАУНД 2 ===
+    html += '<div class="bracket-group upper">';
+    html += '<div class="bracket-group-header upper">Раунд 2</div>';
     html += '<div class="bracket-group-inner">';
-    var lowerKeys = Object.keys(lowerRounds).sort(function(a,b){return a-b;});
-    for (var lk = 0; lk < lowerKeys.length; lk++) {
-        var lr = lowerKeys[lk];
-        html += '<div class="round"><div class="round-label ox">' + (lowerLabels[lr] || 'РАУНД ' + lr) + '</div>';
-        for (var lj = 0; lj < lowerRounds[lr].length; lj++) {
-            html += renderMatch(lowerRounds[lr][lj]);
-        }
-        html += '</div>';
-    }
+    html += '<div class="round">';
+    html += '<div class="round-label">Полуфинал</div>' + renderMatch(m4);
+    html += '</div>';
     html += '</div></div>';
 
-    // ГРАНД-ФИНАЛ
-    if (grandMatches.length) {
-        html += '<div class="bracket-group grand">';
-        html += '<div class="bracket-group-header grand">Гранд-финал</div>';
-        html += '<div class="bracket-group-inner">';
-        html += '<div class="round"><div class="round-label grand">ФИНАЛ</div>';
-        for (var gj = 0; gj < grandMatches.length; gj++) {
-            html += renderMatch(grandMatches[gj]);
+    // === ГРУППА 3: ФИНАЛ ===
+    html += '<div class="bracket-group grand">';
+    html += '<div class="bracket-group-header grand">Финал</div>';
+    html += '<div class="bracket-group-inner">';
+    html += '<div class="round">';
+    html += '<div class="round-label">Гранд-финал</div>' + renderMatch(m5);
+    html += '</div>';
+    html += '</div></div>';
+
+    // === ГРУППА 4: ВЫБЫВШИЕ ===
+    var eliminated = getEliminated();
+    html += '<div class="eliminated-group">';
+    html += '<div class="eliminated-group-title">Выбывшие</div>';
+    html += '<div class="eliminated-list">';
+    if (eliminated.length === 0) {
+        html += '<div class="eliminated-empty">Пока никого</div>';
+    } else {
+        for (var e = 0; e < eliminated.length; e++) {
+            var el = eliminated[e];
+            html += '<div class="eliminated-item" data-team="' + el.team.id + '">';
+            html += '<span class="name">' + el.team.name + '</span>';
+            html += '<span class="meta">Проиграла в M' + el.matchId + '</span>';
+            html += '</div>';
         }
-        html += '</div>';
-        html += '</div></div>';
     }
+    html += '</div></div>';
 
     html += '</div>';
     wrapper.innerHTML = html;
 }
 
 function renderMatch(m) {
+    if (!m) return '<div class="match-empty">—</div>';
     var t1 = getTeam(m.team1);
     var t2 = getTeam(m.team2);
     if (!t1 && !t2) return '<div class="match-empty">ожидание</div>';
@@ -1100,7 +1076,6 @@ function renderMatch(m) {
     var name2 = t2 ? t2.name : '—';
     var id1 = t1 ? t1.id : null;
     var id2 = t2 ? t2.id : null;
-    var hasScore = m.score1 != null && m.score2 != null;
     var isLive = DATA.liveMatchId === m.id;
     var isWaiting = !m.winner && t1 && t2 && CURRENT_PHASE >= 2;
     var isChampionMatch = (CURRENT_PHASE === 3) && (m.bracket === 'grand') && m.winner;
@@ -1122,12 +1097,10 @@ function renderMatch(m) {
 
     var html = '<div class="' + classes + '" data-match="' + m.id + '">';
     html += '<div class="' + team1Classes + '" data-team="' + id1 + '"><span class="seed">#' + (id1 || '?') + '</span><span class="name">' + name1 + '</span>';
-    if (hasScore) html += '<span class="score">' + m.score1 + '</span>';
     if (w1) html += '<span class="status ' + w1 + '">' + (w1 === 'win' ? 'W' : 'L') + '</span>';
     if (id1) html += '<span class="info-icon" title="Состав команды">i</span>';
     html += '</div>';
     html += '<div class="' + team2Classes + '" data-team="' + id2 + '"><span class="seed">#' + (id2 || '?') + '</span><span class="name">' + name2 + '</span>';
-    if (hasScore) html += '<span class="score">' + m.score2 + '</span>';
     if (w2) html += '<span class="status ' + w2 + '">' + (w2 === 'win' ? 'W' : 'L') + '</span>';
     if (id2) html += '<span class="info-icon" title="Состав команды">i</span>';
     html += '</div>';
@@ -1174,14 +1147,14 @@ function renderSchedule() {
         return;
     }
 
-    var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
-    var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
+    var labels = { upper: 'Раунд', grand: 'Финал' };
+    var classes = { upper: 'upper', grand: 'grand' };
     var html = '<div class="schedule-grid">';
     var list = preview.length > 0 ? preview.map(function(x){return x.m;}) : completed.slice(-3);
     for (var i = 0; i < list.length; i++) {
         var m = list[i];
         var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : 'Время не указано';
-        var label = labels[m.bracket] || m.bracket;
+        var label = (m.bracket === 'grand') ? 'Финал' : ('Раунд ' + m.round);
         var cls = classes[m.bracket] || 'upper';
         html += '<div class="schedule-item"><div class="teams"><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span class="time">' + time + '</span><span class="tag ' + cls + '">' + label + '</span></div></div>';
     }
@@ -1260,6 +1233,12 @@ document.addEventListener('click', function(e) {
     if (teamEl && teamEl.dataset.team) {
         var id = parseInt(teamEl.dataset.team, 10);
         if (id) openModal(id);
+        return;
+    }
+    var elimEl = e.target.closest('.eliminated-item');
+    if (elimEl && elimEl.dataset.team) {
+        var eid = parseInt(elimEl.dataset.team, 10);
+        if (eid) openModal(eid);
     }
 });
 
@@ -1269,19 +1248,15 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// ПОБЕДНЫЙ ЭКРАН
+// ПОБЕДНЫЙ ЭКРАН (только 1 и 2 место)
 // ============================================================
 function renderWinnerOverlay() {
-    var grand = getMatch(10);
+    var grand = getMatch(5);
     if (!grand || !grand.winner) return;
 
     var champion = getTeam(grand.winner);
     var loserId = getLoser(grand);
     var runnerUp = loserId ? getTeam(loserId) : null;
-
-    var m9 = getMatch(9);
-    var thirdId = m9 ? getLoser(m9) : null;
-    var third = thirdId ? getTeam(thirdId) : null;
 
     var logoEl = document.getElementById('winnerLogo');
     if (champion && champion.logo) {
@@ -1293,20 +1268,11 @@ function renderWinnerOverlay() {
 
     document.getElementById('winnerName').textContent = champion ? champion.name : '—';
 
-    if (grand.score1 != null && grand.score2 != null) {
-        document.getElementById('winnerScore').style.display = 'inline-flex';
-        document.getElementById('winnerScore1').textContent = grand.score1;
-        document.getElementById('winnerScore2').textContent = grand.score2;
-    } else {
-        document.getElementById('winnerScore').style.display = 'none';
-    }
-
     var podium = document.getElementById('winnerPodium');
     podium.innerHTML = '';
     var places = [
         { rank: '1 МЕСТО', team: champion, cls: 'place-1' },
-        { rank: '2 МЕСТО', team: runnerUp, cls: 'place-2' },
-        { rank: '3 МЕСТО', team: third, cls: 'place-3' }
+        { rank: '2 МЕСТО', team: runnerUp, cls: 'place-2' }
     ];
     for (var i = 0; i < places.length; i++) {
         var pl = places[i];
