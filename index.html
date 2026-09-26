@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compass Arena — турнирная сетка</title>
-    <meta name="description" content="Compass Arena — турнир по Dota 2. Bo3. Следи за сеткой и расписанием матчей.">
+    <meta name="description" content="Compass Arena — турнир по Dota 2. Custom Bracket, Bo3. Следи за сеткой и расписанием матчей.">
     <meta name="theme-color" content="#0a0d12">
 
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
@@ -99,6 +99,35 @@
         .bracket-banner-title { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 38px; letter-spacing: 0.02em; color: #eae6da; line-height: 1.1; margin-bottom: 8px; }
         .bracket-banner-sub { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #7a8494; }
 
+        /* ===== ОБЪЯСНЕНИЕ ФОРМАТА ===== */
+        .explain-section { padding: 32px 0 12px; }
+        .explain-card {
+            background: linear-gradient(180deg, #10141b 0%, #0d1118 100%);
+            border: 1px solid #242b35;
+            border-left: 3px solid #c9a35a;
+            border-radius: 8px;
+            padding: 22px 28px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .explain-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #e3c48a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .explain-title .dot { width: 6px; height: 6px; border-radius: 50%; background: #c9a35a; }
+        .explain-text { font-size: 13.5px; color: #b0b8c4; line-height: 1.75; }
+        .explain-text + .explain-text { margin-top: 10px; }
+        .explain-text em { color: #c9a35a; font-style: normal; }
+        .explain-text .accent-line { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid #1a2029; font-style: italic; color: #97a0ac; font-size: 13px; }
+
         /* ===== ЧАСТИЦЫ ===== */
         #particles-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
 
@@ -122,47 +151,73 @@
         .twitch-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
 
         /* ===== BRACKET ===== */
-        .bracket-section { padding: 24px 0 40px; transition: opacity 0.8s ease; }
-        .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 12px; }
-        .bracket-wrapper { overflow-x: auto; padding: 24px 0 16px; }
+        .bracket-section { padding: 32px 0 48px; transition: opacity 0.8s ease; position: relative; }
+        .bracket-section .sub { color: #97a0ac; font-size: 13px; margin-bottom: 20px; text-align: center; }
+        .bracket-wrapper { overflow-x: auto; padding: 20px 0 24px; }
         .bracket-wrapper::-webkit-scrollbar { height: 8px; }
         .bracket-wrapper::-webkit-scrollbar-track { background: #10141b; border-radius: 4px; }
         .bracket-wrapper::-webkit-scrollbar-thumb { background: #2f3844; border-radius: 4px; }
         .bracket-wrapper::-webkit-scrollbar-thumb:hover { background: #c9a35a; }
 
-        .bracket { display: flex; align-items: flex-start; gap: 28px; padding: 8px 4px; min-width: max-content; }
+        /* Сетка — 3 группы + отдельный финальный блок */
+        .bracket { display: flex; align-items: flex-start; gap: 0; padding: 8px 4px; min-width: max-content; }
 
-        .bracket-group { display: flex; flex-direction: column; gap: 8px; position: relative; flex-shrink: 0; }
+        .bracket-group { display: flex; flex-direction: column; gap: 12px; position: relative; flex-shrink: 0; padding: 0 32px; }
+        .bracket-group:first-child { padding-left: 0; }
+        .bracket-group:last-child { padding-right: 0; }
+
+        .bracket-group + .bracket-group { border-left: 1px solid rgba(201,163,90,0.12); }
+        .bracket-group.final + .bracket-group,
+        .bracket-group.grand + .bracket-group { border-left: 1px solid rgba(201,163,90,0.35); }
+
         .bracket-group-header {
             font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600;
             letter-spacing: 0.22em; text-transform: uppercase;
-            padding-bottom: 8px; border-bottom: 1px solid; text-align: center; margin-bottom: 4px;
+            padding-bottom: 10px;
+            text-align: center;
+            margin-bottom: 12px;
+            position: relative;
         }
-        .bracket-group-header.upper { color: #c9a35a; border-bottom-color: rgba(201,163,90,0.35); }
-        .bracket-group-header.grand { color: #e3c48a; border-bottom-color: rgba(201,163,90,0.5); display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+        .bracket-group-header::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: #c9a35a;
+            border-radius: 1px;
+        }
+        .bracket-group-header.upper { color: #c9a35a; }
+        .bracket-group-header.upper::after { background: #c9a35a; }
+        .bracket-group-header.grand { color: #e3c48a; font-size: 13px; }
+        .bracket-group-header.grand::after { background: #e3c48a; width: 60px; height: 2px; box-shadow: 0 0 12px rgba(201,163,90,0.6); }
         .bracket-group-header.grand::before {
-            content: ''; display: inline-block; width: 18px; height: 14px;
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 14px;
             background-color: #e3c48a;
             -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
             -webkit-mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: center;
             mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'><path d='M2 16h20l-1.5-9-4 4L12 3 7.5 11l-4-4L2 16z'/></svg>");
             mask-repeat: no-repeat; mask-size: contain; mask-position: center;
-            margin-right: 8px; margin-bottom: 2px;
+            margin-right: 10px;
+            margin-bottom: 2px;
+            vertical-align: middle;
         }
 
-        .bracket-group-inner { display: flex; gap: 32px; position: relative; }
+        .bracket-group-inner { display: flex; gap: 28px; position: relative; }
 
-        .bracket-group.lower { padding-left: 28px; border-left: 1px solid rgba(179,105,95,0.18); }
-        .bracket-group.grand { padding-left: 28px; border-left: 1px solid rgba(201,163,90,0.25); }
+        .round { display: flex; flex-direction: column; gap: 20px; min-width: 190px; position: relative; }
+        .round-label { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.18em; color: #5f6773; text-align: center; margin-bottom: 6px; text-transform: uppercase; }
 
-        .round { display: flex; flex-direction: column; gap: 16px; min-width: 160px; position: relative; }
-        .round-label { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.16em; color: #5f6773; text-align: center; margin-bottom: 8px; text-transform: uppercase; }
-
-        .match { background: #151a22; border: 1px solid #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
-        .match:hover { border-color: #c9a35a; background: #1a2029; }
+        .match { background: linear-gradient(180deg, #151a22 0%, #11151c 100%); border: 1px solid #2f3844; border-radius: 6px; padding: 10px 14px; min-height: 62px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; position: relative; }
+        .match:hover { border-color: #c9a35a; background: #1a2029; transform: translateY(-1px); }
 
         .match.is-live { border-color: #e74c3c; background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, #151a22 100%); animation: livePulse 1.8s ease-in-out infinite; }
-        .match.is-live::before { content: 'LIVE'; position: absolute; top: -10px; left: 8px; padding: 2px 8px; background: #e74c3c; color: #fff; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 9px; letter-spacing: 0.14em; border-radius: 3px; animation: blink 1.2s infinite; }
+        .match.is-live::before { content: 'LIVE'; position: absolute; top: -10px; left: 10px; padding: 2px 8px; background: #e74c3c; color: #fff; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 9px; letter-spacing: 0.14em; border-radius: 3px; animation: blink 1.2s infinite; }
         @keyframes livePulse { 0%, 100% { border-color: rgba(231, 76, 60, 0.9); } 50% { border-color: rgba(231, 76, 60, 0.4); } }
 
         .match.is-waiting { border-color: rgba(201,163,90,0.4); box-shadow: 0 0 0 1px rgba(201,163,90,0.1); animation: waitingPulse 3s ease-in-out infinite; }
@@ -171,7 +226,7 @@
             50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.18); }
         }
 
-        .match .team { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; color: #eae6da; transition: color 0.3s, opacity 0.3s; }
+        .match .team { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: #eae6da; transition: color 0.3s, opacity 0.3s; }
         .match .team .seed { font-size: 9px; color: #5f6773; width: 18px; font-weight: 600; }
         .match .team .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .match .team .score { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 600; color: #c9a35a; min-width: 16px; text-align: center; }
@@ -208,64 +263,96 @@
         .match .team.is-loser { opacity: 0.55; }
         .match .team.is-loser .name { color: #7a8494; }
 
-        .match-empty { background: #10141b; border: 1px dashed #2f3844; border-radius: 5px; padding: 8px 12px; min-height: 56px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
+        .match-empty { background: #10141b; border: 1px dashed #2f3844; border-radius: 6px; padding: 10px 14px; min-height: 62px; display: flex; align-items: center; justify-content: center; color: #5f6773; font-size: 11px; }
 
-        .round:not(:last-child)::after { content: ''; position: absolute; top: 30px; right: -20px; width: 8px; height: calc(100% - 60px); border-left: 1px solid rgba(201, 163, 90, 0.15); pointer-events: none; }
+        /* ФИНАЛ — крупнее и ярче */
+        .match.is-grand {
+            background: linear-gradient(180deg, #1a1f28 0%, #151a22 100%);
+            border: 1px solid rgba(201,163,90,0.45);
+            box-shadow: 0 0 0 1px rgba(201,163,90,0.08), 0 8px 24px rgba(201,163,90,0.06);
+            min-height: 76px;
+            padding: 14px 18px;
+        }
+        .match.is-grand .team { font-size: 14px; padding: 6px 0; }
+        .match.is-grand .team .name { font-weight: 500; }
 
-        .bracket-hint { display: none; text-align: center; font-size: 11px; color: #5f6773; margin-top: 4px; letter-spacing: 0.05em; }
-
-        body.phase-3 .bracket-section { opacity: 0.35; pointer-events: none; }
-        body.phase-3 .match { cursor: default; }
-        body.phase-3 .match:hover { border-color: inherit; background: #151a22; }
-        body.phase-3 .match:not(.is-grand-champion) .team .info-icon { opacity: 0.15; }
+        /* Победитель гранд-финала (фаза 3) */
         .match.is-grand-champion {
             opacity: 1;
             border-color: #c9a35a;
-            box-shadow: 0 0 0 2px rgba(201,163,90,0.3), 0 0 30px rgba(201,163,90,0.2);
+            background: linear-gradient(180deg, #1e232c 0%, #151a22 100%);
+            box-shadow: 0 0 0 2px rgba(201,163,90,0.4), 0 0 40px rgba(201,163,90,0.25);
             animation: championGlow 3s ease-in-out infinite;
         }
         .match.is-grand-champion::before {
             content: 'ПОБЕДА';
-            position: absolute; top: -11px; left: 8px;
-            padding: 2px 10px;
+            position: absolute; top: -12px; left: 14px;
+            padding: 3px 12px;
             background: #c9a35a; color: #0a0d12;
             font-family: 'Unbounded', sans-serif; font-weight: 600;
             font-size: 9px; letter-spacing: 0.14em;
             border-radius: 3px;
         }
         @keyframes championGlow {
-            0%,100% { box-shadow: 0 0 0 2px rgba(201,163,90,0.3), 0 0 30px rgba(201,163,90,0.2); }
-            50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.5), 0 0 50px rgba(201,163,90,0.35); }
+            0%,100% { box-shadow: 0 0 0 2px rgba(201,163,90,0.4), 0 0 40px rgba(201,163,90,0.25); }
+            50%     { box-shadow: 0 0 0 3px rgba(201,163,90,0.6), 0 0 60px rgba(201,163,90,0.4); }
         }
 
-        /* ===== КОЛОНКА ВЫБЫВШИХ ===== */
-        .eliminated-group { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
-        .eliminated-group + .eliminated-group { padding-left: 20px; border-left: 1px solid rgba(179,105,95,0.2); }
-        .eliminated-group-title {
-            font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600;
-            letter-spacing: 0.22em; text-transform: uppercase;
-            padding-bottom: 8px; border-bottom: 1px solid rgba(179,105,95,0.35);
-            color: #b3695f; text-align: center; margin-bottom: 4px;
+        /* Соединительные линии между раундами */
+        .round:not(:last-child)::after { content: ''; position: absolute; top: 50%; right: -28px; width: 28px; height: 1px; background: linear-gradient(90deg, rgba(201,163,90,0.35) 0%, rgba(201,163,90,0) 100%); pointer-events: none; }
+
+        .bracket-hint { display: none; text-align: center; font-size: 11px; color: #5f6773; margin-top: 8px; letter-spacing: 0.05em; }
+
+        /* ===== КОЛОНКА ВЫБЫВШИХ (снизу) ===== */
+        .eliminated-section { padding: 24px 0 48px; border-top: 1px solid #242b35; transition: opacity 0.8s ease; }
+        .eliminated-inner { max-width: 1200px; margin: 0 auto; }
+        .eliminated-header {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #b3695f;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(179,105,95,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .eliminated-list { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+        .eliminated-header .count {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            color: #5f6773;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+        }
+        .eliminated-list { display: flex; flex-wrap: wrap; gap: 10px; }
         .eliminated-item {
             background: #0d1118;
             border: 1px solid #1a2029;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: 12px;
+            border-radius: 5px;
+            padding: 10px 16px;
+            font-size: 13px;
             color: #7a8494;
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            opacity: 0.65;
+            gap: 3px;
+            opacity: 0.72;
             cursor: pointer;
             transition: 0.2s;
+            min-width: 160px;
         }
-        .eliminated-item:hover { opacity: 0.9; border-color: #b3695f; }
+        .eliminated-item:hover { opacity: 1; border-color: #b3695f; background: #11151c; }
         .eliminated-item .name { color: #97a0ac; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .eliminated-item .meta { font-size: 10px; color: #5f6773; }
-        .eliminated-empty { color: #5f6773; font-size: 12px; font-style: italic; padding: 8px 12px; }
+        .eliminated-item .meta { font-size: 10px; color: #5f6773; letter-spacing: 0.05em; text-transform: uppercase; }
+        .eliminated-empty { color: #5f6773; font-size: 13px; font-style: italic; padding: 8px 0; }
+
+        body.phase-3 .bracket-section { opacity: 0.35; pointer-events: none; }
+        body.phase-3 .eliminated-section { opacity: 0.5; pointer-events: none; }
+        body.phase-3 .match { cursor: default; }
+        body.phase-3 .match:hover { border-color: inherit; background: #151a22; }
+        body.phase-3 .match:not(.is-grand-champion) .team .info-icon { opacity: 0.15; }
 
         /* ===== SCHEDULE PREVIEW ===== */
         .schedule-section { padding: 20px 0 14px; border-top: 1px solid #242b35; }
@@ -523,11 +610,10 @@
 
         @media (max-width: 860px) {
             .format-grid { grid-template-columns: 1fr; }
-            .bracket { gap: 20px; }
-            .bracket-group-inner { gap: 24px; }
-            .bracket-group.lower { padding-left: 20px; }
-            .bracket-group.grand { padding-left: 20px; }
-            .round { min-width: 130px; }
+            .bracket { gap: 0; }
+            .bracket-group { padding: 0 20px; }
+            .bracket-group-inner { gap: 20px; }
+            .round { min-width: 160px; }
             .schedule-grid { grid-template-columns: 1fr; }
             .timer-block .num { font-size: 44px; text-shadow: none; animation: none; }
             .timer-block { min-width: 64px; }
@@ -539,6 +625,8 @@
             .modal-logo { width: 110px; height: 110px; }
             .modal-head h2 { font-size: 18px; }
             .bracket-group-header { font-size: 11px; letter-spacing: 0.18em; }
+            .explain-card { padding: 18px 20px; }
+            .explain-text { font-size: 13px; }
         }
         @media (max-width: 640px) {
             .hero-bg-inner { min-height: 240px; border-radius: 12px 12px 0 0; }
@@ -561,6 +649,8 @@
             .modal-head { flex-direction: column; gap: 14px; }
             .modal-logo { width: 100%; height: 120px; }
             .modal-head h2 { font-size: 17px; }
+            .eliminated-list { flex-direction: column; }
+            .eliminated-item { min-width: 0; width: 100%; }
         }
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 18px; }
@@ -569,17 +659,19 @@
             .timer-block .num { font-size: 32px; }
             .timer-block { min-width: 52px; }
             .timer-sep { font-size: 22px; }
-            .bracket { gap: 16px; }
-            .bracket-group-inner { gap: 20px; }
-            .bracket-group.lower { padding-left: 16px; }
-            .bracket-group.grand { padding-left: 16px; }
-            .round { min-width: 120px; }
-            .match { padding: 6px 10px; min-height: 50px; }
+            .bracket { gap: 0; }
+            .bracket-group { padding: 0 14px; }
+            .bracket-group-inner { gap: 16px; }
+            .round { min-width: 140px; }
+            .match { padding: 8px 10px; min-height: 56px; }
             .match .team { font-size: 11px; gap: 6px; }
             .match .team .score { font-size: 12px; }
             .bracket-banner-title { font-size: 18px; }
             .stream-collapsed-toggle { padding: 14px 18px; font-size: 12px; }
             .bracket-group-header { font-size: 10px; letter-spacing: 0.14em; }
+            .explain-card { padding: 14px 16px; border-left-width: 2px; }
+            .explain-title { font-size: 11px; }
+            .explain-text { font-size: 12.5px; line-height: 1.65; }
         }
     </style>
 </head>
@@ -655,7 +747,7 @@
         <div class="hero-bg-inner">
             <div class="hero-content">
                 <h1>Здесь сражаются<br>не ради участия —<br><span class="accent">здесь доказывают</span></h1>
-                <p>Двойной вылет, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
+                <p>Один шанс, полная концентрация и один трофей на всех. Первый турнир организации Compass Arena.</p>
             </div>
             <div class="hero-fade"></div>
         </div>
@@ -695,11 +787,52 @@
     </div>
 </section>
 
+<!-- ============================================================
+     ОБЪЯСНЕНИЕ ФОРМАТА
+     ============================================================ -->
+<section class="explain-section">
+    <div class="container">
+        <div class="explain-card">
+            <div class="explain-title">
+                <span class="dot"></span>
+                Как устроена сетка
+            </div>
+            <p class="explain-text">
+                В <em>Раунде 1</em> играют все шесть команд: три матча, каждый — до двух побед (Bo3).
+                Победители <em>M1</em> и <em>M2</em> встречаются между собой в <em>Раунде 2</em> — это полуфинал верхней части.
+                Победитель <em>M3</em> получает особое преимущество: он <em>напрямую проходит в Гранд-финал</em> и ждёт там соперника.
+                Победитель полуфинала встречается с ним в финале. Один матч — один трофей.
+            </p>
+            <p class="explain-text">
+                <strong style="color:#e3c48a;">Формат:</strong> Bo3 — до двух побед в каждой серии.
+            </p>
+            <p class="explain-text">
+                <span class="accent-line">
+                    Из-за ограниченного эфирного времени мы решили отказаться от нижней сетки, чтобы уместить весь турнир в расписание стримов. Просим за это прощения — но это позволяет нам показать все матчи в прямом эфире без утомительных пауз. Спасибо за понимание.
+                </span>
+            </p>
+        </div>
+    </div>
+</section>
+
 <section class="bracket-section" id="bracketSection">
     <div class="container">
-        <p class="sub">Победитель M3 ждёт в финале. Победитель M4 встречается с ним.</p>
+        <p class="sub">Проигравшие выбывают. Победитель M3 ждёт в финале.</p>
         <div class="bracket-wrapper" id="bracketWrapper"></div>
         <div class="bracket-hint">← прокрутите, чтобы увидеть всю сетку →</div>
+    </div>
+</section>
+
+<!-- ============================================================
+     КОЛОНКА ВЫБЫВШИХ — СНИЗУ
+     ============================================================ -->
+<section class="eliminated-section" id="eliminatedSection">
+    <div class="container eliminated-inner">
+        <div class="eliminated-header" id="eliminatedHeader">
+            <span>Выбывшие</span>
+            <span class="count" id="eliminatedCount"></span>
+        </div>
+        <div class="eliminated-list" id="eliminatedList"></div>
     </div>
 </section>
 
@@ -713,9 +846,9 @@
 <section class="format-section">
     <div class="container">
         <div class="format-grid">
-            <div class="format-item"><h3>Раунд 1</h3><p>Три матча — 6 команд. Победители M1 и M2 идут в полуфинал, победитель M3 — сразу в финал.</p></div>
+            <div class="format-item"><h3>Раунд 1</h3><p>Три матча — все шесть команд. Победители M1 и M2 идут в полуфинал, победитель M3 — сразу в финал.</p></div>
             <div class="format-item"><h3>Раунд 2</h3><p>Победители M1 и M2 играют между собой. Победитель идёт в гранд-финал.</p></div>
-            <div class="format-item"><h3>Гранд-финал</h3><p>Победитель M4 vs победитель M3. Bo3 решает всё.</p></div>
+            <div class="format-item"><h3>Гранд-финал</h3><p>Победитель полуфинала vs победитель M3. Bo3 решает всё.</p></div>
         </div>
     </div>
 </section>
@@ -796,7 +929,7 @@
 var ROLE_NAMES = { 1: 'Керри', 2: 'Мидер', 3: 'Офлейн', 4: 'Саппорт 4', 5: 'Саппорт 5' };
 
 // ============================================================
-// ДАННЫЕ (6 команд, 5 матчей, кастомный формат)
+// ДАННЫЕ
 // ============================================================
 var DATA = {
     tournament: { name: "Compass Arena", game: "Dota 2", format: "Custom Bracket", matches: "Bo3", dates: "26 сентября 2026" },
@@ -896,6 +1029,7 @@ function applyPhase(phase) {
     if (streamFull) streamFull.style.display = (phase >= 2) ? 'block' : 'none';
 
     renderBracket();
+    renderEliminated();
 
     if (phase === 3) {
         var championChip = document.getElementById('championChip');
@@ -939,9 +1073,7 @@ function getLoser(m) {
 }
 
 // ============================================================
-// СВЯЗИ СЕТКИ (5 матчей)
-// M4: W(M1) vs W(M2)
-// M5: W(M4) vs W(M3)   ← финал
+// СВЯЗИ СЕТКИ
 // ============================================================
 function updateMatchLinks() {
     var m = {};
@@ -949,19 +1081,15 @@ function updateMatchLinks() {
         m[DATA.matches[i].id] = DATA.matches[i];
     }
 
-    // M1, M2, M3 — команды назначаются вручную, не трогаем
-    // M4: W(M1) vs W(M2)
     if (m[4]) {
         m[4].team1 = m[1] ? m[1].winner : null;
         m[4].team2 = m[2] ? m[2].winner : null;
     }
-    // M5: W(M4) vs W(M3)
     if (m[5]) {
         m[5].team1 = m[4] ? m[4].winner : null;
         m[5].team2 = m[3] ? m[3].winner : null;
     }
 
-    // Сброс winner, если команда больше не в паре
     for (var k = 1; k <= 5; k++) {
         var mm = m[k];
         if (!mm || !mm.winner) continue;
@@ -971,7 +1099,6 @@ function updateMatchLinks() {
             mm.score2 = null;
         }
     }
-    // Сброс winner у матча, где нет одной из команд
     for (var k2 = 1; k2 <= 5; k2++) {
         var mm2 = m[k2];
         if (!mm2) continue;
@@ -981,26 +1108,6 @@ function updateMatchLinks() {
             mm2.score2 = null;
         }
     }
-}
-
-// ============================================================
-// СПИСОК ВЫБЫВШИХ
-// ============================================================
-function getEliminated() {
-    var eliminated = [];
-    for (var i = 0; i < DATA.matches.length; i++) {
-        var m = DATA.matches[i];
-        if (!m.winner) continue;
-        var loserId = getLoser(m);
-        if (!loserId) continue;
-        var team = getTeam(loserId);
-        if (!team) continue;
-        eliminated.push({
-            team: team,
-            matchId: m.id
-        });
-    }
-    return eliminated;
 }
 
 // ============================================================
@@ -1015,58 +1122,40 @@ function renderBracket() {
 
     var html = '<div class="bracket">';
 
-    // === ГРУППА 1: РАУНД 1 ===
+    // РАУНД 1
     html += '<div class="bracket-group upper">';
     html += '<div class="bracket-group-header upper">Раунд 1</div>';
     html += '<div class="bracket-group-inner">';
     html += '<div class="round">';
-    html += '<div class="round-label">Матч 1</div>' + renderMatch(m1);
-    html += '<div class="round-label">Матч 2</div>' + renderMatch(m2);
-    html += '<div class="round-label">Матч 3</div>' + renderMatch(m3);
+    html += '<div class="round-label">Матч 1</div>' + renderMatch(m1, false);
+    html += '<div class="round-label">Матч 2</div>' + renderMatch(m2, false);
+    html += '<div class="round-label">Матч 3</div>' + renderMatch(m3, false);
     html += '</div>';
     html += '</div></div>';
 
-    // === ГРУППА 2: РАУНД 2 ===
+    // РАУНД 2
     html += '<div class="bracket-group upper">';
     html += '<div class="bracket-group-header upper">Раунд 2</div>';
     html += '<div class="bracket-group-inner">';
     html += '<div class="round">';
-    html += '<div class="round-label">Полуфинал</div>' + renderMatch(m4);
+    html += '<div class="round-label">Полуфинал</div>' + renderMatch(m4, false);
     html += '</div>';
     html += '</div></div>';
 
-    // === ГРУППА 3: ФИНАЛ ===
+    // ФИНАЛ
     html += '<div class="bracket-group grand">';
     html += '<div class="bracket-group-header grand">Финал</div>';
     html += '<div class="bracket-group-inner">';
     html += '<div class="round">';
-    html += '<div class="round-label">Гранд-финал</div>' + renderMatch(m5);
+    html += '<div class="round-label">Гранд-финал</div>' + renderMatch(m5, true);
     html += '</div>';
-    html += '</div></div>';
-
-    // === ГРУППА 4: ВЫБЫВШИЕ ===
-    var eliminated = getEliminated();
-    html += '<div class="eliminated-group">';
-    html += '<div class="eliminated-group-title">Выбывшие</div>';
-    html += '<div class="eliminated-list">';
-    if (eliminated.length === 0) {
-        html += '<div class="eliminated-empty">Пока никого</div>';
-    } else {
-        for (var e = 0; e < eliminated.length; e++) {
-            var el = eliminated[e];
-            html += '<div class="eliminated-item" data-team="' + el.team.id + '">';
-            html += '<span class="name">' + el.team.name + '</span>';
-            html += '<span class="meta">Проиграла в M' + el.matchId + '</span>';
-            html += '</div>';
-        }
-    }
     html += '</div></div>';
 
     html += '</div>';
     wrapper.innerHTML = html;
 }
 
-function renderMatch(m) {
+function renderMatch(m, isGrand) {
     if (!m) return '<div class="match-empty">—</div>';
     var t1 = getTeam(m.team1);
     var t2 = getTeam(m.team2);
@@ -1091,6 +1180,7 @@ function renderMatch(m) {
     var w2 = (m.winner && m.winner === m.team2) ? 'win' : (m.winner ? 'loss' : null);
 
     var classes = 'match';
+    if (isGrand) classes += ' is-grand';
     if (isLive) classes += ' is-live';
     if (isWaiting) classes += ' is-waiting';
     if (isChampionMatch) classes += ' is-grand-champion';
@@ -1106,6 +1196,42 @@ function renderMatch(m) {
     html += '</div>';
     html += '</div>';
     return html;
+}
+
+// ============================================================
+// ВЫБЫВШИЕ (снизу)
+// ============================================================
+function renderEliminated() {
+    var list = document.getElementById('eliminatedList');
+    var count = document.getElementById('eliminatedCount');
+    if (!list) return;
+
+    var eliminated = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var m = DATA.matches[i];
+        if (!m.winner) continue;
+        var loserId = getLoser(m);
+        if (!loserId) continue;
+        var team = getTeam(loserId);
+        if (team) eliminated.push({ team: team, matchId: m.id });
+    }
+
+    if (count) count.textContent = eliminated.length > 0 ? (eliminated.length + ' из 6') : '';
+
+    list.innerHTML = '';
+    if (eliminated.length === 0) {
+        list.innerHTML = '<div class="eliminated-empty">Пока никого — турнир только начинается</div>';
+        return;
+    }
+
+    for (var e = 0; e < eliminated.length; e++) {
+        var el = eliminated[e];
+        var div = document.createElement('div');
+        div.className = 'eliminated-item';
+        div.dataset.team = el.team.id;
+        div.innerHTML = '<span class="name">' + el.team.name + '</span><span class="meta">Выбыла в M' + el.matchId + '</span>';
+        list.appendChild(div);
+    }
 }
 
 function formatTime(dt) {
@@ -1147,15 +1273,13 @@ function renderSchedule() {
         return;
     }
 
-    var labels = { upper: 'Раунд', grand: 'Финал' };
-    var classes = { upper: 'upper', grand: 'grand' };
     var html = '<div class="schedule-grid">';
     var list = preview.length > 0 ? preview.map(function(x){return x.m;}) : completed.slice(-3);
     for (var i = 0; i < list.length; i++) {
         var m = list[i];
         var time = (DATA.schedule && DATA.schedule[m.id]) ? formatTime(DATA.schedule[m.id]) : 'Время не указано';
         var label = (m.bracket === 'grand') ? 'Финал' : ('Раунд ' + m.round);
-        var cls = classes[m.bracket] || 'upper';
+        var cls = (m.bracket === 'grand') ? 'grand' : 'upper';
         html += '<div class="schedule-item"><div class="teams"><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span class="time">' + time + '</span><span class="tag ' + cls + '">' + label + '</span></div></div>';
     }
     html += '</div>';
@@ -1248,7 +1372,7 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// ПОБЕДНЫЙ ЭКРАН (только 1 и 2 место)
+// ПОБЕДНЫЙ ЭКРАН
 // ============================================================
 function renderWinnerOverlay() {
     var grand = getMatch(5);
@@ -1361,6 +1485,7 @@ function initToTop() {
 // ============================================================
 function renderAll() {
     renderBracket();
+    renderEliminated();
     renderSchedule();
 }
 
@@ -1378,6 +1503,7 @@ function init() {
     initToTop();
     window.getTournamentData = function() { return DATA; };
     window.renderBracket = renderBracket;
+    window.renderEliminated = renderEliminated;
     window.renderSchedule = renderSchedule;
     window.toggleStreamCard = toggleStreamCard;
 }
