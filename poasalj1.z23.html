@@ -68,21 +68,13 @@
         }
         .drag-handle:hover { color: #c9a35a; }
         .drag-handle:active { cursor: grabbing; }
-        .team-item.dragging {
-            opacity: 0.5;
-            background: #1a2029;
-            border-color: #c9a35a;
-        }
-        .team-item.drag-over {
-            border-color: #c9a35a;
-            background: rgba(201,163,90,0.08);
-        }
+        .team-item.dragging { opacity: 0.5; background: #1a2029; border-color: #c9a35a; }
+        .team-item.drag-over { border-color: #c9a35a; background: rgba(201,163,90,0.08); }
         .team-item.drop-before::before,
         .team-item.drop-after::after {
             content: '';
             position: absolute;
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
             height: 2px;
             background: #c9a35a;
             box-shadow: 0 0 8px rgba(201,163,90,0.6);
@@ -107,15 +99,18 @@
         .team-item .actions { display: flex; gap: 4px; flex-shrink: 0; }
         .match-list { display: flex; flex-direction: column; gap: 6px; }
         .match-item { background: #151a22; border: 1px solid #242b35; border-radius: 4px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 13px; }
+        .match-item.manual { border-left: 3px solid #c9a35a; }
+        .match-item.auto { border-left: 3px solid #5f6773; opacity: 0.85; }
         .match-item .teams { display: flex; align-items: center; gap: 10px; }
         .match-item .teams .vs { color: #5f6773; font-size: 11px; }
         .match-item .teams .winner { color: #e3c48a; font-weight: 600; }
         .match-item .meta { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #5f6773; flex-wrap: wrap; }
         .match-item .meta .tag { padding: 1px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; }
         .match-item .meta .tag.upper { background: rgba(201,163,90,0.2); color: #c9a35a; }
-        .match-item .meta .tag.lower { background: rgba(179,105,95,0.2); color: #b3695f; }
         .match-item .meta .tag.grand { background: rgba(201,163,90,0.3); color: #e3c48a; }
         .match-item .meta select { background: #0a0d12; border: 1px solid #242b35; color: #eae6da; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
+        .manual-selects { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .manual-selects select { background: #0a0d12; border: 1px solid #c9a35a; color: #eae6da; padding: 5px 8px; border-radius: 4px; font-size: 12px; font-family: 'Manrope', sans-serif; min-width: 130px; }
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal { background: #10141b; border: 1px solid #c9a35a; border-radius: 8px; padding: 24px 28px; max-width: 460px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
@@ -135,7 +130,7 @@
         .logo-meta.warn { color: #e3c48a; }
         .logo-meta.err { color: #e74c3c; }
 
-        /* === Превью сетки в админке === */
+        /* === Превью сетки === */
         .preview-wrap { display: flex; gap: 24px; overflow-x: auto; padding: 8px 0; }
         .preview-group { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; min-width: 0; }
         .preview-group + .preview-group { padding-left: 20px; border-left: 1px solid #242b35; }
@@ -145,8 +140,8 @@
             padding-bottom: 6px; border-bottom: 1px solid; margin-bottom: 4px; white-space: nowrap;
         }
         .preview-group-title.upper { color: #c9a35a; border-bottom-color: rgba(201,163,90,0.35); }
-        .preview-group-title.lower { color: #b3695f; border-bottom-color: rgba(179,105,95,0.35); }
         .preview-group-title.grand { color: #e3c48a; border-bottom-color: rgba(201,163,90,0.5); }
+        .preview-group-title.eliminated { color: #b3695f; border-bottom-color: rgba(179,105,95,0.35); }
         .preview-rounds { display: flex; gap: 16px; }
         .preview-round { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
         .preview-round-label { font-size: 9px; color: #5f6773; text-align: center; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 2px; }
@@ -160,6 +155,9 @@
         .preview-team .badge { font-size: 8px; padding: 0px 5px; border-radius: 8px; font-weight: 700; }
         .preview-team .badge.win { background: #4caf50; color: #fff; }
         .preview-team .badge.loss { background: #e74c3c; color: #fff; }
+        .preview-eliminated-item { background: #0d1118; border: 1px solid #1a2029; border-radius: 3px; padding: 6px 10px; font-size: 11px; color: #7a8494; opacity: 0.65; }
+        .preview-eliminated-item .name { color: #97a0ac; font-weight: 500; }
+        .preview-eliminated-item .meta { font-size: 9px; color: #5f6773; }
 
         .toast { position: fixed; bottom: 24px; right: 24px; background: #10141b; border: 1px solid #c9a35a; padding: 10px 20px; border-radius: 6px; color: #eae6da; font-size: 13px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: 0.3s; pointer-events: none; max-width: 360px; }
         .toast.show { opacity: 1; transform: translateY(0); }
@@ -231,7 +229,7 @@
                 </div>
             </div>
             <div class="team-list" id="teamList"></div>
-            <p class="hint" style="margin-top:12px;">⚠️ Порядок команд = посев. Команды #1 и #2 получают bye в 1-м раунде верхней сетки. Тащи за <b>⋮⋮</b> слева, чтобы переставить.</p>
+            <p class="hint" style="margin-top:12px;">⚠️ Порядок команд = список в админке. Тащи за <b>⋮⋮</b> слева, чтобы переставить.</p>
         </div>
         <div class="card">
             <div class="card-header">
@@ -244,7 +242,7 @@
 
     <div class="tab-content" id="tab-matches">
         <div class="card">
-            <div class="card-header"><h3>🏆 Управление матчами</h3><span style="color:#5f6773;font-size:12px;">Выберите победителя</span></div>
+            <div class="card-header"><h3>🏆 Управление матчами</h3><span style="color:#5f6773;font-size:12px;">M1–M3 — выбираешь команды. M4–M5 — автомат</span></div>
             <div class="match-list" id="matchList"></div>
         </div>
     </div>
@@ -291,7 +289,7 @@
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
                 <button class="btn btn-danger" onclick="resetData()">🔄 Сбросить всё</button>
             </div>
-            <p class="hint" style="margin-top:10px;">⚠️ «Сбросить всё» перезапишет KV дефолтной сеткой на 6 команд.</p>
+            <p class="hint" style="margin-top:10px;">⚠️ «Сбросить всё» перезапишет KV дефолтом: 6 команд, 5 матчей.</p>
         </div>
     </div>
 </div>
@@ -334,7 +332,7 @@ var DATA = getDefaultData();
 
 function getDefaultData() {
     return {
-        tournament: { name: "Compass Arena", game: "Dota 2", format: "Double Elimination", matches: "Bo3", dates: "26 сентября 2026" },
+        tournament: { name: "Compass Arena", game: "Dota 2", format: "Custom Bracket", matches: "Bo3", dates: "26 сентября 2026" },
         teams: [
             { id: 1, name: "Слот 1", players: [], logo: "" },
             { id: 2, name: "Слот 2", players: [], logo: "" },
@@ -344,16 +342,11 @@ function getDefaultData() {
             { id: 6, name: "Слот 6", players: [], logo: "" }
         ],
         matches: [
-            { id: 1, round: 1, team1: 3, team2: 4, winner: null, bracket: 'upper' },
-            { id: 2, round: 1, team1: 5, team2: 6, winner: null, bracket: 'upper' },
-            { id: 3, round: 2, team1: 1, team2: null, winner: null, bracket: 'upper' },
-            { id: 4, round: 2, team1: 2, team2: null, winner: null, bracket: 'upper' },
-            { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'upper' },
-            { id: 6, round: 1, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 7, round: 2, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 8, round: 3, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 9, round: 4, team1: null, team2: null, winner: null, bracket: 'lower' },
-            { id: 10, round: 5, team1: null, team2: null, winner: null, bracket: 'grand' }
+            { id: 1, round: 1, team1: null, team2: null, winner: null, bracket: 'upper' },
+            { id: 2, round: 1, team1: null, team2: null, winner: null, bracket: 'upper' },
+            { id: 3, round: 1, team1: null, team2: null, winner: null, bracket: 'upper' },
+            { id: 4, round: 2, team1: null, team2: null, winner: null, bracket: 'upper' },
+            { id: 5, round: 3, team1: null, team2: null, winner: null, bracket: 'grand' }
         ],
         schedule: {},
         liveMatchId: null,
@@ -396,7 +389,7 @@ function playersToInput(players) {
 }
 
 // ============================================================
-// ЛОГОТИП + АВТОСЖАТИЕ
+// ЛОГОТИП
 // ============================================================
 var NEW_TEAM_LOGO = '';
 var EDIT_TEAM_LOGO = '';
@@ -554,6 +547,7 @@ function loadData() {
             if (DATA.tournamentStart === undefined) DATA.tournamentStart = null;
             if (DATA.projectStart === undefined) DATA.projectStart = null;
             if (!DATA.teams) DATA.teams = [];
+            if (!DATA.matches) DATA.matches = getDefaultData().matches;
             for (var j = 0; j < DATA.teams.length; j++) {
                 if (DATA.teams[j].logo === undefined) DATA.teams[j].logo = '';
             }
@@ -660,25 +654,28 @@ function getLoser(m) {
     return null;
 }
 
+// ============================================================
+// СВЯЗИ (5 матчей): M4 автомат, M5 автомат, M1-M3 ручные
+// ============================================================
 function updateMatchLinks() {
     var m = {};
     for (var i = 0; i < DATA.matches.length; i++) {
         m[DATA.matches[i].id] = DATA.matches[i];
     }
-    var t = DATA.teams;
 
-    if (m[1]) { m[1].team1 = t[2] ? t[2].id : null; m[1].team2 = t[3] ? t[3].id : null; }
-    if (m[2]) { m[2].team1 = t[4] ? t[4].id : null; m[2].team2 = t[5] ? t[5].id : null; }
-    if (m[3]) { m[3].team1 = t[0] ? t[0].id : null; m[3].team2 = m[1] ? m[1].winner : null; }
-    if (m[4]) { m[4].team1 = t[1] ? t[1].id : null; m[4].team2 = m[2] ? m[2].winner : null; }
-    if (m[5]) { m[5].team1 = m[3] ? m[3].winner : null; m[5].team2 = m[4] ? m[4].winner : null; }
-    if (m[6]) { m[6].team1 = getLoser(m[1]); m[6].team2 = getLoser(m[2]); }
-    if (m[7]) { m[7].team1 = m[6] ? m[6].winner : null; m[7].team2 = getLoser(m[3]); }
-    if (m[8]) { m[8].team1 = m[7] ? m[7].winner : null; m[8].team2 = getLoser(m[4]); }
-    if (m[9]) { m[9].team1 = m[8] ? m[8].winner : null; m[9].team2 = getLoser(m[5]); }
-    if (m[10]) { m[10].team1 = m[5] ? m[5].winner : null; m[10].team2 = m[9] ? m[9].winner : null; }
+    // M1, M2, M3 — команды назначаются вручную
+    // M4: W(M1) vs W(M2)
+    if (m[4]) {
+        m[4].team1 = m[1] ? m[1].winner : null;
+        m[4].team2 = m[2] ? m[2].winner : null;
+    }
+    // M5: W(M4) vs W(M3)
+    if (m[5]) {
+        m[5].team1 = m[4] ? m[4].winner : null;
+        m[5].team2 = m[3] ? m[3].winner : null;
+    }
 
-    for (var k = 1; k <= 10; k++) {
+    for (var k = 1; k <= 5; k++) {
         var mm = m[k];
         if (!mm || !mm.winner) continue;
         if (mm.winner !== mm.team1 && mm.winner !== mm.team2) {
@@ -687,7 +684,7 @@ function updateMatchLinks() {
             mm.score2 = null;
         }
     }
-    for (var k2 = 1; k2 <= 10; k2++) {
+    for (var k2 = 1; k2 <= 5; k2++) {
         var mm2 = m[k2];
         if (!mm2) continue;
         if ((mm2.team1 === null || mm2.team2 === null) && mm2.winner !== null) {
@@ -696,6 +693,27 @@ function updateMatchLinks() {
             mm2.score2 = null;
         }
     }
+}
+
+// ============================================================
+// РУЧНОЕ НАЗНАЧЕНИЕ КОМАНД В M1-M3
+// ============================================================
+function setMatchTeam(matchId, slot, teamId) {
+    var match = getMatch(matchId);
+    if (!match) return;
+    var id = teamId === '' ? null : parseInt(teamId, 10);
+    if (slot === 1) match.team1 = id;
+    else if (slot === 2) match.team2 = id;
+    // Сброс winner если команда убрана
+    if (match.winner && match.winner !== match.team1 && match.winner !== match.team2) {
+        match.winner = null;
+        match.score1 = null;
+        match.score2 = null;
+    }
+    saveData();
+    renderMatches();
+    renderPreview();
+    showToast('✅ M' + matchId + ': команда назначена');
 }
 
 // ============================================================
@@ -729,14 +747,13 @@ function renderTeams() {
             playersText = 'состав не указан';
         }
 
-        var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше на одну позицию">↑</button>';
-        var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже на одну позицию">↓</button>';
+        var upBtn = '<button class="btn btn-sm" ' + (i === 0 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',-1)"') + ' title="Выше">↑</button>';
+        var downBtn = '<button class="btn btn-sm" ' + (i === DATA.teams.length - 1 ? 'disabled style="opacity:0.3;"' : 'onclick="moveTeam(' + i + ',1)"') + ' title="Ниже">↓</button>';
 
-        var byeLabel = (i < 2) ? ' <span style="color:#c9a35a;font-size:10px;">[BYE]</span>' : '';
         div.innerHTML =
-            '<div class="drag-handle" title="Перетащи, чтобы изменить посев">⋮⋮</div>' +
+            '<div class="drag-handle" title="Перетащи">⋮⋮</div>' +
             '<div class="logo-mini">' + logoHtml + '</div>' +
-            '<div class="info"><span class="name"><span class="seed-label">#' + (i+1) + '</span>' + t.name + byeLabel + '</span><span class="players">' + playersText + '</span></div>' +
+            '<div class="info"><span class="name"><span class="seed-label">#' + (i+1) + '</span>' + t.name + '</span><span class="players">' + playersText + '</span></div>' +
             '<div class="actions">' + upBtn + downBtn + '<button class="btn btn-sm" onclick="openEditModal(' + t.id + ')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteTeam(' + t.id + ')">✕</button></div>';
         container.appendChild(div);
     }
@@ -825,7 +842,6 @@ function clearDropMarkers() {
 
 var TOUCH_DRAG_INDEX = -1;
 var TOUCH_CLONE = null;
-var TOUCH_START_Y = 0;
 var TOUCH_OFFSET_Y = 0;
 var AUTO_SCROLL_INTERVAL = null;
 
@@ -837,7 +853,6 @@ function onTouchStart(e) {
     e.preventDefault();
     TOUCH_DRAG_INDEX = parseInt(item.dataset.index, 10);
     var rect = item.getBoundingClientRect();
-    TOUCH_START_Y = e.touches[0].clientY;
     TOUCH_OFFSET_Y = e.touches[0].clientY - rect.top;
     TOUCH_CLONE = item.cloneNode(true);
     TOUCH_CLONE.style.position = 'fixed';
@@ -895,9 +910,7 @@ function onTouchEnd(e) {
             reorderTeams(TOUCH_DRAG_INDEX, finalIndex);
         }
     }
-    if (TOUCH_CLONE && TOUCH_CLONE.parentNode) {
-        TOUCH_CLONE.parentNode.removeChild(TOUCH_CLONE);
-    }
+    if (TOUCH_CLONE && TOUCH_CLONE.parentNode) TOUCH_CLONE.parentNode.removeChild(TOUCH_CLONE);
     TOUCH_CLONE = null;
     TOUCH_DRAG_INDEX = -1;
     clearDropMarkers();
@@ -929,9 +942,6 @@ function stopAutoScroll() {
     }
 }
 
-// ============================================================
-// REORDER
-// ============================================================
 function reorderTeams(fromIdx, toIdx) {
     if (fromIdx === toIdx) return;
     if (fromIdx < 0 || fromIdx >= DATA.teams.length) return;
@@ -946,11 +956,8 @@ function reorderTeams(fromIdx, toIdx) {
     showToast('📊 ' + team.name + ' → #' + (toIdx + 1));
 }
 
-// ============================================================
-// ПЕРЕМЕШИВАНИЕ
-// ============================================================
 function shuffleTeams() {
-    if (!confirm('Перемешать посев? Текущий порядок команд будет сброшен.')) return;
+    if (!confirm('Перемешать список команд?')) return;
     var arr = DATA.teams.slice();
     for (var i = arr.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -962,7 +969,7 @@ function shuffleTeams() {
     saveData();
     renderTeams();
     renderMatches();
-    showToast('🔀 Посев перемешан');
+    showToast('🔀 Список перемешан');
 }
 
 function moveTeam(index, direction) {
@@ -974,35 +981,21 @@ function moveTeam(index, direction) {
     saveData();
     renderTeams();
     renderMatches();
-    showToast('↕️ Посев обновлён');
+    showToast('↕️ Список обновлён');
 }
 
 // ============================================================
-// ПРЕВЬЮ СЕТКИ В АДМИНКЕ
+// ПРЕВЬЮ СЕТКИ
 // ============================================================
 function renderPreview() {
     var wrap = document.getElementById('previewWrap');
     if (!wrap) return;
     updateMatchLinks();
 
-    var upperRounds = {}, lowerRounds = {}, grandMatches = [];
-    for (var i = 0; i < DATA.matches.length; i++) {
-        var m = DATA.matches[i];
-        if (m.bracket === 'upper') {
-            if (!upperRounds[m.round]) upperRounds[m.round] = [];
-            upperRounds[m.round].push(m);
-        } else if (m.bracket === 'lower') {
-            if (!lowerRounds[m.round]) lowerRounds[m.round] = [];
-            lowerRounds[m.round].push(m);
-        } else if (m.bracket === 'grand') {
-            grandMatches.push(m);
-        }
-    }
-
-    var upperLabels = { 1: 'R1', 2: 'R2', 3: 'Финал В' };
-    var lowerLabels = { 1: 'R1', 2: 'R2', 3: 'R3', 4: 'Финал Н' };
+    var m1 = getMatch(1), m2 = getMatch(2), m3 = getMatch(3), m4 = getMatch(4), m5 = getMatch(5);
 
     function renderMiniMatch(m) {
+        if (!m) return '<div class="preview-match empty">—</div>';
         var t1 = getTeam(m.team1);
         var t2 = getTeam(m.team2);
         if (!t1 && !t2) return '<div class="preview-match empty">ожидание</div>';
@@ -1029,47 +1022,56 @@ function renderPreview() {
 
     var html = '';
 
+    // Раунд 1
     html += '<div class="preview-group">';
-    html += '<div class="preview-group-title upper">Верхняя</div>';
+    html += '<div class="preview-group-title upper">Раунд 1</div>';
     html += '<div class="preview-rounds">';
-    var uKeys = Object.keys(upperRounds).sort(function(a,b){return a-b;});
-    for (var uk = 0; uk < uKeys.length; uk++) {
-        var ur = uKeys[uk];
-        html += '<div class="preview-round">';
-        html += '<div class="preview-round-label">' + (upperLabels[ur] || ur) + '</div>';
-        for (var uj = 0; uj < upperRounds[ur].length; uj++) {
-            html += renderMiniMatch(upperRounds[ur][uj]);
-        }
-        html += '</div>';
-    }
+    html += '<div class="preview-round">';
+    html += '<div class="preview-round-label">M1</div>' + renderMiniMatch(m1);
+    html += '<div class="preview-round-label">M2</div>' + renderMiniMatch(m2);
+    html += '<div class="preview-round-label">M3</div>' + renderMiniMatch(m3);
+    html += '</div>';
     html += '</div></div>';
 
+    // Раунд 2
     html += '<div class="preview-group">';
-    html += '<div class="preview-group-title lower">Нижняя</div>';
+    html += '<div class="preview-group-title upper">Раунд 2</div>';
     html += '<div class="preview-rounds">';
-    var lKeys = Object.keys(lowerRounds).sort(function(a,b){return a-b;});
-    for (var lk = 0; lk < lKeys.length; lk++) {
-        var lr = lKeys[lk];
-        html += '<div class="preview-round">';
-        html += '<div class="preview-round-label">' + (lowerLabels[lr] || lr) + '</div>';
-        for (var lj = 0; lj < lowerRounds[lr].length; lj++) {
-            html += renderMiniMatch(lowerRounds[lr][lj]);
-        }
-        html += '</div>';
-    }
+    html += '<div class="preview-round">';
+    html += '<div class="preview-round-label">Полуфинал</div>' + renderMiniMatch(m4);
+    html += '</div>';
     html += '</div></div>';
 
-    if (grandMatches.length) {
-        html += '<div class="preview-group">';
-        html += '<div class="preview-group-title grand">Гранд-финал</div>';
-        html += '<div class="preview-rounds">';
-        html += '<div class="preview-round">';
-        html += '<div class="preview-round-label">Финал</div>';
-        for (var gj = 0; gj < grandMatches.length; gj++) {
-            html += renderMiniMatch(grandMatches[gj]);
-        }
-        html += '</div></div></div>';
+    // Финал
+    html += '<div class="preview-group">';
+    html += '<div class="preview-group-title grand">Финал</div>';
+    html += '<div class="preview-rounds">';
+    html += '<div class="preview-round">';
+    html += '<div class="preview-round-label">Гранд</div>' + renderMiniMatch(m5);
+    html += '</div>';
+    html += '</div></div>';
+
+    // Выбывшие
+    html += '<div class="preview-group">';
+    html += '<div class="preview-group-title eliminated">Выбывшие</div>';
+    html += '<div class="preview-rounds"><div class="preview-round">';
+    var eliminated = [];
+    for (var i = 0; i < DATA.matches.length; i++) {
+        var mm = DATA.matches[i];
+        if (!mm.winner) continue;
+        var loserId = getLoser(mm);
+        if (!loserId) continue;
+        var team = getTeam(loserId);
+        if (team) eliminated.push({ team: team, matchId: mm.id });
     }
+    if (eliminated.length === 0) {
+        html += '<div class="preview-eliminated-item"><span class="meta">пока никого</span></div>';
+    } else {
+        for (var e = 0; e < eliminated.length; e++) {
+            html += '<div class="preview-eliminated-item"><span class="name">' + eliminated[e].team.name + '</span> <span class="meta">M' + eliminated[e].matchId + '</span></div>';
+        }
+    }
+    html += '</div></div></div>';
 
     wrap.innerHTML = html;
 }
@@ -1082,63 +1084,106 @@ function renderMatches() {
     if (!container) return;
     updateMatchLinks();
     container.innerHTML = '';
-    var labels = { upper: 'Верхняя', lower: 'Нижняя', grand: 'Гранд-финал' };
-    var classes = { upper: 'upper', lower: 'lower', grand: 'grand' };
+
     var sorted = DATA.matches.slice().sort(function(a,b){return a.id - b.id;});
+
     for (var i = 0; i < sorted.length; i++) {
         var m = sorted[i];
-        var t1 = getTeamName(m.team1);
-        var t2 = getTeamName(m.team2);
-        var winner = m.winner ? getTeamName(m.winner) : '—';
-        var isComplete = !!m.winner;
-        var isLive = DATA.liveMatchId === m.id;
         var div = document.createElement('div');
-        div.className = 'match-item';
-        var canPlay = !!(m.team1 && m.team2);
-        var scoreHtml = canPlay ? (
-            '<span style="display:inline-flex;align-items:center;gap:4px;">' +
-            '<input type="number" min="0" max="9" value="' + (m.score1 != null ? m.score1 : '') + '" id="score1_' + m.id + '" style="width:32px;background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 4px;border-radius:4px;font-size:11px;text-align:center;">' +
-            '<span style="color:#5f6773;">:</span>' +
-            '<input type="number" min="0" max="9" value="' + (m.score2 != null ? m.score2 : '') + '" id="score2_' + m.id + '" style="width:32px;background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 4px;border-radius:4px;font-size:11px;text-align:center;">' +
-            '<button class="btn btn-sm" onclick="setScore(' + m.id + ')" title="Сохранить счёт">✓</button>' +
-            '</span>'
-        ) : '';
-        var liveHtml = canPlay ? (
-            isLive
-                ? '<button class="btn btn-sm" style="background:#6e3a3a;color:#e3c48a;" onclick="toggleLive(' + m.id + ')">🔴 Убрать из эфира</button>'
-                : '<button class="btn btn-sm" onclick="toggleLive(' + m.id + ')">▶ Сделать текущим</button>'
-        ) : '';
-        var selectHtml = '';
-        if (!isComplete) {
-            selectHtml = '<select onchange="setWinner(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:2px 6px;border-radius:4px;font-size:11px;"><option value="">Выбрать победителя</option>';
-            if (m.team1) selectHtml += '<option value="' + m.team1 + '">' + getTeamName(m.team1) + '</option>';
-            if (m.team2) selectHtml += '<option value="' + m.team2 + '">' + getTeamName(m.team2) + '</option>';
-            selectHtml += '</select>';
-        } else {
-            selectHtml = '<button class="btn btn-sm" onclick="resetMatch(' + m.id + ')">↩️ Сбросить</button>';
+        var isManual = (m.id <= 3);
+        div.className = 'match-item ' + (isManual ? 'manual' : 'auto');
+
+        var label = (m.bracket === 'grand') ? 'Финал' : ('Раунд ' + m.round);
+
+        // Формируем селекты для ручных матчей
+        var teamsOptions = '<option value="">— выбрать —</option>';
+        for (var ti = 0; ti < DATA.teams.length; ti++) {
+            teamsOptions += '<option value="' + DATA.teams[ti].id + '">' + DATA.teams[ti].name + '</option>';
         }
-        var label = labels[m.bracket] || m.bracket;
-        var cls = classes[m.bracket] || 'upper';
-        var liveTag = isLive ? '<span class="tag" style="background:#6e3a3a;color:#e3c48a;">🔴 В ЭФИРЕ</span>' : '';
-        div.innerHTML = '<div class="teams"><span>' + t1 + '</span><span class="vs">vs</span><span>' + t2 + '</span>' +
-            (m.score1 != null && m.score2 != null ? '<span class="winner" style="color:#e3c48a;">' + m.score1 + ':' + m.score2 + '</span>' : '') +
-            (isComplete ? '<span class="winner">→ ' + winner + '</span>' : '') + '</div>' +
-            '<div class="meta"><span class="tag ' + cls + '">' + label + '</span>' + liveTag + '<span>Раунд ' + m.round + '</span>' + scoreHtml + liveHtml + selectHtml + '</div>';
+
+        var bodyHtml = '';
+        if (isManual) {
+            // Ручной матч — селекты команд + winner
+            var sel1 = '<select onchange="setMatchTeam(' + m.id + ', 1, this.value)">';
+            var sel2 = '<select onchange="setMatchTeam(' + m.id + ', 2, this.value)">';
+            var opts1 = '<option value="">— команда 1 —</option>';
+            var opts2 = '<option value="">— команда 2 —</option>';
+            for (var t1i = 0; t1i < DATA.teams.length; t1i++) {
+                var team1 = DATA.teams[t1i];
+                var selA = (m.team1 === team1.id) ? ' selected' : '';
+                var selB = (m.team2 === team1.id) ? ' selected' : '';
+                opts1 += '<option value="' + team1.id + '"' + selA + '>' + team1.name + '</option>';
+                opts2 += '<option value="' + team1.id + '"' + selB + '>' + team1.name + '</option>';
+            }
+            sel1 += opts1 + '</select>';
+            sel2 += opts2 + '</select>';
+
+            var winnerHtml = '';
+            if (m.team1 && m.team2) {
+                if (!m.winner) {
+                    winnerHtml = '<select onchange="setWinner(' + m.id + ', this.value)"><option value="">— победитель —</option>';
+                    winnerHtml += '<option value="' + m.team1 + '">' + getTeamName(m.team1) + '</option>';
+                    winnerHtml += '<option value="' + m.team2 + '">' + getTeamName(m.team2) + '</option>';
+                    winnerHtml += '</select>';
+                } else {
+                    winnerHtml = '<span class="winner">→ ' + getTeamName(m.winner) + '</span> <button class="btn btn-sm" onclick="resetMatch(' + m.id + ')">↩️ Сбросить</button>';
+                }
+            } else {
+                winnerHtml = '<span style="color:#5f6773;">— сначала выбери команды —</span>';
+            }
+
+            bodyHtml = '<div class="manual-selects">' + sel1 + '<span class="vs">vs</span>' + sel2 + '</div>' +
+                       '<div class="meta" style="margin-top:6px;">' + winnerHtml + '</div>';
+        } else {
+            // Автомат — M4, M5
+            var t1 = getTeamName(m.team1);
+            var t2 = getTeamName(m.team2);
+            var canPlay = !!(m.team1 && m.team2);
+
+            var winnerHtml = '';
+            if (canPlay) {
+                if (!m.winner) {
+                    winnerHtml = '<select onchange="setWinner(' + m.id + ', this.value)"><option value="">— победитель —</option>';
+                    winnerHtml += '<option value="' + m.team1 + '">' + getTeamName(m.team1) + '</option>';
+                    winnerHtml += '<option value="' + m.team2 + '">' + getTeamName(m.team2) + '</option>';
+                    winnerHtml += '</select>';
+                } else {
+                    winnerHtml = '<span class="winner">→ ' + getTeamName(m.winner) + '</span> <button class="btn btn-sm" onclick="resetMatch(' + m.id + ')">↩️ Сбросить</button>';
+                }
+            } else {
+                winnerHtml = '<span style="color:#5f6773;">ожидание (автоматически)</span>';
+            }
+
+            bodyHtml = '<div class="teams"><span>' + t1 + '</span><span class="vs">vs</span><span>' + t2 + '</span></div>' +
+                       '<div class="meta" style="margin-top:6px;"><span class="tag ' + m.bracket + '">' + label + '</span>' + winnerHtml + '</div>';
+        }
+
+        div.innerHTML = bodyHtml;
         container.appendChild(div);
     }
     renderPreview();
 }
 
-function setScore(matchId) {
-    var s1 = document.getElementById('score1_' + matchId).value;
-    var s2 = document.getElementById('score2_' + matchId).value;
+function setWinner(matchId, teamId) {
     var match = getMatch(matchId);
-    if (!match) return;
-    match.score1 = s1 === '' ? null : parseInt(s1, 10);
-    match.score2 = s2 === '' ? null : parseInt(s2, 10);
+    if (!match || !teamId) return;
+    match.winner = parseInt(teamId, 10);
+    if (DATA.liveMatchId === matchId) DATA.liveMatchId = null;
     saveData();
     renderMatches();
-    showToast('🔢 Счёт матча #' + matchId + ' сохранён');
+    showToast('🏆 Победитель матча #' + matchId + ' выбран');
+}
+
+function resetMatch(matchId) {
+    var match = getMatch(matchId);
+    if (!match) return;
+    if (!confirm('Сбросить результат матча #' + matchId + '?')) return;
+    match.winner = null;
+    match.score1 = null;
+    match.score2 = null;
+    saveData();
+    renderMatches();
+    showToast('↩️ Результат матча #' + matchId + ' сброшен');
 }
 
 function toggleLive(matchId) {
@@ -1157,7 +1202,7 @@ function renderSchedule() {
         if (DATA.matches[i].team1 && DATA.matches[i].team2) matches.push(DATA.matches[i]);
     }
     if (matches.length === 0) {
-        container.innerHTML = '<div class="card" style="text-align:center;color:#5f6773;">Нет матчей</div>';
+        container.innerHTML = '<div class="card" style="text-align:center;color:#5f6773;">Нет матчей с двумя командами</div>';
         return;
     }
     for (var i = 0; i < matches.length; i++) {
@@ -1165,7 +1210,7 @@ function renderSchedule() {
         var time = (DATA.schedule && DATA.schedule[m.id]) ? DATA.schedule[m.id] : '';
         var div = document.createElement('div');
         div.className = 'match-item';
-        div.innerHTML = '<div class="teams"><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span>' + (m.winner ? '<span class="winner">✅</span>' : '') + '</div><div class="meta"><input type="datetime-local" value="' + time + '" onchange="setSchedule(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:3px 6px;border-radius:4px;font-size:11px;"/></div>';
+        div.innerHTML = '<div class="teams"><span>M' + m.id + ':</span><span>' + getTeamName(m.team1) + '</span><span class="vs">vs</span><span>' + getTeamName(m.team2) + '</span>' + (m.winner ? '<span class="winner">✅</span>' : '') + '</div><div class="meta"><input type="datetime-local" value="' + time + '" onchange="setSchedule(' + m.id + ', this.value)" style="background:#0a0d12;border:1px solid #242b35;color:#eae6da;padding:3px 6px;border-radius:4px;font-size:11px;"/></div>';
         container.appendChild(div);
     }
 }
@@ -1249,30 +1294,6 @@ function saveEditTeam() {
     showToast('✏️ Команда обновлена');
 }
 
-function setWinner(matchId, teamId) {
-    var match = getMatch(matchId);
-    if (!match || !teamId) return;
-    match.winner = parseInt(teamId, 10);
-    if (DATA.liveMatchId === matchId) DATA.liveMatchId = null;
-    saveData();
-    renderMatches();
-    renderSchedule();
-    showToast('🏆 Победитель матча #' + matchId + ' выбран');
-}
-
-function resetMatch(matchId) {
-    var match = getMatch(matchId);
-    if (!match) return;
-    if (!confirm('Сбросить результат матча #' + matchId + '?')) return;
-    match.winner = null;
-    match.score1 = null;
-    match.score2 = null;
-    saveData();
-    renderMatches();
-    renderSchedule();
-    showToast('↩️ Результат матча #' + matchId + ' сброшен');
-}
-
 function setSchedule(matchId, time) {
     if (!DATA.schedule) DATA.schedule = {};
     DATA.schedule[matchId] = time;
@@ -1333,12 +1354,12 @@ function importData(event) {
 }
 
 function resetData() {
-    if (!confirm('⚠️ Сбросить ВСЕ данные на дефолт (6 команд, 10 матчей)?')) return;
+    if (!confirm('⚠️ Сбросить ВСЕ данные на дефолт (6 команд, 5 матчей)?')) return;
     if (!confirm('Точно? Это перезапишет KV.')) return;
     DATA = getDefaultData();
     saveData();
     renderEverything();
-    showToast('🔄 Данные сброшены к сетке на 6 команд');
+    showToast('🔄 Данные сброшены');
 }
 
 function showToast(msg) {
@@ -1386,9 +1407,9 @@ window.closeEditModal = closeEditModal;
 window.saveEditTeam = saveEditTeam;
 window.moveTeam = moveTeam;
 window.shuffleTeams = shuffleTeams;
+window.setMatchTeam = setMatchTeam;
 window.setWinner = setWinner;
 window.resetMatch = resetMatch;
-window.setScore = setScore;
 window.toggleLive = toggleLive;
 window.setSchedule = setSchedule;
 window.saveSettings = saveSettings;
@@ -1401,7 +1422,7 @@ window.onEditLogo = onEditLogo;
 window.clearNewTeamLogo = clearNewTeamLogo;
 window.clearEditLogo = clearEditLogo;
 
-console.log('✅ Admin panel loaded (6 teams, 10 matches, drag & drop, preview)');
+console.log('✅ Admin panel loaded (Custom Bracket: 6 teams, 5 matches)');
 </script>
 
 </body>
